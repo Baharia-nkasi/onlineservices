@@ -29,7 +29,7 @@ class CustomerApplicationController extends Controller
     {
         abort_if($application->user_id !== Auth::id(), 403);
 
-$application->load([
+        $application->load([
     'service',
     'documents',
 ]);
