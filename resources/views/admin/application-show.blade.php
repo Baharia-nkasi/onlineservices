@@ -55,7 +55,7 @@
                                 <div class="text-xs mt-1">Status: <strong>{{ ucfirst($document->status) }}</strong></div>
                             </div>
                             <div class="flex gap-2">
-                                <a target="_blank" href="{{ asset('storage/'.$document->file_path) }}" class="px-4 py-2 rounded-lg border font-semibold">View</a>
+                                <a target="_blank" href="{{ route('application.documents.view',$document) }}" class="px-4 py-2 rounded-lg border font-semibold">View</a>
                                 <form method="POST" action="{{ route('admin.documents.status',$document) }}" class="flex gap-2">
                                     @csrf @method('PATCH')
                                     <select name="status" class="rounded-lg border-slate-300 text-sm">
