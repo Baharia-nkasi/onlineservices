@@ -1,0 +1,84 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Application;
+use App\Models\ApplicationDocument;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+
+class ApplicationDocumentController extends Controller
+{
+    /**
+     * Upload a document for an application.
+     */
+    public function store(Request $request, Application $application)
+    {
+        // Make sure the application belongs to the logged-in customer
+        abort_if($application->user_id !== Auth::id(), 403);
+
+        $validated = $request->validate([
+            'document_name' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+
+            'document' => [
+                'required',
+                'file',
+                'mimes:pdf,jpg,jpeg,png',
+                'max:5120',
+            ],
+        ]);
+
+        $file = $request->file('document');
+
+        // Store the file in storage/app/public/application-documents
+        $path = $file->store(
+            'application-documents',
+            'public'
+        );
+
+        ApplicationDocument::create([
+            'application_id' => $application->id,
+            'document_name' => $validated['document_name'],
+            'file_name' => $file->getClientOriginalName(),
+            'file_path' => $path,
+            'file_type' => $file->getClientMimeType(),
+            'file_size' => $file->getSize(),
+            'status' => 'pending',
+        ]);
+
+        return redirect()
+            ->route('customer.applications.show', $application)
+            ->with('success', 'Document uploaded successfully.');
+    }
+
+
+    /**
+     * Delete an uploaded document.
+     */
+    public function destroy(ApplicationDocument $document)
+    {
+        // Make sure the document belongs to the logged-in customer's application
+        abort_if(
+            $document->application->user_id !== Auth::id(),
+            403
+        );
+
+        Storage::disk('public')->delete(
+            $document->file_path
+        );
+
+        $document->delete();
+
+        return redirect()
+            ->route(
+                'customer.applications.show',
+                $document->application_id
+            )
+            ->with('success', 'Document deleted successfully.');
+    }
+}
