@@ -7,6 +7,7 @@ use App\Models\ApplicationDocument;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rules\File;
 
 class ApplicationDocumentController extends Controller
 {
@@ -20,7 +21,7 @@ class ApplicationDocumentController extends Controller
 
         $validated = $request->validate([
             'document_name' => ['required', 'string', 'max:255'],
-            'document' => ['required', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
+            'document' => ['required', File::types(['pdf', 'jpg', 'jpeg', 'png'])->max(5 * 1024)],
         ]);
 
         $documentName = trim($validated['document_name']);
