@@ -12,10 +12,10 @@ class CustomerApplicationController extends Controller
      */
     public function index()
     {
-        $applications = Application::with('service')
+        $applications = Application::with(['service', 'documents'])
             ->where('user_id', Auth::id())
             ->latest()
-            ->get();
+            ->paginate(10);
 
         return view('customer.applications.index', [
             'applications' => $applications,
