@@ -123,7 +123,7 @@
                         <div class="flex shrink-0 gap-2">
                             <a target="_blank" rel="noopener" href="{{ route('application.documents.view',$document) }}" class="portal-button-secondary">View</a>
                             @if($document->status === 'pending')
-                                <form method="POST" action="{{ route('application.documents.destroy',$document) }}" x-data @submit="confirmAction('Delete this document?').submit($event)">
+                                <form method="POST" action="{{ route('application.documents.destroy',$document) }}" x-data="confirmAction('Delete this document?')" @submit="submit($event)">
                                     @csrf @method('DELETE')
                                     <button class="rounded-xl bg-red-600 px-4 py-3 text-sm font-extrabold text-white hover:bg-red-700">Delete</button>
                                 </form>
