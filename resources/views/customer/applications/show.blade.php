@@ -31,8 +31,18 @@
                 default => 'bg-slate-100 text-slate-700',
             };
             $requirements = $application->service->documents->where('is_active', true);
-            $requiredCount = $requirements->where('is_required', true)->count();
-            $uploadedRequired = $requirements->where('is_required', true)->filter(fn($r) => $application->documents->contains(fn($d) => mb_strtolower($d->document_name) === mb_strtolower($r->name)))->count();
+            $standaloneRequired = $requirements->where('is_required', true)->whereNull('requirement_group');
+            $requirementGroups = $requirements->whereNotNull('requirement_group')->groupBy('requirement_group');
+            $requiredCount = $standaloneRequired->count();
+            $uploadedRequired = $standaloneRequired->filter(fn($r) => $application->documents->contains(fn($d) => mb_strtolower($d->document_name) === mb_strtolower($r->name) && $d->status !== 'rejected'))->count();
+            $groupRequired = $requirementGroups->count();
+            $groupSatisfied = $requirementGroups->filter(function ($groupRequirements) use ($application) {
+                $minimum = max(1, (int) $groupRequirements->max('minimum_required'));
+                $approved = $application->documents->where('status', 'approved')->filter(fn($d) => $groupRequirements->contains(fn($r) => mb_strtolower($d->document_name) === mb_strtolower($r->name)))->count();
+                return $approved >= $minimum;
+            })->count();
+            $completionUnits = $requiredCount + $groupRequired;
+            $completedUnits = $uploadedRequired + $groupSatisfied;
         @endphp
 
         <section class="relative overflow-hidden rounded-3xl bg-slate-950 p-7 text-white shadow-xl sm:p-9">
@@ -49,7 +59,7 @@
 
         <section class="grid gap-4 sm:grid-cols-3">
             <div class="portal-card p-5"><p class="text-xs font-bold uppercase tracking-wide text-slate-400">Required documents</p><p class="mt-2 text-2xl font-black text-slate-900">{{ $requiredCount }}</p></div>
-            <div class="portal-card p-5"><p class="text-xs font-bold uppercase tracking-wide text-slate-400">Uploaded required</p><p class="mt-2 text-2xl font-black text-slate-900">{{ $uploadedRequired }}/{{ $requiredCount }}</p></div>
+            <div class="portal-card p-5"><p class="text-xs font-bold uppercase tracking-wide text-slate-400">Requirements progress</p><p class="mt-2 text-2xl font-black text-slate-900">{{ $completedUnits }}/{{ $completionUnits }}</p><p class="mt-1 text-xs text-slate-400">Includes document choice groups</p></div>
             <div class="portal-card p-5"><p class="text-xs font-bold uppercase tracking-wide text-slate-400">Total uploaded</p><p class="mt-2 text-2xl font-black text-slate-900">{{ $application->documents->count() }}</p></div>
         </section>
 
