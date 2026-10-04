@@ -23,7 +23,7 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' \
 
 # Laravel uses public/.htaccess for clean routes such as /login and /dashboard.
 # Debian Apache disables .htaccess overrides by default, so explicitly enable them.
-RUN printf '%s\\n' \
+RUN printf '%s\n' \
     '<Directory /var/www/html/public>' \
     '    Options -Indexes +FollowSymLinks' \
     '    AllowOverride All' \
