@@ -13,6 +13,10 @@ class DashboardController extends Controller
      */
     public function index()
     {
+        if (Auth::user()->isAdmin()) {
+            return redirect()->route('admin.dashboard');
+        }
+
         $userId = Auth::id();
 
         // Customer applications
