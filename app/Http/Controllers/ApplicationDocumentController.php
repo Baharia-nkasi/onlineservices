@@ -15,44 +15,41 @@ class ApplicationDocumentController extends Controller
      */
     public function store(Request $request, Application $application)
     {
-        // Make sure the application belongs to the logged-in customer
         abort_if($application->user_id !== Auth::id(), 403);
 
         $validated = $request->validate([
-            'document_name' => [
-                'required',
-                'string',
-                'max:255',
-            ],
-
-            'document' => [
-                'required',
-                'file',
-                'mimes:pdf,jpg,jpeg,png',
-                'max:5120',
-            ],
+            'document_name' => ['required', 'string', 'max:255'],
+            'document' => ['required', 'file', 'mimes:pdf,jpg,jpeg,png', 'max:5120'],
         ]);
 
-        $allowed = $application->service->documents()
-            ->where('is_active', true)
-            ->pluck('name')
-            ->map(fn ($name) => mb_strtolower(trim($name)))
-            ->all();
+        $documentName = trim($validated['document_name']);
 
-        if ($allowed && ! in_array(mb_strtolower(trim($validated['document_name'])), $allowed, true)) {
+        $requirement = $application->service->documents()
+            ->where('is_active', true)
+            ->get()
+            ->first(fn ($document) => mb_strtolower(trim($document->name)) === mb_strtolower($documentName));
+
+        if (! $requirement) {
             return back()->withErrors([
-                'document_name' => 'Please select a document from the requirements for this service.',
+                'document_name' => 'Please select a valid document requirement for this service.',
+            ])->withInput();
+        }
+
+        $existing = $application->documents()
+            ->whereRaw('LOWER(document_name) = ?', [mb_strtolower($documentName)])
+            ->first();
+
+        if ($existing) {
+            return back()->withErrors([
+                'document_name' => 'This document has already been uploaded. Delete the existing file before uploading a new one.',
             ])->withInput();
         }
 
         $file = $request->file('document');
-
-        // Application documents are private and must never be exposed through /storage.
         $path = $file->store('application-documents', 'local');
 
-        ApplicationDocument::create([
-            'application_id' => $application->id,
-            'document_name' => $validated['document_name'],
+        $application->documents()->create([
+            'document_name' => $requirement->name,
             'file_name' => $file->getClientOriginalName(),
             'file_path' => $path,
             'file_type' => $file->getClientMimeType(),
@@ -64,7 +61,6 @@ class ApplicationDocumentController extends Controller
             ->route('customer.applications.show', $application)
             ->with('success', 'Document uploaded successfully.');
     }
-
 
     /**
      * View an uploaded document only when the current user is authorized.
@@ -93,21 +89,15 @@ class ApplicationDocumentController extends Controller
      */
     public function destroy(ApplicationDocument $document)
     {
-        // Make sure the document belongs to the logged-in customer's application
-        abort_if(
-            $document->application->user_id !== Auth::id(),
-            403
-        );
+        abort_if($document->application->user_id !== Auth::id(), 403);
+
+        $applicationId = $document->application_id;
 
         Storage::disk('local')->delete($document->file_path);
-
         $document->delete();
 
         return redirect()
-            ->route(
-                'customer.applications.show',
-                $document->application_id
-            )
+            ->route('customer.applications.show', $applicationId)
             ->with('success', 'Document deleted successfully.');
     }
 }
