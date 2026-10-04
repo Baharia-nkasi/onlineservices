@@ -66,6 +66,29 @@
                 <p class="mt-1 text-sm text-slate-500">Upload each required document. Accepted files: PDF, JPG or PNG, up to 5 MB.</p>
             </div>
 
+            @php
+                $requirementGroups = $requirements->whereNotNull('requirement_group')->groupBy('requirement_group');
+            @endphp
+
+            @if($requirementGroups->isNotEmpty())
+                <div class="border-b border-blue-100 bg-blue-50 p-5">
+                    <p class="text-sm font-extrabold text-blue-900">Special document rules</p>
+                    <div class="mt-3 space-y-2 text-sm text-blue-800">
+                        @foreach($requirementGroups as $group => $groupRequirements)
+                            @php
+                                $type = $groupRequirements->first()->requirement_type;
+                                $minimum = max(1, (int) $groupRequirements->max('minimum_required'));
+                            @endphp
+                            <p>
+                                <strong>{{ ucfirst(str_replace('_', ' ', $group)) }}:</strong>
+                                {{ $type === 'choose_one' ? 'choose 1' : 'choose at least '.$minimum }}
+                                from the options below.
+                            </p>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
             <div class="divide-y divide-slate-100">
                 @forelse($requirements as $requirement)
                     @php $uploaded = $application->documents->first(fn($d) => mb_strtolower($d->document_name) === mb_strtolower($requirement->name)); @endphp
