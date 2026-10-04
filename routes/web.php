@@ -1,14 +1,14 @@
 <?php
 
-use App\Http\ControllersAdminController;
-use App\Http\ControllersApplicationController;
-use App\Http\ControllersApplicationDocumentController;
-use App\Http\ControllersCustomerApplicationController;
-use App\Http\ControllersDashboardController;
-use App\Http\ControllersProfileController;
-use App\Http\ControllersServiceController;
-use Illuminate\Support\FacadesDB;
-use Illuminate\Support\FacadesRoute;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ApplicationController;
+use App\Http\Controllers\ApplicationDocumentController;
+use App\Http\Controllers\CustomerApplicationController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ServiceController;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
