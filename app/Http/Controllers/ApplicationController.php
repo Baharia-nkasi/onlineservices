@@ -27,6 +27,18 @@ class ApplicationController extends Controller
             'notes' => ['nullable', 'string', 'max:2000'],
         ]);
 
+        $existing = Application::where('user_id', Auth::id())
+            ->where('service_id', $service->id)
+            ->whereIn('status', ['pending', 'processing'])
+            ->latest()
+            ->first();
+
+        if ($existing) {
+            return redirect()
+                ->route('customer.applications.show', $existing)
+                ->with('success', 'You already have an active application for this service.');
+        }
+
         $application = Application::create([
             'user_id' => Auth::id(),
             'service_id' => $service->id,
