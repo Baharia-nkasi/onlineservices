@@ -127,7 +127,7 @@
                                 <span class="mt-1 inline-block text-xs font-bold {{ $requirement->is_required ? 'text-red-600' : 'text-slate-500' }}">{{ $requirement->is_required ? 'Required' : 'Optional' }}</span>
                             </div>
                         </div>
-                        <span class="status-pill {{ $uploaded ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700' }}">{{ $uploaded ? 'Uploaded' : 'Pending' }}</span>
+                        <span class="status-pill {{ !$uploaded ? 'bg-amber-50 text-amber-700' : ($uploaded->status === 'rejected' ? 'bg-red-50 text-red-700' : 'bg-emerald-50 text-emerald-700') }}">{{ !$uploaded ? 'Pending' : ucfirst($uploaded->status) }}</span>
                     </div>
                 @empty
                     <div class="p-10 text-center text-sm text-slate-500">No document requirements configured.</div>
@@ -144,7 +144,8 @@
                                 <option value="">Select a requirement</option>
                                 @foreach($requirements as $requirement)
                                     @php $alreadyUploaded = $application->documents->contains(fn($d) => mb_strtolower($d->document_name) === mb_strtolower($requirement->name)); @endphp
-                                    <option value="{{ $requirement->name }}" @disabled($alreadyUploaded)>{{ $requirement->name }}{{ $requirement->is_required ? ' *' : '' }}{{ $alreadyUploaded ? ' — uploaded' : '' }}</option>
+                                    @php $uploadedRequirement = $application->documents->first(fn($d) => mb_strtolower($d->document_name) === mb_strtolower($requirement->name)); @endphp
+                                    <option value="{{ $requirement->name }}" @disabled($uploadedRequirement && $uploadedRequirement->status !== 'rejected')>{{ $requirement->name }}{{ $requirement->is_required ? ' *' : '' }}{{ $uploadedRequirement ? ($uploadedRequirement->status === 'rejected' ? ' — re-upload required' : ' — uploaded') : '' }}</option>
                                 @endforeach
                             </select>
                         </div>
