@@ -53,6 +53,41 @@ class AdminController extends Controller
             'status' => ['required', 'in:pending,processing,completed,rejected'],
         ]);
 
+        if ($validated['status'] === 'completed') {
+            $application->load(['service.documents', 'documents']);
+
+            $missingRequired = $application->service->documents
+                ->where('is_active', true)
+                ->where('is_required', true)
+                ->filter(fn ($requirement) => ! $application->documents->contains(
+                    fn ($document) => mb_strtolower($document->document_name) === mb_strtolower($requirement->name)
+                        && $document->status === 'approved'
+                ));
+
+            $grouped = $application->service->documents
+                ->where('is_active', true)
+                ->whereNotNull('requirement_group')
+                ->groupBy('requirement_group');
+
+            $missingGroups = $grouped->filter(function ($requirements) use ($application) {
+                $minimum = max(1, (int) $requirements->max('minimum_required'));
+                $approved = $application->documents
+                    ->where('status', 'approved')
+                    ->filter(fn ($document) => $requirements->contains(
+                        fn ($requirement) => mb_strtolower($document->document_name) === mb_strtolower($requirement->name)
+                    ))
+                    ->count();
+
+                return $approved < $minimum;
+            });
+
+            if ($missingRequired->isNotEmpty() || $missingGroups->isNotEmpty()) {
+                return back()->withErrors([
+                    'status' => 'This application cannot be completed until all required documents and requirement groups have approved documents.',
+                ]);
+            }
+        }
+
         $application->update(['status' => $validated['status']]);
 
         return back()->with('success', 'Application status updated.');
