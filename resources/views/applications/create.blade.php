@@ -1,601 +1,123 @@
 <x-app-layout>
-
-    <style>
-        /* ========================================
-           MAIN PAGE BACKGROUND
-        ======================================== */
-
-        .applications-wrapper {
-            min-height: calc(100vh - 65px);
-            padding: 45px 0 70px;
-            background:
-                radial-gradient(circle at top left, rgba(59, 130, 246, 0.10), transparent 35%),
-                radial-gradient(circle at bottom right, rgba(16, 185, 129, 0.08), transparent 35%),
-                #f8fafc;
-        }
-
-
-        /* ========================================
-           PAGE HEADER
-        ======================================== */
-
-        .page-header-box {
-            margin-bottom: 30px;
-        }
-
-        .page-title {
-            font-size: 30px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            color: #111827;
-        }
-
-        .page-description {
-            margin-top: 7px;
-            font-size: 15px;
-            color: #64748b;
-        }
-
-
-        /* ========================================
-           APPLICATION LIST
-        ======================================== */
-
-        .applications-list {
-            display: flex;
-            flex-direction: column;
-            gap: 18px;
-        }
-
-
-        /* ========================================
-           APPLICATION CARD
-        ======================================== */
-
-        .application-card {
-            position: relative;
-            background: rgba(255, 255, 255, 0.96);
-            border: 1px solid #e2e8f0;
-            border-radius: 18px;
-            padding: 24px;
-            box-shadow:
-                0 4px 6px rgba(15, 23, 42, 0.03),
-                0 12px 30px rgba(15, 23, 42, 0.06);
-            transition:
-                transform 0.25s ease,
-                box-shadow 0.25s ease,
-                border-color 0.25s ease;
-        }
-
-        .application-card:hover {
-            transform: translateY(-3px);
-            border-color: #bfdbfe;
-            box-shadow:
-                0 8px 12px rgba(15, 23, 42, 0.04),
-                0 18px 40px rgba(37, 99, 235, 0.10);
-        }
-
-
-        /* ========================================
-           CARD FLEX LAYOUT
-        ======================================== */
-
-        .application-flex {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 25px;
-        }
-
-        .application-left {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-            flex: 1;
-            min-width: 0;
-        }
-
-
-        /* ========================================
-           SERVICE ICON
-        ======================================== */
-
-        .service-icon {
-            width: 58px;
-            height: 58px;
-            min-width: 58px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 15px;
-            background: linear-gradient(135deg, #eff6ff, #dbeafe);
-            color: #2563eb;
-            font-size: 24px;
-            box-shadow:
-                inset 0 0 0 1px rgba(37, 99, 235, 0.08);
-        }
-
-
-        /* ========================================
-           SERVICE INFORMATION
-        ======================================== */
-
-        .service-content {
-            min-width: 0;
-        }
-
-        .service-name {
-            font-size: 18px;
-            font-weight: 800;
-            color: #0f172a;
-            line-height: 1.4;
-            margin-bottom: 8px;
-        }
-
-        .application-details {
-            display: flex;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px 20px;
-        }
-
-        .detail-item {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 13px;
-            color: #64748b;
-        }
-
-        .detail-item strong {
-            color: #334155;
-            font-weight: 700;
-        }
-
-
-        /* ========================================
-           STATUS AREA
-        ======================================== */
-
-        .status-area {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 9px;
-            min-width: 125px;
-            padding: 10px 16px;
-            border-radius: 999px;
-            font-size: 13px;
-            font-weight: 800;
-            letter-spacing: 0.1px;
-            white-space: nowrap;
-            box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.04);
-        }
-
-        .status-dot {
-            width: 9px;
-            height: 9px;
-            border-radius: 50%;
-            display: inline-block;
-            flex-shrink: 0;
-        }
-
-
-        /* ========================================
-           PENDING
-        ======================================== */
-
-        .status-pending {
-            color: #92400e;
-            background: linear-gradient(135deg, #fffbeb, #fef3c7);
-            border: 1px solid #fde68a;
-        }
-
-        .status-pending .status-dot {
-            background: #f59e0b;
-            box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.13);
-        }
-
-
-        /* ========================================
-           PROCESSING
-        ======================================== */
-
-        .status-processing {
-            color: #1d4ed8;
-            background: linear-gradient(135deg, #eff6ff, #dbeafe);
-            border: 1px solid #bfdbfe;
-        }
-
-        .status-processing .status-dot {
-            background: #2563eb;
-            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.13);
-        }
-
-
-        /* ========================================
-           COMPLETED
-        ======================================== */
-
-        .status-completed {
-            color: #166534;
-            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
-            border: 1px solid #bbf7d0;
-        }
-
-        .status-completed .status-dot {
-            background: #16a34a;
-            box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.13);
-        }
-
-
-        /* ========================================
-           REJECTED
-        ======================================== */
-
-        .status-rejected {
-            color: #991b1b;
-            background: linear-gradient(135deg, #fef2f2, #fee2e2);
-            border: 1px solid #fecaca;
-        }
-
-        .status-rejected .status-dot {
-            background: #dc2626;
-            box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.13);
-        }
-
-
-        /* ========================================
-           DEFAULT STATUS
-        ======================================== */
-
-        .status-default {
-            color: #374151;
-            background: #f1f5f9;
-            border: 1px solid #cbd5e1;
-        }
-
-        .status-default .status-dot {
-            background: #64748b;
-        }
-
-
-        /* ========================================
-           NOTES
-        ======================================== */
-
-        .application-notes {
-            margin-top: 22px;
-            padding: 15px 17px;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-        }
-
-        .notes-title {
-            font-size: 12px;
-            font-weight: 800;
-            color: #475569;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 5px;
-        }
-
-        .notes-text {
-            font-size: 14px;
-            color: #64748b;
-            line-height: 1.6;
-        }
-
-
-        /* ========================================
-           EMPTY STATE
-        ======================================== */
-
-        .empty-state {
-            background: rgba(255, 255, 255, 0.96);
-            border: 1px solid #e2e8f0;
-            border-radius: 20px;
-            padding: 70px 30px;
-            text-align: center;
-            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
-        }
-
-        .empty-icon {
-            width: 78px;
-            height: 78px;
-            margin: 0 auto 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 22px;
-            background: linear-gradient(135deg, #eff6ff, #dbeafe);
-            color: #2563eb;
-            font-size: 34px;
-        }
-
-        .empty-title {
-            font-size: 22px;
-            font-weight: 800;
-            color: #0f172a;
-        }
-
-        .empty-description {
-            margin-top: 8px;
-            color: #64748b;
-            font-size: 14px;
-        }
-
-        .browse-button {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: 24px;
-            padding: 12px 22px;
-            border-radius: 9px;
-            background: linear-gradient(135deg, #2563eb, #1d4ed8);
-            color: #ffffff !important;
-            font-size: 14px;
-            font-weight: 700;
-            text-decoration: none;
-            box-shadow: 0 5px 12px rgba(37, 99, 235, 0.22);
-            transition: all 0.2s ease;
-        }
-
-        .browse-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 18px rgba(37, 99, 235, 0.30);
-        }
-
-
-        /* ========================================
-           MOBILE
-        ======================================== */
-
-        @media (max-width: 768px) {
-
-            .applications-wrapper {
-                padding: 30px 0 50px;
-            }
-
-            .page-title {
-                font-size: 25px;
-            }
-
-            .application-flex {
-                align-items: flex-start;
-                flex-direction: column;
-                gap: 18px;
-            }
-
-            .application-left {
-                width: 100%;
-            }
-
-            .status-area {
-                width: 100%;
-                justify-content: flex-start;
-            }
-
-            .status-badge {
-                min-width: 115px;
-            }
-        }
-
-
-        @media (max-width: 480px) {
-
-            .application-card {
-                padding: 18px;
-                border-radius: 15px;
-            }
-
-            .application-left {
-                align-items: flex-start;
-            }
-
-            .service-icon {
-                width: 48px;
-                height: 48px;
-                min-width: 48px;
-                font-size: 20px;
-                border-radius: 12px;
-            }
-
-            .service-name {
-                font-size: 16px;
-            }
-
-            .application-details {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 5px;
-            }
-        }
-    </style>
-
-
-    <!-- HEADER -->
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('My Applications') }}
-        </h2>
+        <div class="flex items-center justify-between gap-4">
+            <div>
+                <p class="text-xs font-extrabold uppercase tracking-wider text-blue-700">New application</p>
+                <h2 class="text-2xl font-black tracking-tight text-slate-900">Apply for a service</h2>
+            </div>
+            <a href="{{ route('services.index') }}" class="text-sm font-bold text-slate-500 hover:text-blue-700">← Back to Services</a>
+        </div>
     </x-slot>
 
-
-    <!-- MAIN CONTENT -->
-
-    <div class="applications-wrapper">
-
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-
-            <!-- PAGE TITLE -->
-
-            <div class="page-header-box">
-
-                <h1 class="page-title">
-                    My Applications
-                </h1>
-
-                <p class="page-description">
-                    Track the progress of all your submitted service applications.
-                </p>
-
-            </div>
-
-
-            @if($applications->count() > 0)
-
-                <!-- APPLICATION LIST -->
-
-                <div class="applications-list">
-
-                    @foreach($applications as $application)
-
-                        <div class="application-card">
-
-                            <div class="application-flex">
-
-                                <!-- LEFT SIDE -->
-
-                                <div class="application-left">
-
-                                    <div class="service-icon">
-                                        📄
-                                    </div>
-
-                                    <div class="service-content">
-
-                                        <div class="service-name">
-                                            {{ $application->service->name }}
-                                        </div>
-
-                                        <div class="application-details">
-
-                                            <div class="detail-item">
-                                                <strong>ID:</strong>
-                                                #{{ $application->id }}
-                                            </div>
-
-                                            <div class="detail-item">
-                                                <strong>Applied:</strong>
-                                                {{ $application->created_at->format('d M Y, H:i') }}
-                                            </div>
-
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-
-                                <!-- RIGHT SIDE / STATUS -->
-
-                                <div class="status-area">
-
-                                    @if($application->status === 'pending')
-
-                                        <span class="status-badge status-pending">
-                                            <span class="status-dot"></span>
-                                            🟡 Pending
-                                        </span>
-
-                                    @elseif($application->status === 'processing')
-
-                                        <span class="status-badge status-processing">
-                                            <span class="status-dot"></span>
-                                            🔵 Processing
-                                        </span>
-
-                                    @elseif($application->status === 'completed')
-
-                                        <span class="status-badge status-completed">
-                                            <span class="status-dot"></span>
-                                            🟢 Completed
-                                        </span>
-
-                                    @elseif($application->status === 'rejected')
-
-                                        <span class="status-badge status-rejected">
-                                            <span class="status-dot"></span>
-                                            🔴 Rejected
-                                        </span>
-
-                                    @else
-
-                                        <span class="status-badge status-default">
-                                            <span class="status-dot"></span>
-                                            {{ ucfirst($application->status) }}
-                                        </span>
-
-                                    @endif
-
-                                </div>
-
-                            </div>
-
-
-                            <!-- NOTES -->
-
-                            @if($application->notes)
-
-                                <div class="application-notes">
-
-                                    <div class="notes-title">
-                                        Additional Information
-                                    </div>
-
-                                    <div class="notes-text">
-                                        {{ $application->notes }}
-                                    </div>
-
-                                </div>
-
+    <div class="min-h-screen bg-slate-50 py-8">
+        <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+            <div class="grid gap-6 lg:grid-cols-3">
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+                        <div class="bg-slate-950 p-7 text-white sm:p-8">
+                            <p class="text-sm font-extrabold uppercase tracking-wider text-blue-300">Service</p>
+                            <h1 class="mt-2 text-2xl font-black sm:text-3xl">{{ $service->name }}</h1>
+                            @if($service->description)
+                                <p class="mt-3 leading-7 text-slate-300">{{ $service->description }}</p>
                             @endif
-
                         </div>
 
-                    @endforeach
+                        <div class="p-6 sm:p-8">
+                            <div class="flex flex-wrap gap-3 text-sm">
+                                <span class="rounded-full bg-blue-50 px-4 py-2 font-bold text-blue-700">
+                                    Service fee: TSh {{ number_format($service->service_fee, 0) }}
+                                </span>
+                                <span class="rounded-full bg-slate-100 px-4 py-2 font-bold text-slate-700">
+                                    Government fee: TSh {{ number_format($service->government_fee, 0) }}
+                                </span>
+                            </div>
 
+                            <div class="mt-8">
+                                <div class="flex items-end justify-between gap-4">
+                                    <div>
+                                        <h2 class="text-xl font-black text-slate-900">Required documents</h2>
+                                        <p class="mt-1 text-sm text-slate-500">Prepare these documents before uploading them after creating your application.</p>
+                                    </div>
+                                    <span class="rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-600">
+                                        {{ $service->documents->where('is_active', true)->count() }} items
+                                    </span>
+                                </div>
+
+                                <div class="mt-5 space-y-3">
+                                    @forelse($service->documents->where('is_active', true) as $document)
+                                        <div class="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                                            <div class="flex items-start gap-3">
+                                                <span class="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-black text-blue-700">{{ $loop->iteration }}</span>
+                                                <div class="min-w-0">
+                                                    <h3 class="font-extrabold text-slate-900">
+                                                        {{ $document->name }}
+                                                        @if($document->is_required)
+                                                            <span class="ml-1 text-red-600">*</span>
+                                                        @endif
+                                                    </h3>
+                                                    @if($document->description)
+                                                        <p class="mt-1 text-sm leading-6 text-slate-500">{{ $document->description }}</p>
+                                                    @endif
+                                                    <p class="mt-2 text-xs font-bold {{ $document->is_required ? 'text-red-600' : 'text-slate-500' }}">
+                                                        {{ $document->is_required ? 'Required' : 'Optional' }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @empty
+                                        <div class="rounded-2xl border border-dashed border-slate-300 p-8 text-center text-sm text-slate-500">
+                                            No document requirements have been configured for this service.
+                                        </div>
+                                    @endforelse
+                                </div>
+                            </div>
+
+                            <form method="POST" action="{{ route('applications.store', $service) }}" class="mt-8 border-t border-slate-200 pt-8">
+                                @csrf
+                                <label for="notes" class="block text-sm font-extrabold text-slate-800">Additional information <span class="font-normal text-slate-400">(optional)</span></label>
+                                <textarea id="notes" name="notes" rows="4" maxlength="2000"
+                                    class="mt-2 w-full rounded-2xl border-slate-300 bg-white text-sm shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                                    placeholder="Add any information that may help with your application...">{{ old('notes') }}</textarea>
+                                @error('notes')
+                                    <p class="mt-2 text-sm font-semibold text-red-600">{{ $message }}</p>
+                                @enderror
+
+                                <div class="mt-5 rounded-2xl bg-amber-50 p-4 text-sm leading-6 text-amber-800">
+                                    <strong>Next step:</strong> Click “Start Application”. Your application will be created and you will then upload the required documents.
+                                </div>
+
+                                <div class="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+                                    <a href="{{ route('services.index') }}" class="rounded-xl border border-slate-300 bg-white px-5 py-3 text-center text-sm font-extrabold text-slate-700 hover:bg-slate-50">Cancel</a>
+                                    <button type="submit" class="rounded-xl bg-blue-700 px-6 py-3 text-sm font-extrabold text-white shadow-lg shadow-blue-700/20 hover:bg-blue-800">
+                                        Start Application →
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
 
-
-            @else
-
-                <!-- EMPTY APPLICATIONS -->
-
-                <div class="empty-state">
-
-                    <div class="empty-icon">
-                        📄
+                <aside class="lg:col-span-1">
+                    <div class="sticky top-24 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
+                        <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-xl">✓</div>
+                        <h2 class="mt-5 text-lg font-black text-slate-900">How it works</h2>
+                        <ol class="mt-5 space-y-5">
+                            <li class="flex gap-3">
+                                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-blue-700 text-xs font-black text-white">1</span>
+                                <div><p class="font-bold text-slate-800">Start application</p><p class="mt-1 text-xs leading-5 text-slate-500">Create your application for this service.</p></div>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-blue-700 text-xs font-black text-white">2</span>
+                                <div><p class="font-bold text-slate-800">Upload documents</p><p class="mt-1 text-xs leading-5 text-slate-500">Upload the required PDF or image files.</p></div>
+                            </li>
+                            <li class="flex gap-3">
+                                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-blue-700 text-xs font-black text-white">3</span>
+                                <div><p class="font-bold text-slate-800">Track progress</p><p class="mt-1 text-xs leading-5 text-slate-500">Follow your application status from your dashboard.</p></div>
+                            </li>
+                        </ol>
                     </div>
-
-                    <div class="empty-title">
-                        No Applications Yet
-                    </div>
-
-                    <div class="empty-description">
-                        You have not submitted any applications yet.
-                    </div>
-
-                    <a href="{{ route('services.index') }}"
-                       class="browse-button">
-                        Browse Services
-                    </a>
-
-                </div>
-
-            @endif
-
+                </aside>
+            </div>
         </div>
-
     </div>
-
 </x-app-layout>
