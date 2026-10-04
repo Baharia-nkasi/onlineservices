@@ -36,6 +36,9 @@ Route::middleware('auth')->group(function () {
     Route::post('/my-applications/{application}/documents', [ApplicationDocumentController::class, 'store'])
         ->name('application.documents.store');
 
+    Route::get('/application-documents/{document}/view', [ApplicationDocumentController::class, 'download'])
+        ->name('application.documents.view');
+
     Route::delete('/application-documents/{document}', [ApplicationDocumentController::class, 'destroy'])
         ->name('application.documents.destroy');
 
