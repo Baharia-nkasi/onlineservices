@@ -34,7 +34,7 @@
             $standaloneRequired = $requirements->where('is_required', true)->whereNull('requirement_group');
             $requirementGroups = $requirements->whereNotNull('requirement_group')->groupBy('requirement_group');
             $requiredCount = $standaloneRequired->count();
-            $uploadedRequired = $standaloneRequired->filter(fn($r) => $application->documents->contains(fn($d) => mb_strtolower($d->document_name) === mb_strtolower($r->name) && $d->status !== 'rejected'))->count();
+            $approvedRequired = $standaloneRequired->filter(fn($r) => $application->documents->contains(fn($d) => mb_strtolower($d->document_name) === mb_strtolower($r->name) && $d->status === 'approved'))->count();
             $groupRequired = $requirementGroups->count();
             $groupSatisfied = $requirementGroups->filter(function ($groupRequirements) use ($application) {
                 $minimum = max(1, (int) $groupRequirements->max('minimum_required'));
@@ -42,7 +42,7 @@
                 return $approved >= $minimum;
             })->count();
             $completionUnits = $requiredCount + $groupRequired;
-            $completedUnits = $uploadedRequired + $groupSatisfied;
+            $completedUnits = $approvedRequired + $groupSatisfied;
         @endphp
 
         <section class="relative overflow-hidden rounded-3xl bg-slate-950 p-7 text-white shadow-xl sm:p-9">
@@ -59,7 +59,7 @@
 
         <section class="grid gap-4 sm:grid-cols-3">
             <div class="portal-card p-5"><p class="text-xs font-bold uppercase tracking-wide text-slate-400">Required documents</p><p class="mt-2 text-2xl font-black text-slate-900">{{ $requiredCount }}</p></div>
-            <div class="portal-card p-5"><p class="text-xs font-bold uppercase tracking-wide text-slate-400">Requirements progress</p><p class="mt-2 text-2xl font-black text-slate-900">{{ $completedUnits }}/{{ $completionUnits }}</p><p class="mt-1 text-xs text-slate-400">Includes document choice groups</p></div>
+            <div class="portal-card p-5"><p class="text-xs font-bold uppercase tracking-wide text-slate-400">Approved progress</p><p class="mt-2 text-2xl font-black text-slate-900">{{ $completedUnits }}/{{ $completionUnits }}</p><p class="mt-1 text-xs text-slate-400">Only approved documents count toward completion</p></div>
             <div class="portal-card p-5"><p class="text-xs font-bold uppercase tracking-wide text-slate-400">Total uploaded</p><p class="mt-2 text-2xl font-black text-slate-900">{{ $application->documents->count() }}</p></div>
         </section>
 
@@ -77,7 +77,7 @@
                 @if($completionUnits > 0)
                     <div class="mt-4">
                         <div class="mb-2 flex items-center justify-between text-xs font-extrabold text-slate-500">
-                            <span>Requirements completion</span>
+                            <span>Approved requirements</span>
                             <span>{{ $completedUnits }}/{{ $completionUnits }}</span>
                         </div>
                         <div class="h-2 overflow-hidden rounded-full bg-slate-200">
@@ -92,9 +92,7 @@
                 @endif
             </div>
 
-            @php
-                $requirementGroups = $requirements->whereNotNull('requirement_group')->groupBy('requirement_group');
-            @endphp
+            @php $requirementGroups = $requirements->whereNotNull('requirement_group')->groupBy('requirement_group'); @endphp
 
             @if($requirementGroups->isNotEmpty())
                 <div class="border-b border-blue-100 bg-blue-50 p-5">
@@ -105,11 +103,7 @@
                                 $type = $groupRequirements->first()->requirement_type;
                                 $minimum = max(1, (int) $groupRequirements->max('minimum_required'));
                             @endphp
-                            <p>
-                                <strong>{{ ucfirst(str_replace('_', ' ', $group)) }}:</strong>
-                                {{ $type === 'choose_one' ? 'choose 1' : 'choose at least '.$minimum }}
-                                from the options below.
-                            </p>
+                            <p><strong>{{ ucfirst(str_replace('_', ' ', $group)) }}:</strong> {{ $type === 'choose_one' ? 'choose 1' : 'choose at least '.$minimum }} from the options below.</p>
                         @endforeach
                     </div>
                 </div>
@@ -120,14 +114,18 @@
                     @php $uploaded = $application->documents->first(fn($d) => mb_strtolower($d->document_name) === mb_strtolower($requirement->name)); @endphp
                     <div class="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
                         <div class="flex items-start gap-3">
-                            <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl {{ $uploaded ? 'bg-emerald-100 text-emerald-700' : 'bg-blue-50 text-blue-700' }} font-black">{{ $uploaded ? '✓' : $loop->iteration }}</span>
+                            <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl {{ $uploaded?->status === 'approved' ? 'bg-emerald-100 text-emerald-700' : ($uploaded?->status === 'rejected' ? 'bg-red-100 text-red-700' : ($uploaded ? 'bg-amber-100 text-amber-700' : 'bg-blue-50 text-blue-700')) }} font-black">
+                                {{ $uploaded?->status === 'approved' ? '✓' : ($uploaded?->status === 'rejected' ? '!' : $loop->iteration) }}
+                            </span>
                             <div>
                                 <div class="font-extrabold text-slate-900">{{ $requirement->name }}</div>
                                 @if($requirement->description)<p class="mt-1 text-sm leading-6 text-slate-500">{{ $requirement->description }}</p>@endif
                                 <span class="mt-1 inline-block text-xs font-bold {{ $requirement->is_required ? 'text-red-600' : 'text-slate-500' }}">{{ $requirement->is_required ? 'Required' : 'Optional' }}</span>
                             </div>
                         </div>
-                        <span class="status-pill {{ !$uploaded ? 'bg-amber-50 text-amber-700' : ($uploaded->status === 'rejected' ? 'bg-red-50 text-red-700' : 'bg-emerald-50 text-emerald-700') }}">{{ !$uploaded ? 'Pending' : ucfirst($uploaded->status) }}</span>
+                        <span class="status-pill {{ !$uploaded ? 'bg-amber-50 text-amber-700' : ($uploaded->status === 'rejected' ? 'bg-red-50 text-red-700' : ($uploaded->status === 'approved' ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700')) }}">
+                            {{ !$uploaded ? 'Not uploaded' : ucfirst($uploaded->status) }}
+                        </span>
                     </div>
                 @empty
                     <div class="p-10 text-center text-sm text-slate-500">No document requirements configured.</div>
@@ -143,9 +141,10 @@
                             <select name="document_name" id="document_name" required class="input-modern mt-2">
                                 <option value="">Select a requirement</option>
                                 @foreach($requirements as $requirement)
-                                    @php $alreadyUploaded = $application->documents->contains(fn($d) => mb_strtolower($d->document_name) === mb_strtolower($requirement->name)); @endphp
                                     @php $uploadedRequirement = $application->documents->first(fn($d) => mb_strtolower($d->document_name) === mb_strtolower($requirement->name)); @endphp
-                                    <option value="{{ $requirement->name }}" @disabled($uploadedRequirement && $uploadedRequirement->status !== 'rejected')>{{ $requirement->name }}{{ $requirement->is_required ? ' *' : '' }}{{ $uploadedRequirement ? ($uploadedRequirement->status === 'rejected' ? ' — re-upload required' : ' — uploaded') : '' }}</option>
+                                    <option value="{{ $requirement->name }}" @disabled($uploadedRequirement && $uploadedRequirement->status !== 'rejected')>
+                                        {{ $requirement->name }}{{ $requirement->is_required ? ' *' : '' }}{{ $uploadedRequirement ? ($uploadedRequirement->status === 'rejected' ? ' — re-upload required' : ' — uploaded') : '' }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
@@ -168,7 +167,7 @@
                         <div class="min-w-0">
                             <div class="font-extrabold text-slate-900">{{ $document->document_name }}</div>
                             <div class="mt-1 truncate text-sm text-slate-500">{{ $document->file_name }} · {{ number_format(($document->file_size ?? 0)/1024,1) }} KB</div>
-                            <div class="mt-2 text-xs font-bold {{ $document->status === 'rejected' ? 'text-red-700' : 'text-slate-600' }}">Review: {{ ucfirst($document->status) }}</div>
+                            <div class="mt-2 text-xs font-bold {{ $document->status === 'approved' ? 'text-emerald-700' : ($document->status === 'rejected' ? 'text-red-700' : 'text-amber-700') }}">Review: {{ ucfirst($document->status) }}</div>
                             @if($document->notes)
                                 <div class="mt-2 rounded-xl bg-red-50 px-3 py-2 text-xs leading-5 text-red-700"><strong>Review note:</strong> {{ $document->notes }}</div>
                             @endif
