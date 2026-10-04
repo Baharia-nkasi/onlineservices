@@ -47,11 +47,8 @@ class ApplicationDocumentController extends Controller
 
         $file = $request->file('document');
 
-        // Store the file in storage/app/public/application-documents
-        $path = $file->store(
-            'application-documents',
-            'public'
-        );
+        // Application documents are private and must never be exposed through /storage.
+        $path = $file->store('application-documents', 'local');
 
         ApplicationDocument::create([
             'application_id' => $application->id,
@@ -70,6 +67,28 @@ class ApplicationDocumentController extends Controller
 
 
     /**
+     * View an uploaded document only when the current user is authorized.
+     */
+    public function download(ApplicationDocument $document)
+    {
+        $application = $document->application;
+        $user = Auth::user();
+
+        abort_unless(
+            $user && ($application->user_id === $user->id || $user->isAdmin()),
+            403
+        );
+
+        abort_unless(Storage::disk('local')->exists($document->file_path), 404);
+
+        return Storage::disk('local')->response(
+            $document->file_path,
+            $document->file_name,
+            ['Content-Disposition' => 'inline']
+        );
+    }
+
+    /**
      * Delete an uploaded document.
      */
     public function destroy(ApplicationDocument $document)
@@ -80,9 +99,7 @@ class ApplicationDocumentController extends Controller
             403
         );
 
-        Storage::disk('public')->delete(
-            $document->file_path
-        );
+        Storage::disk('local')->delete($document->file_path);
 
         $document->delete();
 
