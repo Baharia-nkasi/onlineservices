@@ -6,7 +6,7 @@ use App\Models\Application;
 use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\DB;
 
 class ApplicationController extends Controller
 {
@@ -27,27 +27,35 @@ class ApplicationController extends Controller
             'notes' => ['nullable', 'string', 'max:2000'],
         ]);
 
-        $existing = Application::where('user_id', Auth::id())
-            ->where('service_id', $service->id)
-            ->whereIn('status', ['pending', 'processing'])
-            ->latest()
-            ->first();
+        $application = DB::transaction(function () use ($service, $validated) {
+            $user = Auth::user()->newQuery()->lockForUpdate()->findOrFail(Auth::id());
 
-        if ($existing) {
+            $existing = Application::where('user_id', $user->id)
+                ->where('service_id', $service->id)
+                ->whereIn('status', ['pending', 'processing'])
+                ->latest()
+                ->first();
+
+            if ($existing) {
+                return $existing;
+            }
+
+            return Application::create([
+                'user_id' => $user->id,
+                'service_id' => $service->id,
+                'status' => 'pending',
+                'notes' => $validated['notes'] ?? null,
+            ]);
+        });
+
+        if ($application->wasRecentlyCreated) {
             return redirect()
-                ->route('customer.applications.show', $existing)
-                ->with('success', 'You already have an active application for this service.');
+                ->route('customer.applications.show', $application)
+                ->with('success', 'Application submitted successfully. Please upload the required documents.');
         }
-
-        $application = Application::create([
-            'user_id' => Auth::id(),
-            'service_id' => $service->id,
-            'status' => 'pending',
-            'notes' => $validated['notes'] ?? null,
-        ]);
 
         return redirect()
             ->route('customer.applications.show', $application)
-            ->with('success', 'Application submitted successfully. Please upload the required documents.');
+            ->with('success', 'You already have an active application for this service.');
     }
 }
