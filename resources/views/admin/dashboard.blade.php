@@ -31,8 +31,23 @@
 
         <div class="portal-card overflow-hidden">
             <div class="flex flex-col gap-3 border-b border-slate-200 p-5 sm:flex-row sm:items-center sm:justify-between">
-                <div><h3 class="text-lg font-black text-slate-900">Recent Applications</h3><p class="mt-1 text-sm text-slate-500">Review and process customer requests.</p></div>
-                <span class="text-sm font-bold text-slate-400">{{ $applications->total() }} total</span>
+                <div><h3 class="text-lg font-black text-slate-900">Recent Applications</h3><p class="mt-1 text-sm text-slate-500">Search, filter, review and process customer requests.</p></div>
+                <span class="text-sm font-bold text-slate-400">{{ $applications->total() }} matching</span>
+            </div>
+            <form method="GET" class="grid gap-3 border-b border-slate-100 bg-slate-50 p-4 md:grid-cols-[1fr_auto_auto]">
+                <input type="search" name="q" value="{{ request('q') }}" placeholder="Search customer, email, service or application ID..." class="input-modern">
+                <select name="status" class="input-modern md:w-48">
+                    <option value="">All statuses</option>
+                    @foreach(['pending','processing','completed','rejected'] as $status)
+                        <option value="{{ $status }}" @selected(request('status') === $status)>{{ ucfirst($status) }}</option>
+                    @endforeach
+                </select>
+                <div class="flex gap-2">
+                    <button class="portal-button">Filter</button>
+                    @if(request()->hasAny(['q','status']))
+                        <a href="{{ route('admin.dashboard') }}" class="portal-button-secondary">Clear</a>
+                    @endif
+                </div>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-sm">
