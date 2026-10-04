@@ -64,6 +64,11 @@
             <div class="border-b border-slate-200 p-6">
                 <h2 class="text-xl font-black text-slate-900">Document Requirements</h2>
                 <p class="mt-1 text-sm text-slate-500">Upload each required document. Accepted files: PDF, JPG or PNG, up to 5 MB.</p>
+                @if(in_array($application->status, ['completed', 'rejected'], true))
+                    <div class="mt-4 rounded-xl border border-slate-200 bg-slate-100 px-4 py-3 text-sm font-semibold text-slate-600">
+                        This application is {{ $application->status }}. Document changes are no longer allowed.
+                    </div>
+                @endif
             </div>
 
             @php
@@ -108,7 +113,7 @@
                 @endforelse
             </div>
 
-            @if($requirements->count())
+            @if($requirements->count() && !in_array($application->status, ['completed', 'rejected'], true))
                 <form method="POST" action="{{ route('application.documents.store',$application) }}" enctype="multipart/form-data" class="border-t border-slate-200 bg-slate-50 p-6" x-data="{fileName: ''}">
                     @csrf
                     <div class="grid gap-4 md:grid-cols-2">
