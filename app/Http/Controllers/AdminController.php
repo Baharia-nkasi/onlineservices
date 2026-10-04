@@ -67,6 +67,21 @@ class AdminController extends Controller
             'status' => ['required', 'in:pending,processing,completed,rejected'],
         ]);
 
+        $current = $application->status;
+        $next = $validated['status'];
+        $allowed = [
+            'pending' => ['pending', 'processing', 'rejected'],
+            'processing' => ['processing', 'completed', 'rejected'],
+            'completed' => ['completed'],
+            'rejected' => ['rejected', 'processing'],
+        ];
+
+        if (! in_array($next, $allowed[$current] ?? [], true)) {
+            return back()->withErrors([
+                'status' => "Invalid status transition from {$current} to {$next}.",
+            ]);
+        }
+
         if ($validated['status'] === 'completed') {
             $application->load(['service.documents', 'documents']);
 
