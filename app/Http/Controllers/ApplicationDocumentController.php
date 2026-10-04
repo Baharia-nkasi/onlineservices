@@ -33,6 +33,18 @@ class ApplicationDocumentController extends Controller
             ],
         ]);
 
+        $allowed = $application->service->documents()
+            ->where('is_active', true)
+            ->pluck('name')
+            ->map(fn ($name) => mb_strtolower(trim($name)))
+            ->all();
+
+        if ($allowed && ! in_array(mb_strtolower(trim($validated['document_name'])), $allowed, true)) {
+            return back()->withErrors([
+                'document_name' => 'Please select a document from the requirements for this service.',
+            ])->withInput();
+        }
+
         $file = $request->file('document');
 
         // Store the file in storage/app/public/application-documents
