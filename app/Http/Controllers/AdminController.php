@@ -132,6 +132,12 @@ class AdminController extends Controller
             'notes' => ['nullable', 'string', 'max:1000'],
         ]);
 
+        if ($document->application->status === 'completed') {
+            return back()->withErrors([
+                'status' => 'Documents for a completed application are locked and cannot be changed.',
+            ]);
+        }
+
         $document->update($validated);
 
         return back()->with('success', 'Document status updated.');
