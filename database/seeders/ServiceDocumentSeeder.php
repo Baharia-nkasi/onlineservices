@@ -492,7 +492,7 @@ class ServiceDocumentSeeder extends Seeder
                         'name' => $document['name'],
                     ],
                     [
-                        'description' => null,
+                        'description' => $document['description'] ?? null,
                         'is_required' => $document['required'],
                         'sort_order' => $index + 1,
                         'is_active' => true,
