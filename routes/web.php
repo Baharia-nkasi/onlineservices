@@ -10,7 +10,14 @@ use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    $services = \App\Models\Service::query()
+        ->where('is_active', true)
+        ->with(['documents' => fn ($query) => $query->where('is_active', true)])
+        ->latest()
+        ->take(8)
+        ->get();
+
+    return view('welcome', compact('services'));
 })->name('home');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
