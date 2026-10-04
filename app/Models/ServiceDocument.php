@@ -12,6 +12,9 @@ class ServiceDocument extends Model
         'name',
         'description',
         'is_required',
+        'requirement_type',
+        'requirement_group',
+        'minimum_required',
         'sort_order',
         'is_active',
     ];
@@ -19,6 +22,7 @@ class ServiceDocument extends Model
     protected $casts = [
         'is_required' => 'boolean',
         'is_active' => 'boolean',
+        'minimum_required' => 'integer',
     ];
 
     public function service(): BelongsTo
