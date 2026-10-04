@@ -7,10 +7,18 @@ use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\CustomerApplicationController;
 use App\Http\Controllers\ApplicationDocumentController;
 use App\Http\Controllers\DashboardController;
+use App\Models\Service;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    $services = Service::query()
+        ->where('is_active', true)
+        ->with('documents')
+        ->latest()
+        ->take(8)
+        ->get();
+
+    return view('welcome', compact('services'));
 });
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
@@ -46,7 +54,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/', [AdminController::class, 'index'])->name('dashboard');
         Route::get('/applications/{application}', [AdminController::class, 'showApplication'])->name('applications.show');
         Route::patch('/applications/{application}/status', [AdminController::class, 'updateApplicationStatus'])->name('applications.status');
-        Route::patch('/documents/{document}/status', [AdminController::class, 'updateDocumentStatus'])->name('documents.status');
+        Route::patch('/documents/{document}/status', [AdminController::class, 'updateDocumentStatus'])->name('admin.documents.status');
         Route::patch('/services/{service}', [AdminController::class, 'updateService'])->name('services.update');
     });
 });
