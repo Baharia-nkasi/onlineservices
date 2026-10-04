@@ -477,6 +477,31 @@ class ServiceDocumentSeeder extends Seeder
             ],
         ];
 
+        $ruleMap = [
+            'erita-cheti-cha-kuzaliwa' => [
+                'Kadi ya Kliniki ya Mama' => ['type' => 'choose_minimum', 'group' => 'birth_evidence', 'minimum' => 2],
+                'Kadi ya Kliniki ya Mtoto' => ['type' => 'choose_minimum', 'group' => 'birth_evidence', 'minimum' => 2],
+                'Tangazo la Kuzaliwa' => ['type' => 'choose_minimum', 'group' => 'birth_evidence', 'minimum' => 2],
+                'Cheti cha Ubatizo cha Mtoto' => ['type' => 'choose_minimum', 'group' => 'birth_evidence', 'minimum' => 2],
+                'Cheti cha Kumaliza Elimu ya Msingi au Sekondari (O Level)' => ['type' => 'choose_minimum', 'group' => 'birth_evidence', 'minimum' => 2],
+                'Pasi ya Kusafiria' => ['type' => 'choose_minimum', 'group' => 'birth_evidence', 'minimum' => 2],
+                'Kadi ya Mpiga Kura' => ['type' => 'choose_minimum', 'group' => 'birth_evidence', 'minimum' => 2],
+                'Kitambulisho cha Taifa cha Mzazi/Mlezi' => ['type' => 'choose_minimum', 'group' => 'birth_evidence', 'minimum' => 2],
+                'Hati ya Kusafiria ya Mzazi' => ['type' => 'choose_minimum', 'group' => 'birth_evidence', 'minimum' => 2],
+                'Utambulisho kutoka kwa Mtendaji wa Kata' => ['type' => 'choose_minimum', 'group' => 'birth_evidence', 'minimum' => 2],
+                'Cheti cha Ubatizo' => ['type' => 'choose_minimum', 'group' => 'birth_evidence', 'minimum' => 2],
+            ],
+            'erita-cheti-cha-kifo' => [
+                'Kadi ya Mpiga Kura ya Marehemu' => ['type' => 'choose_one', 'group' => 'deceased_identity', 'minimum' => 1],
+                'Kitambulisho cha Taifa cha Marehemu' => ['type' => 'choose_one', 'group' => 'deceased_identity', 'minimum' => 1],
+                'Kitambulisho cha Msimamizi wa Mirathi - Kadi ya Mpiga Kura' => ['type' => 'choose_one', 'group' => 'administrator_identity', 'minimum' => 1],
+                'Kitambulisho cha Msimamizi wa Mirathi - Pasi ya Kusafiria' => ['type' => 'choose_one', 'group' => 'administrator_identity', 'minimum' => 1],
+                'Kitambulisho cha Msimamizi wa Mirathi - Kitambulisho cha Taifa' => ['type' => 'choose_one', 'group' => 'administrator_identity', 'minimum' => 1],
+                'Cheti cha Ndoa' => ['type' => 'choose_one', 'group' => 'relationship_proof', 'minimum' => 1],
+                'Cheti cha Kuzaliwa cha Mtoto' => ['type' => 'choose_one', 'group' => 'relationship_proof', 'minimum' => 1],
+            ],
+        ];
+
         foreach ($requirements as $slug => $documents) {
 
             $service = Service::where('slug', $slug)->first();
@@ -486,6 +511,8 @@ class ServiceDocumentSeeder extends Seeder
             }
 
             foreach ($documents as $index => $document) {
+                $rule = $ruleMap[$slug][$document['name']] ?? null;
+
                 ServiceDocument::updateOrCreate(
                     [
                         'service_id' => $service->id,
@@ -494,6 +521,9 @@ class ServiceDocumentSeeder extends Seeder
                     [
                         'description' => $document['description'] ?? null,
                         'is_required' => $document['required'],
+                        'requirement_type' => $rule['type'] ?? ($document['required'] ? 'required' : 'optional'),
+                        'requirement_group' => $rule['group'] ?? null,
+                        'minimum_required' => $rule['minimum'] ?? 1,
                         'sort_order' => $index + 1,
                         'is_active' => true,
                     ]
