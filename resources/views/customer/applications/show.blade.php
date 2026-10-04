@@ -168,7 +168,10 @@
                         <div class="min-w-0">
                             <div class="font-extrabold text-slate-900">{{ $document->document_name }}</div>
                             <div class="mt-1 truncate text-sm text-slate-500">{{ $document->file_name }} · {{ number_format(($document->file_size ?? 0)/1024,1) }} KB</div>
-                            <div class="mt-2 text-xs font-bold text-slate-600">Review: {{ ucfirst($document->status) }}</div>
+                            <div class="mt-2 text-xs font-bold {{ $document->status === 'rejected' ? 'text-red-700' : 'text-slate-600' }}">Review: {{ ucfirst($document->status) }}</div>
+                            @if($document->notes)
+                                <div class="mt-2 rounded-xl bg-red-50 px-3 py-2 text-xs leading-5 text-red-700"><strong>Review note:</strong> {{ $document->notes }}</div>
+                            @endif
                         </div>
                         <div class="flex shrink-0 gap-2">
                             <a target="_blank" rel="noopener" href="{{ route('application.documents.view',$document) }}" class="portal-button-secondary">View</a>
