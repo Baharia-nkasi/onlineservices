@@ -23,8 +23,18 @@
 
             @php
                 $requirements = $application->service->documents->where('is_active', true);
-                $required = $requirements->where('is_required', true);
-                $approvedRequired = $required->filter(fn($r) => $application->documents->contains(fn($d) => mb_strtolower($d->document_name) === mb_strtolower($r->name) && $d->status === 'approved'))->count();
+                $standaloneRequired = $requirements->where('is_required', true)->whereNull('requirement_group');
+                $requirementGroups = $requirements->whereNotNull('requirement_group')->groupBy('requirement_group');
+                $required = $standaloneRequired;
+                $approvedRequired = $standaloneRequired->filter(fn($r) => $application->documents->contains(fn($d) => mb_strtolower($d->document_name) === mb_strtolower($r->name) && $d->status === 'approved'))->count();
+                $groupRequired = $requirementGroups->count();
+                $groupSatisfied = $requirementGroups->filter(function ($groupRequirements) use ($application) {
+                    $minimum = max(1, (int) $groupRequirements->max('minimum_required'));
+                    $approved = $application->documents->where('status', 'approved')->filter(fn($d) => $groupRequirements->contains(fn($r) => mb_strtolower($r->name) === mb_strtolower($d->document_name)))->count();
+                    return $approved >= $minimum;
+                })->count();
+                $completionUnits = $standaloneRequired->count() + $groupRequired;
+                $completedUnits = $approvedRequired + $groupSatisfied;
                 $totalUploaded = $application->documents->count();
                 $statusClasses = match($application->status) {
                     'pending' => 'bg-amber-100 text-amber-800',
@@ -49,7 +59,7 @@
 
             <section class="grid gap-4 sm:grid-cols-3">
                 <div class="portal-card p-5"><p class="text-xs font-bold uppercase tracking-wide text-slate-400">Required</p><p class="mt-2 text-2xl font-black text-slate-900">{{ $required->count() }}</p></div>
-                <div class="portal-card p-5"><p class="text-xs font-bold uppercase tracking-wide text-slate-400">Approved required</p><p class="mt-2 text-2xl font-black text-slate-900">{{ $approvedRequired }}/{{ $required->count() }}</p></div>
+                <div class="portal-card p-5"><p class="text-xs font-bold uppercase tracking-wide text-slate-400">Requirements progress</p><p class="mt-2 text-2xl font-black text-slate-900">{{ $completedUnits }}/{{ $completionUnits }}</p><div class="mt-3 h-2 overflow-hidden rounded-full bg-slate-200"><div class="h-full rounded-full bg-blue-600" style="width: {{ $completionUnits ? min(100, round(($completedUnits / $completionUnits) * 100)) : 0 }}%"></div></div></div>
                 <div class="portal-card p-5"><p class="text-xs font-bold uppercase tracking-wide text-slate-400">Uploaded files</p><p class="mt-2 text-2xl font-black text-slate-900">{{ $totalUploaded }}</p></div>
             </section>
 
@@ -98,7 +108,7 @@
                             <span class="text-sm font-bold text-slate-700">Required documents</span>
                             <span class="text-sm font-black {{ $approvedRequired === $required->count() ? 'text-emerald-700' : 'text-amber-700' }}">{{ $approvedRequired }}/{{ $required->count() }}</span>
                         </div>
-                        @foreach($requirements->whereNotNull('requirement_group')->groupBy('requirement_group') as $group => $groupRequirements)
+                        @foreach($requirementGroups as $group => $groupRequirements)
                             @php
                                 $minimum = max(1, (int) $groupRequirements->max('minimum_required'));
                                 $approved = $application->documents->where('status','approved')->filter(fn($d) => $groupRequirements->contains(fn($r) => mb_strtolower($r->name) === mb_strtolower($d->document_name)))->count();
@@ -136,6 +146,7 @@
                                             <option value="{{ $status }}" @selected($document->status === $status)>{{ ucfirst($status) }}</option>
                                         @endforeach
                                     </select>
+                                    <input type="text" name="notes" maxlength="1000" value="{{ old('notes', $document->notes) }}" placeholder="Review note (optional)" class="rounded-xl border-slate-300 text-sm">
                                     <button class="rounded-xl bg-slate-900 px-4 py-3 text-sm font-extrabold text-white hover:bg-slate-800">Save Review</button>
                                 </form>
                             </div>
