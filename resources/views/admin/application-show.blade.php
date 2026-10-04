@@ -1,77 +1,150 @@
 <x-app-layout>
-    <x-slot name="header"><h2 class="font-semibold text-xl text-slate-800">Review Application #{{ $application->id }}</h2></x-slot>
+    <x-slot name="header">
+        <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+                <p class="text-xs font-extrabold uppercase tracking-wider text-blue-700">Admin review</p>
+                <h2 class="text-2xl font-black tracking-tight text-slate-900">Application #{{ $application->id }}</h2>
+            </div>
+            <a href="{{ route('admin.dashboard') }}" class="text-sm font-bold text-slate-500 hover:text-blue-700">← Admin Dashboard</a>
+        </div>
+    </x-slot>
 
-    <div class="py-8 bg-slate-50 min-h-screen">
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-            @if(session('success')) <div class="rounded-xl bg-emerald-50 border border-emerald-200 p-4 text-emerald-800">{{ session('success') }}</div> @endif
+    <div class="min-h-screen bg-slate-50 page-enter">
+        <div class="mx-auto max-w-6xl space-y-6 px-4 py-8 sm:px-6 lg:px-8">
+            @if(session('success'))
+                <div class="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm font-semibold text-emerald-800">{{ session('success') }}</div>
+            @endif
             @if($errors->any())
-                <div class="rounded-xl bg-red-50 border border-red-200 p-4 text-red-700"><ul class="list-disc ml-5">@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>
+                <div class="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                    <p class="font-extrabold">Action could not be completed.</p>
+                    <ul class="mt-2 list-disc pl-5">@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>
+                </div>
             @endif
 
-            <div class="grid md:grid-cols-2 gap-6">
-                <div class="bg-white rounded-2xl border p-6 shadow-sm">
-                    <h3 class="font-bold text-lg mb-4">Application</h3>
-                    <dl class="space-y-3 text-sm">
-                        <div><dt class="text-slate-500">Customer</dt><dd class="font-semibold">{{ $application->user->name }} — {{ $application->user->email }}</dd></div>
-                        <div><dt class="text-slate-500">Service</dt><dd class="font-semibold">{{ $application->service->name }}</dd></div>
-                        <div><dt class="text-slate-500">Submitted</dt><dd>{{ $application->created_at->format('d M Y, H:i') }}</dd></div>
-                        <div><dt class="text-slate-500">Notes</dt><dd>{{ $application->notes ?: 'No notes provided.' }}</dd></div>
+            @php
+                $requirements = $application->service->documents->where('is_active', true);
+                $required = $requirements->where('is_required', true);
+                $approvedRequired = $required->filter(fn($r) => $application->documents->contains(fn($d) => mb_strtolower($d->document_name) === mb_strtolower($r->name) && $d->status === 'approved'))->count();
+                $totalUploaded = $application->documents->count();
+                $statusClasses = match($application->status) {
+                    'pending' => 'bg-amber-100 text-amber-800',
+                    'processing' => 'bg-blue-100 text-blue-800',
+                    'completed' => 'bg-emerald-100 text-emerald-800',
+                    'rejected' => 'bg-red-100 text-red-800',
+                    default => 'bg-slate-100 text-slate-700',
+                };
+            @endphp
+
+            <section class="relative overflow-hidden rounded-3xl bg-slate-950 p-7 text-white shadow-xl sm:p-9">
+                <div class="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-blue-600/20 blur-3xl"></div>
+                <div class="relative flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+                    <div>
+                        <p class="text-sm font-extrabold uppercase tracking-wider text-blue-300">{{ $application->service->name }}</p>
+                        <h1 class="mt-2 text-3xl font-black">Review customer application</h1>
+                        <p class="mt-2 text-sm text-slate-300">{{ $application->user->name }} · {{ $application->user->email }}</p>
+                    </div>
+                    <span class="status-pill {{ $statusClasses }}">{{ ucfirst($application->status) }}</span>
+                </div>
+            </section>
+
+            <section class="grid gap-4 sm:grid-cols-3">
+                <div class="portal-card p-5"><p class="text-xs font-bold uppercase tracking-wide text-slate-400">Required</p><p class="mt-2 text-2xl font-black text-slate-900">{{ $required->count() }}</p></div>
+                <div class="portal-card p-5"><p class="text-xs font-bold uppercase tracking-wide text-slate-400">Approved required</p><p class="mt-2 text-2xl font-black text-slate-900">{{ $approvedRequired }}/{{ $required->count() }}</p></div>
+                <div class="portal-card p-5"><p class="text-xs font-bold uppercase tracking-wide text-slate-400">Uploaded files</p><p class="mt-2 text-2xl font-black text-slate-900">{{ $totalUploaded }}</p></div>
+            </section>
+
+            <div class="grid gap-6 lg:grid-cols-3">
+                <section class="portal-card p-6 lg:col-span-2">
+                    <div class="flex items-center justify-between gap-4">
+                        <div>
+                            <h2 class="text-xl font-black text-slate-900">Application details</h2>
+                            <p class="mt-1 text-sm text-slate-500">Review the customer information before changing the application status.</p>
+                        </div>
+                    </div>
+
+                    <dl class="mt-6 grid gap-5 sm:grid-cols-2">
+                        <div><dt class="text-xs font-bold uppercase tracking-wide text-slate-400">Customer</dt><dd class="mt-1 font-extrabold text-slate-900">{{ $application->user->name }}</dd></div>
+                        <div><dt class="text-xs font-bold uppercase tracking-wide text-slate-400">Email</dt><dd class="mt-1 font-extrabold text-slate-900 break-all">{{ $application->user->email }}</dd></div>
+                        <div><dt class="text-xs font-bold uppercase tracking-wide text-slate-400">Submitted</dt><dd class="mt-1 font-semibold text-slate-700">{{ $application->created_at->format('d M Y, H:i') }}</dd></div>
+                        <div><dt class="text-xs font-bold uppercase tracking-wide text-slate-400">Service</dt><dd class="mt-1 font-extrabold text-slate-900">{{ $application->service->name }}</dd></div>
                     </dl>
 
-                    <form method="POST" action="{{ route('admin.applications.status',$application) }}" class="mt-6 flex gap-3">
-                        @csrf @method('PATCH')
-                        <select name="status" class="rounded-lg border-slate-300 flex-1">
-                            @foreach(['pending','processing','completed','rejected'] as $status)
-                                <option value="{{ $status }}" @selected($application->status === $status)>{{ ucfirst($status) }}</option>
-                            @endforeach
-                        </select>
-                        <button class="px-5 py-2 rounded-lg bg-blue-600 text-white font-bold hover:bg-blue-700">Update</button>
-                    </form>
-                </div>
+                    @if($application->notes)
+                        <div class="mt-6 rounded-2xl bg-slate-50 p-4">
+                            <p class="text-xs font-bold uppercase tracking-wide text-slate-400">Customer notes</p>
+                            <p class="mt-2 text-sm leading-6 text-slate-700">{{ $application->notes }}</p>
+                        </div>
+                    @endif
 
-                <div class="bg-white rounded-2xl border p-6 shadow-sm">
-                    <h3 class="font-bold text-lg mb-4">Required Documents</h3>
-                    <div class="space-y-2 max-h-80 overflow-y-auto">
-                        @forelse($application->service->documents->where('is_active',true) as $required)
-                            <div class="flex justify-between gap-3 p-3 rounded-lg bg-slate-50">
-                                <span>{{ $required->name }}</span>
-                                <span class="text-xs font-bold {{ $required->is_required ? 'text-red-600' : 'text-slate-500' }}">{{ $required->is_required ? 'Required' : 'Optional' }}</span>
+                    <form method="POST" action="{{ route('admin.applications.status',$application) }}" class="mt-6 border-t border-slate-200 pt-6">
+                        @csrf @method('PATCH')
+                        <label for="status" class="block text-sm font-extrabold text-slate-800">Application status</label>
+                        <div class="mt-2 flex flex-col gap-3 sm:flex-row">
+                            <select id="status" name="status" class="input-modern flex-1">
+                                @foreach(['pending','processing','completed','rejected'] as $status)
+                                    <option value="{{ $status }}" @selected($application->status === $status)>{{ ucfirst($status) }}</option>
+                                @endforeach
+                            </select>
+                            <button class="portal-button">Update Status</button>
+                        </div>
+                    </form>
+                </section>
+
+                <aside class="portal-card p-6">
+                    <h2 class="text-lg font-black text-slate-900">Completion checklist</h2>
+                    <p class="mt-1 text-sm text-slate-500">An application can only be completed when required documents and special groups are approved.</p>
+                    <div class="mt-5 space-y-3">
+                        <div class="flex items-center justify-between rounded-xl bg-slate-50 p-3">
+                            <span class="text-sm font-bold text-slate-700">Required documents</span>
+                            <span class="text-sm font-black {{ $approvedRequired === $required->count() ? 'text-emerald-700' : 'text-amber-700' }}">{{ $approvedRequired }}/{{ $required->count() }}</span>
+                        </div>
+                        @foreach($requirements->whereNotNull('requirement_group')->groupBy('requirement_group') as $group => $groupRequirements)
+                            @php
+                                $minimum = max(1, (int) $groupRequirements->max('minimum_required'));
+                                $approved = $application->documents->where('status','approved')->filter(fn($d) => $groupRequirements->contains(fn($r) => mb_strtolower($r->name) === mb_strtolower($d->document_name)))->count();
+                            @endphp
+                            <div class="flex items-center justify-between rounded-xl bg-slate-50 p-3">
+                                <span class="text-sm font-bold text-slate-700">{{ ucfirst(str_replace('_',' ',$group)) }}</span>
+                                <span class="text-sm font-black {{ $approved >= $minimum ? 'text-emerald-700' : 'text-amber-700' }}">{{ $approved }}/{{ $minimum }}</span>
                             </div>
-                        @empty
-                            <p class="text-slate-500">No document requirements configured.</p>
-                        @endforelse
+                        @endforeach
                     </div>
-                </div>
+                </aside>
             </div>
 
-            <div class="bg-white rounded-2xl border shadow-sm overflow-hidden">
-                <div class="p-5 border-b"><h3 class="font-bold text-lg">Uploaded Documents</h3></div>
-                <div class="divide-y">
+            <section class="portal-card overflow-hidden">
+                <div class="border-b border-slate-200 p-6">
+                    <h2 class="text-xl font-black text-slate-900">Uploaded Documents</h2>
+                    <p class="mt-1 text-sm text-slate-500">Open each file, review it, then approve or reject it.</p>
+                </div>
+
+                <div class="divide-y divide-slate-100">
                     @forelse($application->documents as $document)
-                        <div class="p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                            <div>
-                                <div class="font-bold">{{ $document->document_name }}</div>
-                                <div class="text-sm text-slate-500">{{ $document->file_name }} · {{ number_format(($document->file_size ?? 0)/1024,1) }} KB</div>
-                                <div class="text-xs mt-1">Status: <strong>{{ ucfirst($document->status) }}</strong></div>
+                        <div class="flex flex-col gap-4 p-5 xl:flex-row xl:items-center xl:justify-between">
+                            <div class="min-w-0">
+                                <div class="font-extrabold text-slate-900">{{ $document->document_name }}</div>
+                                <div class="mt-1 truncate text-sm text-slate-500">{{ $document->file_name }} · {{ number_format(($document->file_size ?? 0)/1024,1) }} KB</div>
+                                <span class="mt-2 inline-block rounded-full px-3 py-1 text-xs font-bold {{ $document->status === 'approved' ? 'bg-emerald-50 text-emerald-700' : ($document->status === 'rejected' ? 'bg-red-50 text-red-700' : 'bg-amber-50 text-amber-700') }}">{{ ucfirst($document->status) }}</span>
                             </div>
-                            <div class="flex gap-2">
-                                <a target="_blank" href="{{ route('application.documents.view',$document) }}" class="px-4 py-2 rounded-lg border font-semibold">View</a>
-                                <form method="POST" action="{{ route('admin.documents.status',$document) }}" class="flex gap-2">
+
+                            <div class="flex flex-col gap-2 sm:flex-row">
+                                <a target="_blank" rel="noopener" href="{{ route('application.documents.view',$document) }}" class="portal-button-secondary text-center">View File</a>
+                                <form method="POST" action="{{ route('admin.documents.status',$document) }}" class="flex flex-col gap-2 sm:flex-row">
                                     @csrf @method('PATCH')
-                                    <select name="status" class="rounded-lg border-slate-300 text-sm">
-                                        @foreach(['pending','approved','rejected'] as $status)<option value="{{ $status }}" @selected($document->status===$status)>{{ ucfirst($status) }}</option>@endforeach
+                                    <select name="status" class="rounded-xl border-slate-300 text-sm">
+                                        @foreach(['pending','approved','rejected'] as $status)
+                                            <option value="{{ $status }}" @selected($document->status === $status)>{{ ucfirst($status) }}</option>
+                                        @endforeach
                                     </select>
-                                    <button class="px-4 py-2 rounded-lg bg-slate-900 text-white font-semibold">Save</button>
+                                    <button class="rounded-xl bg-slate-900 px-4 py-3 text-sm font-extrabold text-white hover:bg-slate-800">Save Review</button>
                                 </form>
                             </div>
                         </div>
                     @empty
-                        <div class="p-10 text-center text-slate-500">No documents uploaded.</div>
+                        <div class="p-12 text-center text-slate-500">No documents have been uploaded yet.</div>
                     @endforelse
                 </div>
-            </div>
-
-            <a href="{{ route('admin.dashboard') }}" class="inline-block text-blue-600 font-bold">← Back to Admin Dashboard</a>
+            </section>
         </div>
     </div>
 </x-app-layout>
