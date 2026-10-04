@@ -74,6 +74,17 @@
             <div class="border-b border-slate-200 p-6">
                 <h2 class="text-xl font-black text-slate-900">Document Requirements</h2>
                 <p class="mt-1 text-sm text-slate-500">Upload each required document. Accepted files: PDF, JPG or PNG, up to 5 MB.</p>
+                @if($completionUnits > 0)
+                    <div class="mt-4">
+                        <div class="mb-2 flex items-center justify-between text-xs font-extrabold text-slate-500">
+                            <span>Requirements completion</span>
+                            <span>{{ $completedUnits }}/{{ $completionUnits }}</span>
+                        </div>
+                        <div class="h-2 overflow-hidden rounded-full bg-slate-200">
+                            <div class="h-full rounded-full bg-blue-600 transition-all" style="width: {{ min(100, round(($completedUnits / $completionUnits) * 100)) }}%"></div>
+                        </div>
+                    </div>
+                @endif
                 @if(in_array($application->status, ['completed', 'rejected'], true))
                     <div class="mt-4 rounded-xl border border-slate-200 bg-slate-100 px-4 py-3 text-sm font-semibold text-slate-600">
                         This application is {{ $application->status }}. Document changes are no longer allowed.
