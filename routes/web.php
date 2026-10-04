@@ -1,17 +1,35 @@
 <?php
 
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\ApplicationController;
-use App\Http\Controllers\ApplicationDocumentController;
-use App\Http\Controllers\CustomerApplicationController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ServiceController;
-use Illuminate\Support\Facades\Route;
+use AppHttpControllersAdminController;
+use AppHttpControllersApplicationController;
+use AppHttpControllersApplicationDocumentController;
+use AppHttpControllersCustomerApplicationController;
+use AppHttpControllersDashboardController;
+use AppHttpControllersProfileController;
+use AppHttpControllersServiceController;
+use IlluminateSupportFacadesDB;
+use IlluminateSupportFacadesRoute;
 
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
+
+Route::get('/health', function () {
+    try {
+        DB::connection()->getPdo();
+
+        return response()->json([
+            'status' => 'ok',
+            'app' => config('app.name'),
+        ]);
+    } catch (Throwable $e) {
+        report($e);
+
+        return response()->json([
+            'status' => 'error',
+        ], 503);
+    }
+})->name('health');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware('auth')
