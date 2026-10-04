@@ -43,6 +43,12 @@
                     'rejected' => 'bg-red-100 text-red-800',
                     default => 'bg-slate-100 text-slate-700',
                 };
+                $allowedTransitions = match($application->status) {
+                    'pending' => ['pending', 'processing', 'rejected'],
+                    'processing' => ['processing', 'completed', 'rejected'],
+                    'rejected' => ['rejected', 'processing'],
+                    default => ['completed'],
+                };
             @endphp
 
             <section class="relative overflow-hidden rounded-3xl bg-slate-950 p-7 text-white shadow-xl sm:p-9">
@@ -59,17 +65,15 @@
 
             <section class="grid gap-4 sm:grid-cols-3">
                 <div class="portal-card p-5"><p class="text-xs font-bold uppercase tracking-wide text-slate-400">Required</p><p class="mt-2 text-2xl font-black text-slate-900">{{ $required->count() }}</p></div>
-                <div class="portal-card p-5"><p class="text-xs font-bold uppercase tracking-wide text-slate-400">Requirements progress</p><p class="mt-2 text-2xl font-black text-slate-900">{{ $completedUnits }}/{{ $completionUnits }}</p><div class="mt-3 h-2 overflow-hidden rounded-full bg-slate-200"><div class="h-full rounded-full bg-blue-600" style="width: {{ $completionUnits ? min(100, round(($completedUnits / $completionUnits) * 100)) : 0 }}%"></div></div></div>
+                <div class="portal-card p-5"><p class="text-xs font-bold uppercase tracking-wide text-slate-400">Approved progress</p><p class="mt-2 text-2xl font-black text-slate-900">{{ $completedUnits }}/{{ $completionUnits }}</p><div class="mt-3 h-2 overflow-hidden rounded-full bg-slate-200"><div class="h-full rounded-full bg-blue-600" style="width: {{ $completionUnits ? min(100, round(($completedUnits / $completionUnits) * 100)) : 0 }}%"></div></div></div>
                 <div class="portal-card p-5"><p class="text-xs font-bold uppercase tracking-wide text-slate-400">Uploaded files</p><p class="mt-2 text-2xl font-black text-slate-900">{{ $totalUploaded }}</p></div>
             </section>
 
             <div class="grid gap-6 lg:grid-cols-3">
                 <section class="portal-card p-6 lg:col-span-2">
-                    <div class="flex items-center justify-between gap-4">
-                        <div>
-                            <h2 class="text-xl font-black text-slate-900">Application details</h2>
-                            <p class="mt-1 text-sm text-slate-500">Review the customer information before changing the application status.</p>
-                        </div>
+                    <div>
+                        <h2 class="text-xl font-black text-slate-900">Application details</h2>
+                        <p class="mt-1 text-sm text-slate-500">Review the customer information before changing the application status.</p>
                     </div>
 
                     <dl class="mt-6 grid gap-5 sm:grid-cols-2">
@@ -90,13 +94,19 @@
                         @csrf @method('PATCH')
                         <label for="status" class="block text-sm font-extrabold text-slate-800">Application status</label>
                         <div class="mt-2 flex flex-col gap-3 sm:flex-row">
-                            <select id="status" name="status" class="input-modern flex-1">
-                                @foreach(['pending','processing','completed','rejected'] as $status)
+                            <select id="status" name="status" class="input-modern flex-1" {{ $application->status === 'completed' ? 'disabled' : '' }}>
+                                @foreach($allowedTransitions as $status)
                                     <option value="{{ $status }}" @selected($application->status === $status)>{{ ucfirst($status) }}</option>
                                 @endforeach
                             </select>
-                            <button class="portal-button">Update Status</button>
+                            @if($application->status === 'completed')
+                                <input type="hidden" name="status" value="completed">
+                            @endif
+                            <button class="portal-button" {{ $application->status === 'completed' ? 'disabled' : '' }}>Update Status</button>
                         </div>
+                        @if($application->status === 'completed')
+                            <p class="mt-2 text-xs font-semibold text-slate-500">Completed applications are locked and cannot be reopened.</p>
+                        @endif
                     </form>
                 </section>
 
@@ -141,13 +151,13 @@
                                 <a target="_blank" rel="noopener" href="{{ route('application.documents.view',$document) }}" class="portal-button-secondary text-center">View File</a>
                                 <form method="POST" action="{{ route('admin.documents.status',$document) }}" class="flex flex-col gap-2 sm:flex-row">
                                     @csrf @method('PATCH')
-                                    <select name="status" class="rounded-xl border-slate-300 text-sm">
+                                    <select name="status" class="rounded-xl border-slate-300 text-sm" {{ $application->status === 'completed' ? 'disabled' : '' }}>
                                         @foreach(['pending','approved','rejected'] as $status)
                                             <option value="{{ $status }}" @selected($document->status === $status)>{{ ucfirst($status) }}</option>
                                         @endforeach
                                     </select>
-                                    <input type="text" name="notes" maxlength="1000" value="{{ old('notes', $document->notes) }}" placeholder="Review note (optional)" class="rounded-xl border-slate-300 text-sm">
-                                    <button class="rounded-xl bg-slate-900 px-4 py-3 text-sm font-extrabold text-white hover:bg-slate-800">Save Review</button>
+                                    <input type="text" name="notes" maxlength="1000" value="{{ old('notes', $document->notes) }}" placeholder="Review note (optional)" class="rounded-xl border-slate-300 text-sm" {{ $application->status === 'completed' ? 'disabled' : '' }}>
+                                    <button class="rounded-xl bg-slate-900 px-4 py-3 text-sm font-extrabold text-white hover:bg-slate-800" {{ $application->status === 'completed' ? 'disabled' : '' }}>Save Review</button>
                                 </form>
                             </div>
                         </div>
