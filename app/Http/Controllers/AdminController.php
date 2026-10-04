@@ -19,9 +19,23 @@ class AdminController extends Controller
     {
         $this->guard();
 
+        $validated = request()->validate([
+            'q' => ['nullable', 'string', 'max:100'],
+            'status' => ['nullable', 'in:pending,processing,completed,rejected'],
+        ]);
+
         $applications = Application::with(['user', 'service', 'documents'])
+            ->when($validated['q'] ?? null, function ($query, $search) {
+                $query->where(function ($query) use ($search) {
+                    $query->where('id', is_numeric($search) ? (int) $search : -1)
+                        ->orWhereHas('user', fn ($user) => $user->where('name', 'like', "%{$search}%")->orWhere('email', 'like', "%{$search}%"))
+                        ->orWhereHas('service', fn ($service) => $service->where('name', 'like', "%{$search}%"));
+                });
+            })
+            ->when($validated['status'] ?? null, fn ($query, $status) => $query->where('status', $status))
             ->latest()
-            ->paginate(15);
+            ->paginate(15)
+            ->withQueryString();
 
         $stats = [
             'applications' => Application::count(),
