@@ -68,16 +68,18 @@
         <a href="{{ route('services.index') }}" class="font-bold text-blue-700 hover:text-blue-900">View all services →</a>
     </div>
     <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        @forelse($services as $service)
-            <article class="group flex flex-col rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
-                <div class="flex items-center justify-between"><span class="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-lg">📄</span><span class="text-xs font-bold text-slate-400">{{ $service->documents->where('is_active', true)->count() }} requirements</span></div>
-                <h3 class="mt-5 text-lg font-extrabold">{{ $service->name }}</h3>
-                <p class="mt-2 line-clamp-3 flex-1 text-sm leading-6 text-slate-500">{{ $service->description }}</p>
-                <div class="mt-5 flex items-center justify-between border-t border-slate-100 pt-4"><span class="text-sm text-slate-500">Service fee</span><span class="text-sm font-black text-slate-900">TSh {{ number_format($service->service_fee, 0) }}</span></div>
+        @foreach([
+            ['🎓','Education & Loans','University applications, HESLB and NACTVET services.'],
+            ['🪪','Identity & Certificates','NIDA, birth, death and certificate services.'],
+            ['🏢','Business & Tax','BRELA business registration and TRA/TIN services.'],
+            ['✈️','Travel & Immigration','Passport, visa and residence/work permit services.'],
+        ] as $service)
+            <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
+                <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-lg">{{ $service[0] }}</span>
+                <h3 class="mt-5 text-lg font-extrabold">{{ $service[1] }}</h3>
+                <p class="mt-2 text-sm leading-6 text-slate-500">{{ $service[2] }}</p>
             </article>
-        @empty
-            <div class="sm:col-span-2 lg:col-span-4 rounded-2xl border border-dashed border-slate-300 bg-white p-10 text-center text-slate-500">Services will appear here when they are available.</div>
-        @endforelse
+        @endforeach
     </div>
 </section>
 
