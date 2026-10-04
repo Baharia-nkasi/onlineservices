@@ -59,6 +59,7 @@ class AdminController extends Controller
             $missingRequired = $application->service->documents
                 ->where('is_active', true)
                 ->where('is_required', true)
+                ->whereNull('requirement_group')
                 ->filter(fn ($requirement) => ! $application->documents->contains(
                     fn ($document) => mb_strtolower($document->document_name) === mb_strtolower($requirement->name)
                         && $document->status === 'approved'
