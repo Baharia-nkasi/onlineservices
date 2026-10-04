@@ -51,16 +51,12 @@
                 <div><strong class="block text-xl text-white">Trackable</strong><span class="text-slate-400">application progress</span></div>
             </div>
         </div>
-        <div class="hidden lg:block">
-            <div class="mx-auto max-w-md rounded-3xl border border-white/10 bg-white/10 p-4 shadow-2xl backdrop-blur">
-                <div class="rounded-2xl bg-white p-5">
-                    <div class="flex items-center justify-between"><div><p class="text-xs font-bold uppercase tracking-wider text-slate-400">Application overview</p><p class="mt-1 text-xl font-black">Your services</p></div><span class="rounded-lg bg-blue-50 px-3 py-2 text-xs font-bold text-blue-700">LIVE</span></div>
-                    <div class="mt-5 space-y-3">
-                        <div class="rounded-xl border border-slate-200 p-4"><div class="flex justify-between text-sm"><span class="font-bold">Application</span><span class="font-bold text-amber-600">Processing</span></div><p class="mt-1 text-sm text-slate-500">Track your application status</p></div>
-                        <div class="rounded-xl border border-slate-200 p-4"><div class="flex justify-between text-sm"><span class="font-bold">Documents</span><span class="font-bold text-emerald-600">3 / 3</span></div><p class="mt-1 text-sm text-slate-500">Required documents submitted</p></div>
-                        <div class="rounded-xl bg-slate-50 p-4"><p class="text-xs font-bold uppercase tracking-wider text-slate-400">Next step</p><p class="mt-1 font-bold">Follow your application progress</p></div>
-                    </div>
-                </div>
+        <div class="relative hidden lg:block">
+            <div class="absolute -inset-6 rounded-[3rem] bg-blue-500/10 blur-3xl"></div>
+            <div class="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 p-3 shadow-2xl backdrop-blur">
+                <img src="{{ asset('images/online-services-hero.svg') }}"
+                     alt="Online Services application and document tracking"
+                     class="h-auto w-full rounded-[1.5rem]">
             </div>
         </div>
     </div>
