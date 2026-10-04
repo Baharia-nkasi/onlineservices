@@ -41,23 +41,37 @@ class ApplicationDocumentController extends Controller
             ->whereRaw('LOWER(document_name) = ?', [mb_strtolower($documentName)])
             ->first();
 
-        if ($existing) {
+        $file = $request->file('document');
+
+        if ($existing && $existing->status !== 'rejected') {
             return back()->withErrors([
-                'document_name' => 'This document has already been uploaded. Delete the existing file before uploading a new one.',
+                'document_name' => 'This document has already been uploaded and is under review or approved.',
             ])->withInput();
         }
 
-        $file = $request->file('document');
         $path = $file->store('application-documents', 'local');
 
-        $application->documents()->create([
-            'document_name' => $requirement->name,
-            'file_name' => $file->getClientOriginalName(),
-            'file_path' => $path,
-            'file_type' => $file->getClientMimeType(),
-            'file_size' => $file->getSize(),
-            'status' => 'pending',
-        ]);
+        if ($existing) {
+            Storage::disk('local')->delete($existing->file_path);
+
+            $existing->update([
+                'file_name' => $file->getClientOriginalName(),
+                'file_path' => $path,
+                'file_type' => $file->getClientMimeType(),
+                'file_size' => $file->getSize(),
+                'status' => 'pending',
+                'notes' => null,
+            ]);
+        } else {
+            $application->documents()->create([
+                'document_name' => $requirement->name,
+                'file_name' => $file->getClientOriginalName(),
+                'file_path' => $path,
+                'file_type' => $file->getClientMimeType(),
+                'file_size' => $file->getSize(),
+                'status' => 'pending',
+            ]);
+        }
 
         return redirect()
             ->route('customer.applications.show', $application)
