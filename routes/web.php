@@ -24,10 +24,10 @@ Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/services', [ServiceController::class, 'index'])
-        ->name('services.index');
+Route::get('/services', [ServiceController::class, 'index'])
+    ->name('services.index');
 
+Route::middleware('auth')->group(function () {
     Route::get('/services/{service}/apply', [ApplicationController::class, 'create'])
         ->name('applications.create');
 
