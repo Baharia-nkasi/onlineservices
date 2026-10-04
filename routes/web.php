@@ -52,12 +52,14 @@ Route::middleware('auth')->group(function () {
         ->name('customer.applications.show');
 
     Route::post('/my-applications/{application}/documents', [ApplicationDocumentController::class, 'store'])
+        ->middleware('throttle:20,1')
         ->name('application.documents.store');
 
     Route::get('/application-documents/{document}/view', [ApplicationDocumentController::class, 'download'])
         ->name('application.documents.view');
 
     Route::delete('/application-documents/{document}', [ApplicationDocumentController::class, 'destroy'])
+        ->middleware('throttle:20,1')
         ->name('application.documents.destroy');
 
     Route::get('/profile', [ProfileController::class, 'edit'])
