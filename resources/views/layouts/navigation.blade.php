@@ -2,7 +2,7 @@
 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 <div class="flex h-16 items-center justify-between">
     <div class="flex items-center gap-8">
-        <a href="{{ route('dashboard') }}" class="flex items-center gap-2.5">
+        <a href="{{ route('dashboard') }}" class="flex items-center gap-2.5" aria-label="Online Services dashboard">
             <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-700 text-sm font-black text-white">OS</span>
             <span class="font-extrabold tracking-tight text-slate-900">Online Services</span>
         </a>
@@ -14,9 +14,9 @@
         </div>
     </div>
     <div class="hidden items-center gap-3 md:flex">
-        <span class="text-sm text-slate-500">{{ Auth::user()->name }}</span>
+        <span class="max-w-48 truncate text-sm font-semibold text-slate-500">{{ Auth::user()->name }}</span>
         <x-dropdown align="right" width="48">
-            <x-slot name="trigger"><button class="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-sm font-extrabold text-slate-700 hover:bg-slate-200">{{ strtoupper(substr(Auth::user()->name,0,1)) }}</button></x-slot>
+            <x-slot name="trigger"><button type="button" class="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 text-sm font-extrabold text-slate-700 hover:bg-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" aria-label="Open account menu">{{ strtoupper(substr(Auth::user()->name,0,1)) }}</button></x-slot>
             <x-slot name="content">
                 <x-dropdown-link :href="route('profile.edit')">Profile</x-dropdown-link>
                 @if(Auth::user()->isAdmin()) <x-dropdown-link :href="route('admin.dashboard')">Admin Panel</x-dropdown-link> @endif
@@ -24,12 +24,12 @@
             </x-slot>
         </x-dropdown>
     </div>
-    <button @click="open=!open" class="rounded-xl p-2 text-slate-500 md:hidden" aria-label="Open menu">
-        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path x-show="!open" stroke-linecap="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/><path x-show="open" stroke-linecap="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+    <button type="button" @click="open=!open" class="rounded-xl p-2 text-slate-500 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 md:hidden" aria-label="Toggle navigation menu" :aria-expanded="open.toString()" aria-controls="mobile-menu">
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path x-show="!open" stroke-linecap="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/><path x-show="open" stroke-linecap="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
     </button>
 </div>
 </div>
-<div x-show="open" class="border-t border-slate-200 bg-white px-4 py-3 md:hidden">
+<div id="mobile-menu" x-cloak x-show="open" x-transition class="border-t border-slate-200 bg-white px-4 py-3 md:hidden">
     <div class="space-y-1">
         <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">Dashboard</x-responsive-nav-link>
         <x-responsive-nav-link :href="route('services.index')" :active="request()->routeIs('services.*')">Services</x-responsive-nav-link>
