@@ -94,6 +94,14 @@
                                                 <button type="submit" class="portal-button">{{ __('Save') }}</button>
                                             </div>
                                         </form>
+                                        <div class="mt-2 flex justify-end">
+                                            <form method="POST" action="{{ route('admin.service-documents.destroy', $document) }}" onsubmit="return confirm('{{ __('Delete this document requirement permanently? This cannot be undone.') }}');">
+                                                @csrf @method('DELETE')
+                                                <button type="submit" class="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs font-extrabold text-red-700 hover:bg-red-100">
+                                                    {{ __('Delete Requirement') }}
+                                                </button>
+                                            </form>
+                                        </div>
                                     @empty
                                         <p class="text-sm text-slate-500">{{ __('No document requirements configured.') }}</p>
                                     @endforelse
