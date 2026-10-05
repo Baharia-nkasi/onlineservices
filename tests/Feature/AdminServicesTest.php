@@ -137,6 +137,57 @@ class AdminServicesTest extends TestCase
         $this->assertDatabaseHas('services', ['id' => $protectedService->id]);
     }
 
+
+    public function test_admin_can_manage_service_document_requirements(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+
+        $service = Service::create([
+            'name' => 'Identity Service',
+            'slug' => 'identity-service',
+            'description' => 'Identity',
+            'government_fee' => 0,
+            'service_fee' => 0,
+            'is_active' => true,
+        ]);
+
+        $this->actingAs($admin)
+            ->post(route('admin.services.documents.store', $service), [
+                'name' => 'National ID',
+                'description' => 'Valid ID',
+                'is_required' => 1,
+                'requirement_type' => 'single',
+                'requirement_group' => 'ignored',
+                'minimum_required' => 5,
+                'sort_order' => 1,
+                'is_active' => 1,
+            ])
+            ->assertRedirect();
+
+        $document = $service->documents()->firstOrFail();
+        $this->assertNull($document->requirement_group);
+        $this->assertSame(1, $document->minimum_required);
+
+        $this->actingAs($admin)
+            ->patch(route('admin.service-documents.update', $document), [
+                'name' => 'National ID Updated',
+                'description' => 'Updated',
+                'is_required' => 1,
+                'requirement_type' => 'single',
+                'requirement_group' => null,
+                'minimum_required' => 1,
+                'sort_order' => 2,
+                'is_active' => 0,
+            ])
+            ->assertRedirect();
+
+        $this->assertDatabaseHas('service_documents', [
+            'id' => $document->id,
+            'name' => 'National ID Updated',
+            'is_active' => false,
+        ]);
+    }
+
     public function test_active_service_cannot_be_deleted_until_deactivated(): void
     {
         $admin = User::factory()->create(['role' => 'admin']);
