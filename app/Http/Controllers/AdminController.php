@@ -91,7 +91,7 @@ class AdminController extends Controller
 
         if (! in_array($next, $allowed[$current] ?? [], true)) {
             return back()->withErrors([
-                'status' => "Invalid status transition from {$current} to {$next}.",
+                'status' => __('Invalid status transition from :current to :next.', ['current' => $current, 'next' => $next]),
             ]);
         }
 
