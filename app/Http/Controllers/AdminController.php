@@ -230,6 +230,17 @@ class AdminController extends Controller
         return back()->with('success', __('Document status updated.'));
     }
 
+    public function showService(Service $service)
+    {
+        $this->guard();
+
+        $service->load('documents');
+        $service->loadCount('applications');
+        $service->loadCount(['documents as active_documents_count' => fn ($query) => $query->where('is_active', true)]);
+
+        return view('admin.services.show', compact('service'));
+    }
+
     public function services()
     {
         $this->guard();
