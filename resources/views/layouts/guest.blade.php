@@ -15,6 +15,10 @@
         <div class="max-w-lg"><p class="text-sm font-extrabold uppercase tracking-wider text-blue-300">Secure service portal</p><h1 class="mt-4 text-5xl font-black leading-tight">Apply, upload and track your services in one place.</h1><p class="mt-6 text-lg leading-8 text-slate-300">A simple way to start service applications, submit requirements and follow progress online.</p></div>
         <p class="text-sm text-slate-500">© {{ date('Y') }} Online Services</p>
     </div>
+    <div class="absolute right-5 top-5 z-10"><div class="flex items-center gap-1 rounded-xl border border-slate-200 bg-white/90 p-1 shadow-sm" role="group" aria-label="Language">
+ <a href="{{ route('language.switch', 'en') }}" class="rounded-lg px-2.5 py-1.5 text-xs font-extrabold {{ app()->getLocale() === 'en' ? 'bg-blue-50 text-blue-700' : 'text-slate-500' }}">EN</a>
+ <a href="{{ route('language.switch', 'sw') }}" class="rounded-lg px-2.5 py-1.5 text-xs font-extrabold {{ app()->getLocale() === 'sw' ? 'bg-blue-50 text-blue-700' : 'text-slate-500' }}">SW</a>
+</div></div>
     <div class="flex items-center justify-center bg-slate-50 px-5 py-10">
         <div class="w-full max-w-md">
             <a href="{{ url('/') }}" class="mb-8 flex items-center gap-3 lg:hidden"><span class="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-700 font-black text-white">OS</span><span class="font-extrabold">Online Services</span></a>
