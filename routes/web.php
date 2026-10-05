@@ -10,6 +10,7 @@ use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use App\Models\Service;
+use App\Models\Service;
 
 Route::get('/', function () {
     return view('welcome', [
