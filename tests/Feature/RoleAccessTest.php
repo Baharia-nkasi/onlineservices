@@ -30,6 +30,10 @@ class RoleAccessTest extends TestCase
         $this->actingAs($provider)
             ->get(route('applications.create', ['service' => $service]))
             ->assertForbidden();
+
+        $this->actingAs($provider)
+            ->get(route('dashboard'))
+            ->assertForbidden();
     }
 
     public function test_customer_can_use_customer_workflows_but_not_admin(): void
