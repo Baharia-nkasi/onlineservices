@@ -106,7 +106,7 @@
                     @php $uploaded = $application->documents->first(fn($d) => mb_strtolower($d->document_name) === mb_strtolower($requirement->name)); @endphp
                     <div class="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
                         <div class="flex items-start gap-3">
-                            <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl {{ $uploaded?->status === 'approved' ? 'bg-emerald-100 text-emerald-700' : ($uploaded?->status === 'rejected' ? 'bg-red-100 text-red-700' : ($uploaded ? 'bg-amber-100 text-amber-700' : 'bg-blue-50 text-blue-700')) }} font-black">{{ $uploaded?->status === 'approved' ? '✓' : ($uploaded?->status === 'rejected' ? '!' : $loop->iteration) }}</span>
+                            <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl {{ ($uploaded && $uploaded->status === 'approved') ? 'bg-emerald-100 text-emerald-700' : (($uploaded && $uploaded->status === 'rejected') ? 'bg-red-100 text-red-700' : ($uploaded ? 'bg-amber-100 text-amber-700' : 'bg-blue-50 text-blue-700')) }} font-black">{{ ($uploaded && $uploaded->status === 'approved') ? '✓' : (($uploaded && $uploaded->status === 'rejected') ? '!' : $loop->iteration) }}</span>
                             <div>
                                 <div class="font-extrabold text-slate-900">{{ $requirement->name }}</div>
                                 @if($requirement->description)<p class="mt-1 text-sm leading-6 text-slate-500">{{ $requirement->description }}</p>@endif
