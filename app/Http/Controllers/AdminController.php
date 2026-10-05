@@ -26,10 +26,23 @@ class AdminController extends Controller
 
         $applications = Application::with(['user', 'service', 'documents'])
             ->when($validated['q'] ?? null, function ($query, $search) {
-                $query->where(function ($query) use ($search) {
+                $search = trim($search);
+
+                if ($search === '') {
+                    return;
+                }
+
+                $searchLower = mb_strtolower($search);
+
+                $query->where(function ($query) use ($search, $searchLower) {
                     $query->where('id', is_numeric($search) ? (int) $search : -1)
-                        ->orWhereHas('user', fn ($user) => $user->where('name', 'like', "%{$search}%")->orWhere('email', 'like', "%{$search}%"))
-                        ->orWhereHas('service', fn ($service) => $service->where('name', 'like', "%{$search}%"));
+                        ->orWhereHas('user', function ($user) use ($searchLower) {
+                            $user->whereRaw('LOWER(name) LIKE ?', ["%{$searchLower}%"])
+                                ->orWhereRaw('LOWER(email) LIKE ?', ["%{$searchLower}%"]);
+                        })
+                        ->orWhereHas('service', function ($service) use ($searchLower) {
+                            $service->whereRaw('LOWER(name) LIKE ?', ["%{$searchLower}%"]);
+                        });
                 });
             })
             ->when($validated['status'] ?? null, fn ($query, $status) => $query->where('status', $status))
