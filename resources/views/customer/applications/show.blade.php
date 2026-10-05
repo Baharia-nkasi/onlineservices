@@ -142,8 +142,8 @@
                                 <option value="">{{ __('Select a requirement') }}</option>
                                 @foreach($requirements as $requirement)
                                     @php $uploadedRequirement = $application->documents->first(fn($d) => mb_strtolower($d->document_name) === mb_strtolower($requirement->name)); @endphp
-                                    <option value="{{ $requirement->name }}" @disabled($uploadedRequirement && $uploadedRequirement->status !== 'rejected' && $uploadedRequirement->hasAvailable{{ __('File') }}())>
-                                        {{ $requirement->name }}{{ $requirement->is_required ? ' *' : '' }}{{ $uploadedRequirement ? ($uploadedRequirement->status === 'rejected' || ! $uploadedRequirement->hasAvailable{{ __('File') }}() ? ' — re-upload required' : ' — uploaded') : '' }}
+                                    <option value="{{ $requirement->name }}" @disabled($uploadedRequirement && $uploadedRequirement->status !== 'rejected' && $uploadedRequirement->hasAvailableFile())>
+                                        {{ $requirement->name }}{{ $requirement->is_required ? ' *' : '' }}{{ $uploadedRequirement ? ($uploadedRequirement->status === 'rejected' || ! $uploadedRequirement->hasAvailable{{ __('File') }}() ? ' — {{ __('re-upload required') }}' : ' — {{ __('uploaded') }}') : '' }}
                                     </option>
                                 @endforeach
                             </select>
@@ -160,7 +160,7 @@
         </section>
 
         <section class="portal-card overflow-hidden">
-            <div class="border-b border-slate-200 p-5"><h2 class="font-black text-lg text-slate-900">Uploaded {{ __('Document') }}s</h2></div>
+            <div class="border-b border-slate-200 p-5"><h2 class="font-black text-lg text-slate-900">{{ __('Uploaded Documents') }}</h2></div>
             <div class="divide-y divide-slate-100">
                 @forelse($application->documents as $document)
                     <div class="flex flex-col gap-4 p-5 md:flex-row md:items-center md:justify-between">
