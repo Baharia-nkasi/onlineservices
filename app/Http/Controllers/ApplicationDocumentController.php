@@ -4,21 +4,29 @@ namespace App\Http\Controllers;
 
 use App\Models\Application;
 use App\Models\ApplicationDocument;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Database\QueryException;
 use Illuminate\Validation\Rules\File;
 
 class ApplicationDocumentController extends Controller
 {
     /**
      * Upload a document for an application.
+     *
+     * Application files are stored in PostgreSQL so they survive Render
+     * container restarts and deployments. The 5 MB upload limit keeps this
+     * suitable for the current document workflow.
      */
     public function store(Request $request, Application $application)
     {
         abort_unless(Auth::check() && $application->user_id === Auth::id(), 403);
-        abort_if(in_array($application->status, ['completed', 'rejected'], true), 422, 'Documents cannot be changed after this application is completed or rejected.');
+        abort_if(
+            in_array($application->status, ['completed', 'rejected'], true),
+            422,
+            'Documents cannot be changed after this application is completed or rejected.'
+        );
 
         $validated = $request->validate([
             'document_name' => ['required', 'string', 'max:255'],
@@ -50,36 +58,49 @@ class ApplicationDocumentController extends Controller
             ])->withInput();
         }
 
-        $path = $file->store('application-documents', 'local');
-        $originalPath = $existing?->file_path;
+        $fileName = basename($file->getClientOriginalName());
+        $fileName = preg_replace('/[\\r\\n"]+/', '', $fileName) ?: 'uploaded-document';
+        $fileType = $file->getMimeType();
+        $fileSize = $file->getSize();
+        $fileContent = file_get_contents($file->getRealPath());
+
+        if ($fileContent === false) {
+            return back()->withErrors([
+                'document' => 'The uploaded file could not be read. Please try again.',
+            ])->withInput();
+        }
+
+        $storedPath = 'database://application-documents/'.bin2hex(random_bytes(16));
 
         try {
             if ($existing) {
+                $originalPath = $existing->file_path;
+
                 $existing->update([
-                    'file_name' => basename($file->getClientOriginalName()),
-                    'file_path' => $path,
-                    'file_type' => $file->getMimeType(),
-                    'file_size' => $file->getSize(),
+                    'file_name' => $fileName,
+                    'file_path' => $storedPath,
+                    'file_content' => $fileContent,
+                    'file_type' => $fileType,
+                    'file_size' => $fileSize,
                     'status' => 'pending',
                     'notes' => null,
                 ]);
 
-                if ($originalPath && $originalPath !== $path) {
+                if ($originalPath && ! str_starts_with($originalPath, 'database://')) {
                     Storage::disk('local')->delete($originalPath);
                 }
             } else {
                 $application->documents()->create([
                     'document_name' => $requirement->name,
-                    'file_name' => basename($file->getClientOriginalName()),
-                    'file_path' => $path,
-                    'file_type' => $file->getMimeType(),
-                    'file_size' => $file->getSize(),
+                    'file_name' => $fileName,
+                    'file_path' => $storedPath,
+                    'file_content' => $fileContent,
+                    'file_type' => $fileType,
+                    'file_size' => $fileSize,
                     'status' => 'pending',
                 ]);
             }
         } catch (QueryException $exception) {
-            Storage::disk('local')->delete($path);
-
             if ($exception->getCode() === '23505') {
                 return back()->withErrors([
                     'document_name' => 'This document has already been uploaded. Please refresh the application and try again.',
@@ -96,6 +117,9 @@ class ApplicationDocumentController extends Controller
 
     /**
      * View an uploaded document only when the current user is authorized.
+     *
+     * New uploads are served directly from PostgreSQL. Legacy uploads are
+     * still supported when their old local file is available.
      */
     public function download(ApplicationDocument $document)
     {
@@ -107,13 +131,33 @@ class ApplicationDocumentController extends Controller
             403
         );
 
-        abort_unless(Storage::disk('local')->exists($document->file_path), 404);
+        $fileName = preg_replace('/[\\r\\n"]+/', '', basename($document->file_name)) ?: 'document';
+        $contentType = $document->file_type ?: 'application/octet-stream';
 
-        return Storage::disk('local')->response(
-            $document->file_path,
-            $document->file_name,
-            ['Content-Disposition' => 'inline']
-        );
+        if ($document->file_content !== null) {
+            return response($document->file_content, 200, [
+                'Content-Type' => $contentType,
+                'Content-Length' => (string) strlen($document->file_content),
+                'Content-Disposition' => 'inline; filename="'.$fileName.'"',
+                'X-Content-Type-Options' => 'nosniff',
+                'Cache-Control' => 'private, no-store',
+            ]);
+        }
+
+        if ($document->file_path && Storage::disk('local')->exists($document->file_path)) {
+            return Storage::disk('local')->response(
+                $document->file_path,
+                $fileName,
+                [
+                    'Content-Type' => $contentType,
+                    'Content-Disposition' => 'inline',
+                    'X-Content-Type-Options' => 'nosniff',
+                    'Cache-Control' => 'private, no-store',
+                ]
+            );
+        }
+
+        abort(404, 'This document file is no longer available. Please upload the document again.');
     }
 
     /**
@@ -123,11 +167,18 @@ class ApplicationDocumentController extends Controller
     {
         abort_unless(Auth::check() && $document->application->user_id === Auth::id(), 403);
         abort_if($document->status !== 'pending', 422, 'Only pending documents can be deleted.');
-        abort_if(in_array($document->application->status, ['completed', 'rejected'], true), 422, 'Documents cannot be changed after this application is completed or rejected.');
+        abort_if(
+            in_array($document->application->status, ['completed', 'rejected'], true),
+            422,
+            'Documents cannot be changed after this application is completed or rejected.'
+        );
 
         $applicationId = $document->application_id;
 
-        Storage::disk('local')->delete($document->file_path);
+        if ($document->file_path && ! str_starts_with($document->file_path, 'database://')) {
+            Storage::disk('local')->delete($document->file_path);
+        }
+
         $document->delete();
 
         return redirect()
