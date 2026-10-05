@@ -12,21 +12,11 @@ use Illuminate\Validation\Rules\File;
 
 class ApplicationDocumentController extends Controller
 {
-    /**
-     * Upload a document for an application.
-     *
-     * Application files are stored in PostgreSQL so they survive Render
-     * container restarts and deployments. The 5 MB upload limit keeps this
-     * suitable for the current document workflow.
-     */
     public function store(Request $request, Application $application)
     {
         abort_unless(Auth::check() && $application->user_id === Auth::id(), 403);
-        abort_if(
-            in_array($application->status, ['completed', 'rejected'], true),
-            422,
-            __('Documents cannot be changed after this application is completed or rejected.')
-        );
+        abort_if(in_array($application->status, ['completed', 'rejected'], true), 422,
+            __('Documents cannot be changed after this application is completed or rejected.'));
 
         $validated = $request->validate([
             'document_name' => ['required', 'string', 'max:255'],
@@ -59,7 +49,7 @@ class ApplicationDocumentController extends Controller
         }
 
         $fileName = basename($file->getClientOriginalName());
-        $fileName = preg_replace('/[\\r\\n"]+/', '', $fileName) ?: 'uploaded-document';
+        $fileName = preg_replace('/[\r\n"]+/', '', $fileName) ?: 'uploaded-document';
         $fileType = $file->getMimeType();
         $fileSize = $file->getSize();
         $fileContent = file_get_contents($file->getRealPath());
@@ -75,7 +65,6 @@ class ApplicationDocumentController extends Controller
         try {
             if ($existing) {
                 $originalPath = $existing->file_path;
-
                 $existing->update([
                     'file_name' => $fileName,
                     'file_path' => $storedPath,
@@ -106,39 +95,45 @@ class ApplicationDocumentController extends Controller
                     'document_name' => __('This document has already been uploaded. Please refresh the application and try again.'),
                 ])->withInput();
             }
-
             throw $exception;
         }
 
-        return redirect()
-            ->route('customer.applications.show', $application)
+        return redirect()->route('customer.applications.show', $application)
             ->with('success', __('Document uploaded successfully.'));
     }
 
     /**
-     * View an uploaded document only when the current user is authorized.
-     *
-     * New uploads are served directly from PostgreSQL. Legacy uploads are
-     * still supported when their old local file is available.
+     * Inline viewing for both the owning customer and an authorized admin.
+     */
+    public function view(ApplicationDocument $document)
+    {
+        return $this->serve($document, false);
+    }
+
+    /**
+     * Forced download for both the owning customer and an authorized admin.
      */
     public function download(ApplicationDocument $document)
+    {
+        return $this->serve($document, true);
+    }
+
+    private function serve(ApplicationDocument $document, bool $download)
     {
         $application = $document->application;
         $user = Auth::user();
 
-        abort_unless(
-            $user && ($application->user_id === $user->id || $user->isAdmin()),
-            403
-        );
+        abort_unless($user && ($application->user_id === $user->id || $user->isAdmin()), 403);
 
-        $fileName = preg_replace('/[\\r\\n"]+/', '', basename($document->file_name)) ?: 'document';
+        $fileName = preg_replace('/[\r\n"]+/', '', basename($document->file_name)) ?: 'document';
         $contentType = $document->file_type ?: 'application/octet-stream';
+        $disposition = $download ? 'attachment' : 'inline';
 
         if ($document->file_content !== null) {
             return response($document->file_content, 200, [
                 'Content-Type' => $contentType,
                 'Content-Length' => (string) strlen($document->file_content),
-                'Content-Disposition' => 'inline; filename="'.$fileName.'"',
+                'Content-Disposition' => $disposition.'; filename="'.$fileName.'"',
                 'X-Content-Type-Options' => 'nosniff',
                 'Cache-Control' => 'private, no-store',
             ]);
@@ -150,35 +145,26 @@ class ApplicationDocumentController extends Controller
                 $fileName,
                 [
                     'Content-Type' => $contentType,
-                    'Content-Disposition' => 'inline',
+                    'Content-Disposition' => $disposition,
                     'X-Content-Type-Options' => 'nosniff',
                     'Cache-Control' => 'private, no-store',
                 ]
             );
         }
 
-        return redirect()
-            ->route(
-                $user->isAdmin() ? 'admin.applications.show' : 'customer.applications.show',
-                $application
-            )
-            ->withErrors([
-                'document' => __('This uploaded file is no longer available on the server. Please upload the document again.'),
-            ]);
+        $route = $user->isAdmin() ? 'admin.applications.show' : 'customer.applications.show';
+
+        return redirect()->route($route, $application)->withErrors([
+            'document' => __('This uploaded file is no longer available on the server. Please upload the document again.'),
+        ]);
     }
 
-    /**
-     * Delete an uploaded document.
-     */
     public function destroy(ApplicationDocument $document)
     {
         abort_unless(Auth::check() && $document->application->user_id === Auth::id(), 403);
         abort_if($document->status !== 'pending', 422, __('Only pending documents can be deleted.'));
-        abort_if(
-            in_array($document->application->status, ['completed', 'rejected'], true),
-            422,
-            __('Documents cannot be changed after this application is completed or rejected.')
-        );
+        abort_if(in_array($document->application->status, ['completed', 'rejected'], true), 422,
+            __('Documents cannot be changed after this application is completed or rejected.'));
 
         $applicationId = $document->application_id;
 
@@ -188,8 +174,7 @@ class ApplicationDocumentController extends Controller
 
         $document->delete();
 
-        return redirect()
-            ->route('customer.applications.show', $applicationId)
+        return redirect()->route('customer.applications.show', $applicationId)
             ->with('success', __('Document deleted successfully.'));
     }
 }
