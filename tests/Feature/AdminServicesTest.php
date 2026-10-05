@@ -208,4 +208,72 @@ class AdminServicesTest extends TestCase
 
         $this->assertDatabaseHas('services', ['id' => $service->id]);
     }
+    public function test_admin_can_delete_unused_document_requirement(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+
+        $service = Service::create([
+            'name' => 'Document Service',
+            'slug' => 'document-service',
+            'description' => 'Documents',
+            'government_fee' => 0,
+            'service_fee' => 0,
+            'is_active' => true,
+        ]);
+
+        $document = $service->documents()->create([
+            'name' => 'Old Requirement',
+            'description' => 'No longer needed',
+            'is_required' => true,
+            'requirement_type' => 'single',
+            'minimum_required' => 1,
+            'sort_order' => 1,
+            'is_active' => true,
+        ]);
+
+        $this->actingAs($admin)
+            ->delete(route('admin.service-documents.destroy', $document))
+            ->assertRedirect();
+
+        $this->assertDatabaseMissing('service_documents', ['id' => $document->id]);
+    }
+
+    public function test_requirement_with_existing_applications_cannot_be_deleted(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $customer = User::factory()->create(['role' => 'customer']);
+
+        $service = Service::create([
+            'name' => 'Historical Document Service',
+            'slug' => 'historical-document-service',
+            'description' => 'Historical',
+            'government_fee' => 0,
+            'service_fee' => 0,
+            'is_active' => false,
+        ]);
+
+        $document = $service->documents()->create([
+            'name' => 'Historical Requirement',
+            'description' => 'Keep for history',
+            'is_required' => true,
+            'requirement_type' => 'single',
+            'minimum_required' => 1,
+            'sort_order' => 1,
+            'is_active' => true,
+        ]);
+
+        Application::create([
+            'user_id' => $customer->id,
+            'service_id' => $service->id,
+            'status' => 'completed',
+        ]);
+
+        $this->actingAs($admin)
+            ->delete(route('admin.service-documents.destroy', $document))
+            ->assertRedirect()
+            ->assertSessionHasErrors('document');
+
+        $this->assertDatabaseHas('service_documents', ['id' => $document->id]);
+    }
+
 }
