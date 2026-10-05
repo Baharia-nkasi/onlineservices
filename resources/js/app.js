@@ -131,7 +131,65 @@ function initDynamicTableSearch() {
     });
 }
 
+
+function applyTheme(theme, persist = true) {
+    const root = document.documentElement;
+    const isDark = theme === 'dark';
+
+    root.classList.toggle('dark', isDark);
+
+    if (persist) {
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    }
+
+    const toggle = document.getElementById('theme-toggle');
+    const label = document.getElementById('theme-toggle-label');
+
+    if (toggle) {
+        toggle.setAttribute('aria-pressed', isDark ? 'true' : 'false');
+        toggle.setAttribute(
+            'aria-label',
+            isDark ? 'Switch to light mode' : 'Switch to dark mode'
+        );
+        toggle.setAttribute(
+            'title',
+            isDark ? 'Switch to light mode' : 'Switch to dark mode'
+        );
+    }
+
+    if (label) {
+        label.textContent = isDark ? 'Dark mode' : 'Light mode';
+    }
+}
+
+function initThemeToggle() {
+    const toggle = document.getElementById('theme-toggle');
+    if (!toggle || toggle.dataset.themeReady === '1') return;
+
+    toggle.dataset.themeReady = '1';
+
+    const saved = localStorage.getItem('theme');
+    const preferred = saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)
+        ? 'dark'
+        : 'light';
+
+    applyTheme(preferred, false);
+
+    toggle.addEventListener('click', () => {
+        const nextTheme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
+        applyTheme(nextTheme);
+    });
+
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    mediaQuery.addEventListener?.('change', (event) => {
+        if (!localStorage.getItem('theme')) {
+            applyTheme(event.matches ? 'dark' : 'light', false);
+        }
+    });
+}
+
 function initInteractiveUi() {
+    initThemeToggle();
     initLiveValidation();
     initDynamicTableSearch();
 }
