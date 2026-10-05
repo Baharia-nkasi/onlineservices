@@ -22,15 +22,15 @@
             @endif
 
             @php
-                $requirements = $application->service->documents->where('is_active', true);
+                $requirements = $application->effectiveServiceRequirements()->sortBy('sort_order')->values();
                 $standaloneRequired = $requirements->where('is_required', true)->whereNull('requirement_group');
                 $requirementGroups = $requirements->where('is_required', true)->whereNotNull('requirement_group')->groupBy('requirement_group');
                 $required = $standaloneRequired;
-                $approvedRequired = $standaloneRequired->filter(fn($r) => $application->documents->contains(fn($d) => mb_strtolower($d->document_name) === mb_strtolower($r->name) && $d->status === 'approved'))->count();
+                $approvedRequired = $standaloneRequired->filter(fn($r) => $application->documents->contains(fn($d) => mb_strtolower($d->document_name) === mb_strtolower($r->name) && $d->status === 'approved' && $d->hasAvailableFile()))->count();
                 $groupRequired = $requirementGroups->count();
                 $groupSatisfied = $requirementGroups->filter(function ($groupRequirements) use ($application) {
                     $minimum = max(1, (int) $groupRequirements->max('minimum_required'));
-                    $approved = $application->documents->where('status', 'approved')->filter(fn($d) => $groupRequirements->contains(fn($r) => mb_strtolower($r->name) === mb_strtolower($d->document_name)))->count();
+                    $approved = $application->documents->where('status', 'approved')->filter(fn($d) => $d->hasAvailableFile() && $groupRequirements->contains(fn($r) => mb_strtolower($r->name) === mb_strtolower($d->document_name)))->count();
                     return $approved >= $minimum;
                 })->count();
                 $completionUnits = $standaloneRequired->count() + $groupRequired;
@@ -121,7 +121,7 @@
                         @foreach($requirementGroups as $group => $groupRequirements)
                             @php
                                 $minimum = max(1, (int) $groupRequirements->max('minimum_required'));
-                                $approved = $application->documents->where('status','approved')->filter(fn($d) => $groupRequirements->contains(fn($r) => mb_strtolower($r->name) === mb_strtolower($d->document_name)))->count();
+                                $approved = $application->documents->where('status','approved')->filter(fn($d) => $d->hasAvailableFile() && $groupRequirements->contains(fn($r) => mb_strtolower($r->name) === mb_strtolower($d->document_name)))->count();
                             @endphp
                             <div class="flex items-center justify-between rounded-xl bg-slate-50 p-3">
                                 <span class="text-sm font-bold text-slate-700">{{ ucfirst(str_replace('_',' ',$group)) }}</span>
