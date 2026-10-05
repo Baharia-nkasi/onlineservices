@@ -41,7 +41,7 @@
                 </div>
                 <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     @forelse($services as $service)
-                        <article class="dashboard-service-card">
+                        <article class="dashboard-service-card group">
                             <div class="flex items-center justify-between">
                                 <span class="dashboard-icon">📄</span>
                                 <span class="text-xs font-bold text-slate-400">{{ $service->documents->where('is_active', true)->count() }} requirements</span>
