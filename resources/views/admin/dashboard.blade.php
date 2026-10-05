@@ -2,7 +2,10 @@
 <x-slot name="header">
     <div class="flex items-center justify-between">
         <div><p class="text-xs font-extrabold uppercase tracking-wider text-blue-700">{{ __('Management') }}</p><h2 class="text-2xl font-black tracking-tight text-slate-900">{{ __('Admin Dashboard') }}</h2></div>
-        <a href="{{ route('services.index') }}" class="portal-button-secondary hidden sm:inline-flex">{{ __('View Services') }}</a>
+        <div class="flex gap-2">
+            <a href="{{ route('admin.services.index') }}" class="portal-button hidden sm:inline-flex">{{ __('Manage Services') }}</a>
+            <a href="{{ route('services.index') }}" class="portal-button-secondary hidden sm:inline-flex">{{ __('View Services') }}</a>
+        </div>
     </div>
 </x-slot>
 
