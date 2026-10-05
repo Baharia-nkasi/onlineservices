@@ -24,6 +24,34 @@
             </div>
         @endif
 
+        <section class="rounded-[2rem] border border-cyan-200 bg-gradient-to-br from-cyan-50 via-sky-50 to-blue-50 p-5 shadow-sm">
+            <div class="mb-4">
+                <p class="text-xs font-black uppercase tracking-[0.18em] text-cyan-700">{{ __('Management') }}</p>
+                <h3 class="mt-1 text-xl font-black text-slate-900">{{ __('Service Management') }}</h3>
+                <p class="mt-1 text-sm text-slate-600">{{ __('Use the management areas below to quickly update this service and its customer requirements.') }}</p>
+            </div>
+            <div class="flex flex-wrap gap-4">
+                <a href="#service-settings" class="group min-w-[220px] flex-1 rounded-3xl border border-cyan-200 bg-white/90 p-5 shadow-sm transition duration-200 hover:-translate-y-1 hover:border-cyan-400 hover:shadow-lg">
+                    <div class="flex items-center gap-3">
+                        <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-cyan-100 text-xl text-cyan-700">⚙️</span>
+                        <div><p class="font-black text-slate-900">{{ __('Service Settings') }}</p><p class="text-xs font-semibold text-slate-500">{{ __('Name, fees and availability') }}</p></div>
+                    </div>
+                </a>
+                <a href="#document-requirements" class="group min-w-[220px] flex-1 rounded-3xl border border-sky-200 bg-white/90 p-5 shadow-sm transition duration-200 hover:-translate-y-1 hover:border-sky-400 hover:shadow-lg">
+                    <div class="flex items-center gap-3">
+                        <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-sky-100 text-xl text-sky-700">📄</span>
+                        <div><p class="font-black text-slate-900">{{ __('Document Requirements') }}</p><p class="text-xs font-semibold text-slate-500">{{ __('Add, edit and deactivate') }}</p></div>
+                    </div>
+                </a>
+                <a href="{{ route('admin.services.index') }}" class="group min-w-[220px] flex-1 rounded-3xl border border-blue-200 bg-white/90 p-5 shadow-sm transition duration-200 hover:-translate-y-1 hover:border-blue-400 hover:shadow-lg">
+                    <div class="flex items-center gap-3">
+                        <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-100 text-xl text-blue-700">🧩</span>
+                        <div><p class="font-black text-slate-900">{{ __('All Services') }}</p><p class="text-xs font-semibold text-slate-500">{{ __('Manage other services') }}</p></div>
+                    </div>
+                </a>
+            </div>
+        </section>
+
         <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <div class="portal-card p-5"><p class="text-xs font-extrabold uppercase tracking-wide text-slate-400">{{ __('Status') }}</p><p class="mt-2 text-lg font-black {{ $service->is_active ? 'text-emerald-700' : 'text-slate-500' }}">{{ $service->is_active ? __('Active') : __('Deactivated') }}</p></div>
             <div class="portal-card p-5"><p class="text-xs font-extrabold uppercase tracking-wide text-slate-400">{{ __('Applications') }}</p><p class="mt-2 text-2xl font-black text-slate-900">{{ $service->applications_count }}</p></div>
@@ -31,7 +59,7 @@
             <div class="portal-card p-5"><p class="text-xs font-extrabold uppercase tracking-wide text-slate-400">{{ __('Total requirements') }}</p><p class="mt-2 text-2xl font-black text-slate-900">{{ $service->documents->count() }}</p></div>
         </div>
 
-        <section class="portal-card p-6">
+        <section id="service-settings" class="rounded-[2rem] border border-cyan-200 bg-white p-6 shadow-sm">
             <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <h3 class="text-xl font-black text-slate-900">{{ __('Service Settings') }}</h3>
@@ -52,7 +80,7 @@
             </form>
         </section>
 
-        <section class="portal-card overflow-hidden">
+        <section id="document-requirements" class="rounded-[2rem] border border-sky-200 bg-white shadow-sm overflow-hidden">
             <div class="border-b border-slate-200 p-6">
                 <h3 class="text-xl font-black text-slate-900">{{ __('Document Requirements') }}</h3>
                 <p class="mt-1 text-sm text-slate-500">{{ __('Add, edit, activate or deactivate documents required for this service.') }}</p>
@@ -77,7 +105,7 @@
 
                 <div class="mt-6 space-y-4">
                     @forelse($service->documents as $document)
-                        <div class="rounded-2xl border border-slate-200 bg-white p-5">
+                        <div class="rounded-3xl border border-cyan-100 bg-gradient-to-br from-cyan-50/70 to-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
                             <form method="POST" action="{{ route('admin.service-documents.update', $document) }}" class="grid gap-3 md:grid-cols-12">
                                 @csrf @method('PATCH')
                                 <input name="name" value="{{ $document->name }}" required maxlength="255" class="input-modern md:col-span-3">
