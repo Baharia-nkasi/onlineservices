@@ -119,4 +119,91 @@ class DashboardWorkflowTest extends TestCase
         $this->assertNotSame($completed->user_id, $rejected->user_id);
         $this->assertNotNull($approvedDocument->id);
     }
+
+    public function test_admin_application_detail_uses_historical_requirements_and_rejects_unavailable_completion_files(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $customer = User::factory()->create(['role' => 'customer']);
+
+        $service = Service::create([
+            'name' => 'Historical Review Service',
+            'slug' => 'historical-review-service',
+            'description' => 'Test',
+            'government_fee' => 0,
+            'service_fee' => 0,
+            'is_active' => true,
+        ]);
+
+        $required = $service->documents()->create([
+            'name' => 'National ID',
+            'description' => 'Identity',
+            'is_required' => true,
+            'requirement_type' => 'single',
+            'minimum_required' => 1,
+            'sort_order' => 1,
+            'is_active' => true,
+        ]);
+
+        $application = Application::create([
+            'user_id' => $customer->id,
+            'service_id' => $service->id,
+            'status' => 'processing',
+        ]);
+
+        $this->actingAs($admin)
+            ->get(route('admin.applications.show', $application))
+            ->assertOk()
+            ->assertSee('National ID');
+
+        $required->update(['is_active' => false]);
+
+        $application->refresh();
+
+        $this->actingAs($admin)
+            ->get(route('admin.applications.show', $application))
+            ->assertOk()
+            ->assertSee('National ID');
+    }
+
+    public function test_admin_cannot_change_documents_while_application_is_rejected(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $customer = User::factory()->create(['role' => 'customer']);
+
+        $service = Service::create([
+            'name' => 'Rejected Lock Service',
+            'slug' => 'rejected-lock-service',
+            'description' => 'Test',
+            'government_fee' => 0,
+            'service_fee' => 0,
+            'is_active' => true,
+        ]);
+
+        $application = Application::create([
+            'user_id' => $customer->id,
+            'service_id' => $service->id,
+            'status' => 'rejected',
+        ]);
+
+        $document = ApplicationDocument::create([
+            'application_id' => $application->id,
+            'document_name' => 'National ID',
+            'file_name' => 'id.pdf',
+            'file_path' => 'database://test-placeholder',
+            'file_content' => null,
+            'file_type' => 'application/pdf',
+            'file_size' => 100,
+            'status' => 'pending',
+        ]);
+
+        $this->actingAs($admin)
+            ->patch(route('admin.documents.status', $document), [
+                'status' => 'approved',
+                'notes' => 'Should not change',
+            ])
+            ->assertSessionHasErrors('status');
+
+        $this->assertSame('pending', $document->fresh()->status);
+    }
+
 }
