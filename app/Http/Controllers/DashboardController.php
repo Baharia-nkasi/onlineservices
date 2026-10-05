@@ -32,13 +32,38 @@ class DashboardController extends Controller
             ->take(5)
             ->get();
 
+        // Customer-facing updates: completed/rejected applications and document review results.
+        $recentCompletedApplications = Application::with('service')
+            ->where('user_id', $userId)
+            ->where('status', 'completed')
+            ->latest('updated_at')
+            ->take(3)
+            ->get();
+
+        $recentRejectedApplications = Application::with('service')
+            ->where('user_id', $userId)
+            ->where('status', 'rejected')
+            ->latest('updated_at')
+            ->take(3)
+            ->get();
+
+        $recentDocumentUpdates = \App\Models\ApplicationDocument::with('application.service')
+            ->whereHas('application', fn ($query) => $query->where('user_id', $userId))
+            ->whereIn('status', ['approved', 'rejected'])
+            ->latest('updated_at')
+            ->take(5)
+            ->get();
+
         return view('dashboard', compact(
             'totalApplications',
             'pendingApplications',
             'processingApplications',
             'completedApplications',
             'services',
-            'recentApplications'
+            'recentApplications',
+            'recentCompletedApplications',
+            'recentRejectedApplications',
+            'recentDocumentUpdates'
         ));
     }
 }
