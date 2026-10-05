@@ -17,7 +17,8 @@
                 <x-nav-link :href="route('services.index')" :active="request()->routeIs('services.*')">{{ __('Services') }}</x-nav-link>
                 <x-nav-link :href="route('customer.applications.index')" :active="request()->routeIs('customer.applications.*')">{{ __('My Applications') }}</x-nav-link>
                 @if(Auth::user()->isAdmin())
-                    <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')">{{ __('Admin') }}</x-nav-link>
+                    <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">{{ __('Admin') }}</x-nav-link>
+                    <x-nav-link :href="route('admin.services.index')" :active="request()->routeIs('admin.services.*')">{{ __('Manage Services') }}</x-nav-link>
                 @endif
             </div>
         @else
@@ -85,7 +86,8 @@
             <x-responsive-nav-link :href="route('services.index')" :active="request()->routeIs('services.*')">{{ __('Services') }}</x-responsive-nav-link>
             <x-responsive-nav-link :href="route('customer.applications.index')" :active="request()->routeIs('customer.applications.*')">{{ __('My Applications') }}</x-responsive-nav-link>
             @if(Auth::user()->isAdmin())
-                <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')">{{ __('Admin') }}</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">{{ __('Admin') }}</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.services.index')" :active="request()->routeIs('admin.services.*')">{{ __('Manage Services') }}</x-responsive-nav-link>
             @endif
             <x-responsive-nav-link :href="route('profile.edit')">{{ __('Profile') }}</x-responsive-nav-link>
             <form method="POST" action="{{ route('logout') }}">
