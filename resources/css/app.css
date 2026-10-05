@@ -170,7 +170,7 @@
     }
 
     .dashboard-service-card {
-        @apply group portal-card p-5;
+        @apply portal-card p-5;
     }
 
     .dashboard-icon {
