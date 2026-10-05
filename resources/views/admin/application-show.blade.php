@@ -24,7 +24,7 @@
             @php
                 $requirements = $application->service->documents->where('is_active', true);
                 $standaloneRequired = $requirements->where('is_required', true)->whereNull('requirement_group');
-                $requirementGroups = $requirements->whereNotNull('requirement_group')->groupBy('requirement_group');
+                $requirementGroups = $requirements->where('is_required', true)->whereNotNull('requirement_group')->groupBy('requirement_group');
                 $required = $standaloneRequired;
                 $approvedRequired = $standaloneRequired->filter(fn($r) => $application->documents->contains(fn($d) => mb_strtolower($d->document_name) === mb_strtolower($r->name) && $d->status === 'approved'))->count();
                 $groupRequired = $requirementGroups->count();
