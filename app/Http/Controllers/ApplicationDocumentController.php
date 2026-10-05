@@ -16,8 +16,6 @@ class ApplicationDocumentController extends Controller
     public function store(Request $request, Application $application)
     {
         abort_unless(Auth::check() && $application->user_id === Auth::id(), 403);
-        abort_if(in_array($application->status, ['completed', 'rejected'], true), 422,
-            __('Documents cannot be changed after this application is completed or rejected.'));
 
         $validated = $request->validate([
             'document_name' => ['required', 'string', 'max:255'],
@@ -25,34 +23,7 @@ class ApplicationDocumentController extends Controller
         ]);
 
         $documentName = trim($validated['document_name']);
-
-        $requirement = $application->service->documents()
-            ->where('is_active', true)
-            ->get()
-            ->first(fn ($document) => mb_strtolower(trim($document->name)) === mb_strtolower($documentName));
-
-        if (! $requirement) {
-            return back()->withErrors([
-                'document_name' => __('Please select a valid document requirement for this service.'),
-            ])->withInput();
-        }
-
-        $existing = $application->documents()
-            ->whereRaw('LOWER(document_name) = ?', [mb_strtolower($documentName)])
-            ->first();
-
         $file = $request->file('document');
-
-        if ($existing && $existing->status !== 'rejected' && $existing->hasAvailableFile()) {
-            return back()->withErrors([
-                'document_name' => __('This document has already been uploaded and is under review or approved.'),
-            ])->withInput();
-        }
-
-        $fileName = basename($file->getClientOriginalName());
-        $fileName = preg_replace('/[\r\n"]+/', '', $fileName) ?: 'uploaded-document';
-        $fileType = $file->getMimeType();
-        $fileSize = $file->getSize();
         $fileContent = file_get_contents($file->getRealPath());
 
         if ($fileContent === false) {
@@ -61,6 +32,10 @@ class ApplicationDocumentController extends Controller
             ])->withInput();
         }
 
+        $fileName = basename($file->getClientOriginalName());
+        $fileName = preg_replace('/[\r\n"]+/', '', $fileName) ?: 'uploaded-document';
+        $fileType = $file->getMimeType();
+        $fileSize = $file->getSize();
         $storedPath = 'database://application-documents/'.bin2hex(random_bytes(16));
 
         try {
@@ -68,8 +43,7 @@ class ApplicationDocumentController extends Controller
 
             DB::transaction(function () use (
                 $application,
-                $requirement,
-                $existing,
+                $documentName,
                 $fileName,
                 $storedPath,
                 $fileContent,
@@ -77,9 +51,33 @@ class ApplicationDocumentController extends Controller
                 $fileSize,
                 &$originalPath
             ) {
+                $lockedApplication = Application::query()->lockForUpdate()->findOrFail($application->id);
+
+                abort_unless($lockedApplication->user_id === Auth::id(), 403);
+                abort_if(in_array($lockedApplication->status, ['completed', 'rejected'], true), 422,
+                    __('Documents cannot be changed after this application is completed or rejected.'));
+
+                $requirement = $lockedApplication->service->documents()
+                    ->where('is_active', true)
+                    ->whereRaw('LOWER(TRIM(name)) = ?', [mb_strtolower($documentName)])
+                    ->lockForUpdate()
+                    ->first();
+
+                if (! $requirement) {
+                    abort(422, __('Please select a valid document requirement for this service.'));
+                }
+
+                $existing = $lockedApplication->documents()
+                    ->whereRaw('LOWER(document_name) = ?', [mb_strtolower($documentName)])
+                    ->lockForUpdate()
+                    ->first();
+
+                if ($existing && $existing->status !== 'rejected' && $existing->hasAvailableFile()) {
+                    abort(422, __('This document has already been uploaded and is under review or approved.'));
+                }
+
                 if ($existing) {
                     $originalPath = $existing->file_path;
-
                     $existing->update([
                         'file_name' => $fileName,
                         'file_path' => $storedPath,
@@ -89,10 +87,9 @@ class ApplicationDocumentController extends Controller
                         'status' => 'pending',
                         'notes' => null,
                     ]);
-
                     $this->storeBinaryContent($existing, $fileContent);
                 } else {
-                    $newDocument = $application->documents()->create([
+                    $newDocument = $lockedApplication->documents()->create([
                         'document_name' => $requirement->name,
                         'file_name' => $fileName,
                         'file_path' => $storedPath,
@@ -101,7 +98,6 @@ class ApplicationDocumentController extends Controller
                         'file_size' => $fileSize,
                         'status' => 'pending',
                     ]);
-
                     $this->storeBinaryContent($newDocument, $fileContent);
                 }
             });
@@ -117,13 +113,11 @@ class ApplicationDocumentController extends Controller
             }
 
             report($exception);
-
             return back()->withErrors([
                 'document' => __('The document could not be saved. Please try again.'),
             ])->withInput();
         } catch (\Throwable $exception) {
             report($exception);
-
             return back()->withErrors([
                 'document' => __('The document could not be saved. Please try again.'),
             ])->withInput();
@@ -204,17 +198,26 @@ class ApplicationDocumentController extends Controller
     public function destroy(ApplicationDocument $document)
     {
         abort_unless(Auth::check() && $document->application->user_id === Auth::id(), 403);
-        abort_if($document->status !== 'pending', 422, __('Only pending documents can be deleted.'));
-        abort_if(in_array($document->application->status, ['completed', 'rejected'], true), 422,
-            __('Documents cannot be changed after this application is completed or rejected.'));
 
         $applicationId = $document->application_id;
+        $oldPath = null;
 
-        if ($document->file_path && ! str_starts_with($document->file_path, 'database://')) {
-            Storage::disk('local')->delete($document->file_path);
+        DB::transaction(function () use ($document, &$oldPath) {
+            $lockedApplication = Application::query()->lockForUpdate()->findOrFail($document->application_id);
+            $lockedDocument = $lockedApplication->documents()->lockForUpdate()->findOrFail($document->id);
+
+            abort_unless($lockedApplication->user_id === Auth::id(), 403);
+            abort_if($lockedDocument->status !== 'pending', 422, __('Only pending documents can be deleted.'));
+            abort_if(in_array($lockedApplication->status, ['completed', 'rejected'], true), 422,
+                __('Documents cannot be changed after this application is completed or rejected.'));
+
+            $oldPath = $lockedDocument->file_path;
+            $lockedDocument->delete();
+        });
+
+        if ($oldPath && ! str_starts_with($oldPath, 'database://')) {
+            Storage::disk('local')->delete($oldPath);
         }
-
-        $document->delete();
 
         return redirect()->route('customer.applications.show', $applicationId)
             ->with('success', __('Document deleted successfully.'));
