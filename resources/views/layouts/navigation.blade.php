@@ -28,6 +28,10 @@
         @endauth
     </div>
 
+    <button type="button" x-data @click="document.documentElement.classList.toggle('dark'); localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light')" class="dark-mode-toggle hidden md:inline-flex" aria-label="Toggle dark mode" title="Toggle dark mode">
+        <span aria-hidden="true">◐</span>
+    </button>
+
     @auth
         <div class="hidden items-center gap-3 md:flex">
             <span class="max-w-48 truncate text-sm font-semibold text-slate-500">{{ Auth::user()->name }}</span>
