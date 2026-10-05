@@ -143,7 +143,7 @@
                                 @foreach($requirements as $requirement)
                                     @php $uploadedRequirement = $application->documents->first(fn($d) => mb_strtolower($d->document_name) === mb_strtolower($requirement->name)); @endphp
                                     <option value="{{ $requirement->name }}" @disabled($uploadedRequirement && $uploadedRequirement->status !== 'rejected' && $uploadedRequirement->hasAvailableFile())>
-                                        {{ $requirement->name }}{{ $requirement->is_required ? ' *' : '' }}{{ $uploadedRequirement ? ($uploadedRequirement->status === 'rejected' || ! $uploadedRequirement->hasAvailable{{ __('File') }}() ? ' — {{ __('re-upload required') }}' : ' — {{ __('uploaded') }}') : '' }}
+                                        {{ $requirement->name }}{{ $requirement->is_required ? ' *' : '' }}{{ $uploadedRequirement ? ($uploadedRequirement->status === 'rejected' || ! $uploadedRequirement->hasAvailableFile() ? ' — ' . __('re-upload required') : ' — ' . __('uploaded')) : '' }}
                                     </option>
                                 @endforeach
                             </select>
@@ -177,7 +177,7 @@
                                 <a target="_blank" rel="noopener" href="{{ route('application.documents.view',$document) }}" class="portal-button-secondary">{{ __('View') }}</a>
                             @else
                                 <span class="inline-flex items-center rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-extrabold text-amber-700" title="Please upload this document again">
-                                    {{ __('File') }} unavailable — re-upload
+                                    {{ __('File unavailable — re-upload') }}
                                 </span>
                             @endif
                             @if($document->status === 'pending')
