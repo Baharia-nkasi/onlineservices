@@ -210,8 +210,8 @@ class AdminController extends Controller
             $application = Application::query()->lockForUpdate()->findOrFail($document->application_id);
             $lockedDocument = $application->documents()->lockForUpdate()->findOrFail($document->id);
 
-            if ($application->status === 'completed') {
-                return __('Documents for a completed application are locked and cannot be changed.');
+            if (in_array($application->status, ['completed', 'rejected'], true)) {
+                return __('Documents for a completed or rejected application are locked and cannot be changed.');
             }
 
             if ($validated['status'] === 'approved' && ! $lockedDocument->hasAvailableFile()) {
