@@ -23,7 +23,7 @@ class AdminController extends Controller
 
         $validated = request()->validate([
             'q' => ['nullable', 'string', 'max:100'],
-            'status' => ['nullable', 'in:pending,processing,completed,rejected'],
+            'status' => ['nullable', 'in:pending,processing'],
         ]);
 
         // The dashboard is an action queue: only applications that still need admin work appear here.
