@@ -12,10 +12,15 @@ class ApplicationDocument extends Model
         'document_name',
         'file_name',
         'file_path',
+        'file_content',
         'file_type',
         'file_size',
         'status',
         'notes',
+    ];
+
+    protected $casts = [
+        'file_content' => 'string',
     ];
 
     public function application(): BelongsTo
