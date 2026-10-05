@@ -7,6 +7,7 @@ use App\Models\ApplicationDocument;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\File;
 
@@ -68,12 +69,14 @@ class ApplicationDocumentController extends Controller
                 $existing->update([
                     'file_name' => $fileName,
                     'file_path' => $storedPath,
-                    'file_content' => $fileContent,
+                    'file_content' => null,
                     'file_type' => $fileType,
                     'file_size' => $fileSize,
                     'status' => 'pending',
                     'notes' => null,
                 ]);
+
+                $this->storeBinaryContent($existing, $fileContent);
 
                 if ($originalPath && ! str_starts_with($originalPath, 'database://')) {
                     Storage::disk('local')->delete($originalPath);
@@ -118,6 +121,15 @@ class ApplicationDocumentController extends Controller
         return $this->serve($document, true);
     }
 
+    private function storeBinaryContent(ApplicationDocument $document, string $content): void
+    {
+        $pdo = DB::connection()->getPdo();
+        $statement = $pdo->prepare('UPDATE application_documents SET file_content = ? WHERE id = ?');
+        $statement->bindValue(1, $content, \PDO::PARAM_LOB);
+        $statement->bindValue(2, $document->getKey(), \PDO::PARAM_INT);
+        $statement->execute();
+    }
+
     private function serve(ApplicationDocument $document, bool $download)
     {
         $application = $document->application;
@@ -129,10 +141,12 @@ class ApplicationDocumentController extends Controller
         $contentType = $document->file_type ?: 'application/octet-stream';
         $disposition = $download ? 'attachment' : 'inline';
 
-        if ($document->file_content !== null) {
-            return response($document->file_content, 200, [
+        $fileContent = $document->binaryContent();
+
+        if ($fileContent !== null) {
+            return response($fileContent, 200, [
                 'Content-Type' => $contentType,
-                'Content-Length' => (string) strlen($document->file_content),
+                'Content-Length' => (string) strlen($fileContent),
                 'Content-Disposition' => $disposition.'; filename="'.$fileName.'"',
                 'X-Content-Type-Options' => 'nosniff',
                 'Cache-Control' => 'private, no-store',
