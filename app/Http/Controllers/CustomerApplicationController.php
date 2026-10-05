@@ -12,8 +12,12 @@ class CustomerApplicationController extends Controller
      */
     public function index()
     {
+        $user = Auth::user();
+
+        abort_unless($user?->isAdmin() || $user?->isCustomer(), 403);
+
         $applications = Application::with(['service', 'documents'])
-            ->where('user_id', Auth::id())
+            ->when($user->isCustomer(), fn ($query) => $query->where('user_id', $user->id))
             ->latest()
             ->paginate(10);
 
@@ -27,7 +31,10 @@ class CustomerApplicationController extends Controller
      */
     public function show(Application $application)
     {
-        abort_if($application->user_id !== Auth::id(), 403);
+        $user = Auth::user();
+
+        abort_unless($user?->isAdmin() || $user?->isCustomer(), 403);
+        abort_if($user->isCustomer() && $application->user_id !== $user->id, 403);
 
         $application->load([
     'service',
