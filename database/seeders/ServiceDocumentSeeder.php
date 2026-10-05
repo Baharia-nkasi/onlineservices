@@ -513,7 +513,10 @@ class ServiceDocumentSeeder extends Seeder
             foreach ($documents as $index => $document) {
                 $rule = $ruleMap[$slug][$document['name']] ?? null;
 
-                ServiceDocument::updateOrCreate(
+                // Requirements are seeded as defaults only. Never overwrite an
+                // existing requirement because admins may intentionally change
+                // its active state, description, ordering or validation rules.
+                ServiceDocument::firstOrCreate(
                     [
                         'service_id' => $service->id,
                         'name' => $document['name'],
