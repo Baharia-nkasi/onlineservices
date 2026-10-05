@@ -189,18 +189,74 @@ class AdminController extends Controller
         return back()->with('success', __('Document status updated.'));
     }
 
+    public function services()
+    {
+        $this->guard();
+
+        $services = Service::withCount('applications')
+            ->withCount(['documents as active_documents_count' => fn ($query) => $query->where('is_active', true)])
+            ->latest()
+            ->paginate(15);
+
+        return view('admin.services.index', compact('services'));
+    }
+
+    public function storeService(Request $request)
+    {
+        $this->guard();
+
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'slug' => ['required', 'string', 'max:255', 'alpha_dash', 'unique:services,slug'],
+            'description' => ['nullable', 'string', 'max:5000'],
+            'government_fee' => ['required', 'numeric', 'min:0', 'max:9999999999'],
+            'service_fee' => ['required', 'numeric', 'min:0', 'max:9999999999'],
+            'is_active' => ['required', 'boolean'],
+        ]);
+
+        Service::create($validated);
+
+        return redirect()->route('admin.services.index')
+            ->with('success', __('Service created successfully.'));
+    }
+
     public function updateService(Request $request, Service $service)
     {
         $this->guard();
 
         $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'slug' => ['required', 'string', 'max:255', 'alpha_dash', 'unique:services,slug,'.$service->id],
+            'description' => ['nullable', 'string', 'max:5000'],
             'is_active' => ['required', 'boolean'],
-            'service_fee' => ['required', 'numeric', 'min:0', 'max:9999999999'],
             'government_fee' => ['required', 'numeric', 'min:0', 'max:9999999999'],
+            'service_fee' => ['required', 'numeric', 'min:0', 'max:9999999999'],
         ]);
 
         $service->update($validated);
 
         return back()->with('success', __('Service settings updated.'));
+    }
+
+    public function destroyService(Service $service)
+    {
+        $this->guard();
+
+        if ($service->is_active) {
+            return back()->withErrors([
+                'service' => __('Only deactivated services can be deleted. Deactivate the service first.'),
+            ]);
+        }
+
+        if ($service->applications()->exists()) {
+            return back()->withErrors([
+                'service' => __('This service cannot be deleted because it has customer applications. Keep it deactivated to preserve application history.'),
+            ]);
+        }
+
+        $service->delete();
+
+        return redirect()->route('admin.services.index')
+            ->with('success', __('Service deleted successfully.'));
     }
 }
