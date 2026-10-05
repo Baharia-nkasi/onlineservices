@@ -65,7 +65,7 @@
                             ? 'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1400&q=85'
                             : (str_contains($slug, 'erita') || str_contains($slug, 'cheti') || str_contains($slug, 'nyaraka') || str_contains($slug, 'nida')
                                 ? 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1400&q=85'
-                                : 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1400&q=85'));
+                                : 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1400&q=85')));
                 return ['name' => $service->name, 'description' => $service->description, 'url' => route('applications.create', $service), 'image' => $image];
             });
         @endphp
