@@ -2,13 +2,13 @@
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
-    <form method="POST" action="{{ route('login') }}">
+    <form method="POST" action="{{ route('login') }}" data-live-validate="login" novalidate>
         @csrf
 
         <!-- Email Address -->
         <div>
             <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
+            <x-text-input id="email" class="input-modern mt-1 block w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" aria-describedby="email-live-error" />\n            <p id="email-live-error" class="mt-1 min-h-5 text-xs font-semibold text-red-600" aria-live="polite"></p>
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
@@ -16,12 +16,12 @@
         <div class="mt-4">
             <x-input-label for="password" :value="__('Password')" />
 
-            <x-text-input id="password" class="block mt-1 w-full"
+            <x-text-input id="password" class="input-modern mt-1 block w-full" aria-describedby="password-live-error"
                             type="password"
                             name="password"
                             required autocomplete="current-password" />
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+            <x-input-error :messages="$errors->get('password')" class="mt-2" />\n            <p id="password-live-error" class="mt-1 min-h-5 text-xs font-semibold text-red-600" aria-live="polite"></p>
         </div>
 
         <!-- Remember Me -->
@@ -39,7 +39,7 @@
                 </a>
             @endif
 
-            <x-primary-button class="ms-3">
+            <x-primary-button class="portal-button ms-3">
                 {{ __('Log in') }}
             </x-primary-button>
         </div>
