@@ -55,6 +55,52 @@
                             <div class="lg:col-span-2 flex items-end"><label class="flex items-center gap-2 pb-3 text-sm font-bold {{ $service->is_active ? 'text-emerald-700' : 'text-slate-500' }}"><input type="hidden" name="is_active" value="0"><input type="checkbox" name="is_active" value="1" @checked($service->is_active) class="rounded border-slate-300 text-blue-700 focus:ring-blue-500">{{ $service->is_active ? __('Active') : __('Deactivated') }}</label></div>
                             <div class="lg:col-span-4 flex flex-wrap items-end gap-2"><span class="rounded-xl bg-slate-100 px-3 py-2 text-xs font-bold text-slate-600">{{ $service->applications_count }} {{ __('applications') }}</span><span class="rounded-xl bg-slate-100 px-3 py-2 text-xs font-bold text-slate-600">{{ $service->active_documents_count }} {{ __('active requirements') }}</span><button type="submit" class="portal-button">{{ __('Save Changes') }}</button></div>
                         </form>
+                        <details class="mt-5 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                            <summary class="cursor-pointer text-sm font-extrabold text-slate-800">{{ __('Manage document requirements') }} ({{ $service->active_documents_count }})</summary>
+                            <div class="mt-4 space-y-4">
+                                <form method="POST" action="{{ route('admin.services.documents.store', $service) }}" class="grid gap-3 md:grid-cols-2">
+                                    @csrf
+                                    <input name="name" required maxlength="255" class="input-modern" placeholder="{{ __('Document name') }}">
+                                    <input name="description" maxlength="2000" class="input-modern" placeholder="{{ __('Description') }}">
+                                    <select name="requirement_type" class="input-modern">
+                                        <option value="single">{{ __('Single requirement') }}</option>
+                                        <option value="choose_one">{{ __('Choose one from group') }}</option>
+                                        <option value="choose_many">{{ __('Choose many from group') }}</option>
+                                    </select>
+                                    <input name="requirement_group" maxlength="100" pattern="[A-Za-z0-9_-]+" class="input-modern" placeholder="{{ __('Group (optional, e.g. identity)') }}">
+                                    <input type="number" name="minimum_required" value="1" min="1" max="100" class="input-modern" placeholder="{{ __('Minimum required') }}">
+                                    <input type="number" name="sort_order" value="0" min="0" max="10000" class="input-modern" placeholder="{{ __('Sort order') }}">
+                                    <label class="flex items-center gap-2 text-sm font-bold"><input type="hidden" name="is_required" value="0"><input type="checkbox" name="is_required" value="1" checked>{{ __('Required') }}</label>
+                                    <label class="flex items-center gap-2 text-sm font-bold"><input type="hidden" name="is_active" value="0"><input type="checkbox" name="is_active" value="1" checked>{{ __('Active') }}</label>
+                                    <button type="submit" class="portal-button md:col-span-2">{{ __('Add Requirement') }}</button>
+                                </form>
+                                <div class="space-y-3">
+                                    @forelse($service->documents as $document)
+                                        <form method="POST" action="{{ route('admin.service-documents.update', $document) }}" class="grid gap-3 rounded-xl border border-slate-200 bg-white p-4 md:grid-cols-12">
+                                            @csrf @method('PATCH')
+                                            <input name="name" value="{{ $document->name }}" required maxlength="255" class="input-modern md:col-span-3">
+                                            <input name="description" value="{{ $document->description }}" maxlength="2000" class="input-modern md:col-span-3">
+                                            <select name="requirement_type" class="input-modern md:col-span-2">
+                                                <option value="single" @selected($document->requirement_type === 'single')>{{ __('Single') }}</option>
+                                                <option value="choose_one" @selected($document->requirement_type === 'choose_one')>{{ __('Choose one') }}</option>
+                                                <option value="choose_many" @selected($document->requirement_type === 'choose_many')>{{ __('Choose many') }}</option>
+                                            </select>
+                                            <input name="requirement_group" value="{{ $document->requirement_group }}" maxlength="100" pattern="[A-Za-z0-9_-]+" class="input-modern md:col-span-2" placeholder="{{ __('Group') }}">
+                                            <input type="number" name="minimum_required" value="{{ $document->minimum_required }}" min="1" max="100" class="input-modern">
+                                            <input type="number" name="sort_order" value="{{ $document->sort_order }}" min="0" max="10000" class="input-modern">
+                                            <div class="flex items-center gap-3 md:col-span-8">
+                                                <label class="text-xs font-bold"><input type="hidden" name="is_required" value="0"><input type="checkbox" name="is_required" value="1" @checked($document->is_required)> {{ __('Required') }}</label>
+                                                <label class="text-xs font-bold"><input type="hidden" name="is_active" value="0"><input type="checkbox" name="is_active" value="1" @checked($document->is_active)> {{ __('Active') }}</label>
+                                                <button type="submit" class="portal-button">{{ __('Save') }}</button>
+                                            </div>
+                                        </form>
+                                    @empty
+                                        <p class="text-sm text-slate-500">{{ __('No document requirements configured.') }}</p>
+                                    @endforelse
+                                </div>
+                            </div>
+                        </details>
+
                         <div class="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 pt-4">
                             <p class="text-xs text-slate-500">@if($service->is_active){{ __('Active services are visible to customers and can receive new requests.') }}@else{{ __('Deactivated services are hidden from new customer requests. Existing applications are preserved.') }}@endif</p>
                             @if(!$service->is_active)
