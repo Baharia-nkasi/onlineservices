@@ -45,8 +45,8 @@
                             <div class="flex flex-col gap-5 lg:flex-row lg:{{ __('items') }}-center lg:justify-between">
                                 <div class="min-w-0">
                                     <div class="flex flex-wrap {{ __('items') }}-center gap-2">
-                                        <span class="text-xs font-extrabold uppercase tracking-wider text-slate-400">Application #{{ $application->id }}</span>
-                                        <span class="status-pill {{ $badge }}">{{ ucfirst($application->status) }}</span>
+                                        <span class="text-xs font-extrabold uppercase tracking-wider text-slate-400">{{ __('Application') }} #{{ $application->id }}</span>
+                                        <span class="status-pill {{ $badge }}">{{ __($application->status) }}</span>
                                     </div>
                                     <h2 class="mt-2 truncate text-xl font-black text-slate-900">{{ $application->service->name }}</h2>
                                     <p class="mt-1 text-sm text-slate-500">{{ __('Submitted') }} {{ $application->created_at->format('d M Y, H:i') }}</p>
