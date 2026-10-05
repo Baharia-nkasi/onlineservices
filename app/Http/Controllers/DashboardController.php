@@ -10,6 +10,8 @@ class DashboardController extends Controller
 {
     public function index()
     {
+        abort_unless(Auth::user()->isAdmin() || Auth::user()->isCustomer(), 403);
+
         if (Auth::user()->isAdmin()) {
             return redirect()->route('admin.dashboard');
         }
