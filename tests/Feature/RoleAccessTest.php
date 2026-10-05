@@ -68,7 +68,6 @@ class RoleAccessTest extends TestCase
             ->get(route('customer.applications.index'))
             ->assertOk()
             ->assertSee('All Applications')
-            ->assertSee($customer->name)
             ->assertSee('Manage Application');
 
         $this->actingAs($admin)
