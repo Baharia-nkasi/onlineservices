@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use App\Models\Service;
 
-Route::get('/', function () {
+Route::get('/language/{locale}', function (string $locale) {\n    abort_unless(in_array($locale, ['en', 'sw'], true), 404);\n\n    session(['locale' => $locale]);\n\n    return back()->with('success', $locale === 'sw' ? 'Lugha imebadilishwa kuwa Kiswahili.' : 'Language changed to English.');\n})->name('language.switch');\n\nRoute::middleware('locale')->group(function () {\n\nRoute::get('/', function () {
     return view('welcome', [
         'services' => Service::where('is_active', true)->latest()->limit(4)->get(),
     ]);
@@ -96,4 +96,4 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-require __DIR__.'/auth.php';
+require __DIR__.'/auth.php';\n\n});
