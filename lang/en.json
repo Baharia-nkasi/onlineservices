@@ -81,5 +81,6 @@
     "pending": "Pending",
     "processing": "Processing",
     "completed": "Completed",
-    "rejected": "Rejected"
+    "rejected": "Rejected",
+    "Application": "Application"
 }
