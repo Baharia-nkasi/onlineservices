@@ -15,7 +15,7 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="font-sans antialiased bg-slate-50 text-slate-900">
+<body class="font-sans antialiased app-shell bg-slate-50 text-slate-900">
 <div class="min-h-screen">
     @include('layouts.navigation')
     @isset($header)
@@ -23,7 +23,25 @@
             <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">{{ $header }}</div>
         </header>
     @endisset
-    <main>{{ $slot }}</main>
+    <main class="app-main">{{ $slot }}</main>
+
+    <div class="theme-toggle-dock" aria-label="{{ __('Theme controls') }}">
+        <button
+            type="button"
+            id="theme-toggle"
+            class="theme-toggle-switch"
+            aria-label="{{ __('Switch theme') }}"
+            aria-pressed="false"
+            title="{{ __('Switch between light and dark mode') }}"
+        >
+            <span class="theme-toggle-track" aria-hidden="true">
+                <span class="theme-toggle-icon theme-toggle-sun">☀</span>
+                <span class="theme-toggle-icon theme-toggle-moon">☾</span>
+                <span class="theme-toggle-thumb"></span>
+            </span>
+            <span id="theme-toggle-label" class="theme-toggle-label">{{ __('Light mode') }}</span>
+        </button>
+    </div>
 </div>
 </body>
 </html>
