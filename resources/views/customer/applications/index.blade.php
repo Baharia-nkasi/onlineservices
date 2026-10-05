@@ -14,7 +14,7 @@
                     <div>
                         <p class="text-sm font-extrabold uppercase tracking-wider text-blue-300">{{ Auth::user()->isAdmin() ? __('Application management') : __('Application center') }}</p>
                         <h1 class="mt-2 text-3xl font-black tracking-tight sm:text-4xl">{{ Auth::user()->isAdmin() ? __('Manage all applications') : __('Track your applications') }}</h1>
-                        <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-300">{{ Auth::user()->isAdmin() ? __('Review customer applications and open each request to manage its documents and status.') : __('Monitor progress, upload documents, and review updates for every service request in one place.') }}</p>
+                        <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-300">{{ Auth::user()->isAdmin() ? __('Review customer applications and open each request to manage its documents and status.') : __('Monitor active and completed service requests in one place. Rejected applications are removed from your application history and must be started again from the beginning.') }}</p>
                     </div>
                     @if(!Auth::user()->isAdmin())
                         <a href="{{ route('services.index') }}" class="portal-button shrink-0">{{ __('Start New Application') }}</a>
@@ -68,8 +68,8 @@
                 @empty
                     <div class="portal-card p-12 text-center">
                         <div class="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-blue-50 text-3xl">📋</div>
-                        <h2 class="mt-5 text-xl font-black text-slate-900">{{ __('No applications yet') }}</h2>
-                        <p class="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">{{ __('Choose one of our services to start your first application. You can return here anytime to track its progress.') }}</p>
+                        <h2 class="mt-5 text-xl font-black text-slate-900">{{ Auth::user()->isAdmin() ? __('No applications yet') : __('No active applications') }}</h2>
+                        <p class="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">{{ Auth::user()->isAdmin() ? __('Choose one of our services to start your first application. You can return here anytime to track its progress.') : __('Rejected applications are not kept in your application history. Choose a service below to start a new application from the beginning.') }}</p>
                         <a href="{{ route('services.index') }}" class="portal-button mt-6">{{ __('Browse Services') }}</a>
                     </div>
                 @endforelse
