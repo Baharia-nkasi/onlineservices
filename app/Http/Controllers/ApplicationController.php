@@ -21,13 +21,14 @@ class ApplicationController extends Controller
 
     public function store(Request $request, Service $service)
     {
-        abort_unless($service->is_active, 404);
-
         $validated = $request->validate([
             'notes' => ['nullable', 'string', 'max:2000'],
         ]);
 
         $application = DB::transaction(function () use ($service, $validated) {
+            $lockedService = Service::query()->lockForUpdate()->findOrFail($service->id);
+            abort_unless($lockedService->is_active, 404);
+
             $user = Auth::user()->newQuery()->lockForUpdate()->findOrFail(Auth::id());
 
             $existing = Application::where('user_id', $user->id)
@@ -42,7 +43,7 @@ class ApplicationController extends Controller
 
             return Application::create([
                 'user_id' => $user->id,
-                'service_id' => $service->id,
+                'service_id' => $lockedService->id,
                 'status' => 'pending',
                 'notes' => $validated['notes'] ?? null,
             ]);
