@@ -7,6 +7,7 @@ use App\Models\ApplicationDocument;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\QueryException;
 use Illuminate\Validation\Rules\File;
 
 class ApplicationDocumentController extends Controller
@@ -50,27 +51,42 @@ class ApplicationDocumentController extends Controller
         }
 
         $path = $file->store('application-documents', 'local');
+        $originalPath = $existing?->file_path;
 
-        if ($existing) {
-            Storage::disk('local')->delete($existing->file_path);
+        try {
+            if ($existing) {
+                $existing->update([
+                    'file_name' => basename($file->getClientOriginalName()),
+                    'file_path' => $path,
+                    'file_type' => $file->getMimeType(),
+                    'file_size' => $file->getSize(),
+                    'status' => 'pending',
+                    'notes' => null,
+                ]);
 
-            $existing->update([
-                'file_name' => $file->getClientOriginalName(),
-                'file_path' => $path,
-                'file_type' => $file->getClientMimeType(),
-                'file_size' => $file->getSize(),
-                'status' => 'pending',
-                'notes' => null,
-            ]);
-        } else {
-            $application->documents()->create([
-                'document_name' => $requirement->name,
-                'file_name' => $file->getClientOriginalName(),
-                'file_path' => $path,
-                'file_type' => $file->getClientMimeType(),
-                'file_size' => $file->getSize(),
-                'status' => 'pending',
-            ]);
+                if ($originalPath && $originalPath !== $path) {
+                    Storage::disk('local')->delete($originalPath);
+                }
+            } else {
+                $application->documents()->create([
+                    'document_name' => $requirement->name,
+                    'file_name' => basename($file->getClientOriginalName()),
+                    'file_path' => $path,
+                    'file_type' => $file->getMimeType(),
+                    'file_size' => $file->getSize(),
+                    'status' => 'pending',
+                ]);
+            }
+        } catch (QueryException $exception) {
+            Storage::disk('local')->delete($path);
+
+            if ($exception->getCode() === '23505') {
+                return back()->withErrors([
+                    'document_name' => 'This document has already been uploaded. Please refresh the application and try again.',
+                ])->withInput();
+            }
+
+            throw $exception;
         }
 
         return redirect()
