@@ -90,61 +90,72 @@ class AdminController extends Controller
             'status' => ['required', 'in:pending,processing,completed,rejected'],
         ]);
 
-        $current = $application->status;
         $next = $validated['status'];
-        $allowed = [
-            'pending' => ['pending', 'processing', 'rejected'],
-            'processing' => ['processing', 'completed', 'rejected'],
-            'completed' => ['completed'],
-            'rejected' => ['rejected', 'processing'],
-        ];
+        $error = DB::transaction(function () use ($application, $next) {
+            // Serialize admin status changes so two admins cannot complete/reject
+            // the same application against stale document/status data.
+            $lockedApplication = Application::query()->lockForUpdate()->findOrFail($application->id);
+            $current = $lockedApplication->status;
 
-        if (! in_array($next, $allowed[$current] ?? [], true)) {
-            return back()->withErrors([
-                'status' => __('Invalid status transition from :current to :next.', ['current' => $current, 'next' => $next]),
-            ]);
-        }
+            $allowed = [
+                'pending' => ['pending', 'processing', 'rejected'],
+                'processing' => ['processing', 'completed', 'rejected'],
+                'completed' => ['completed'],
+                'rejected' => ['rejected', 'processing'],
+            ];
 
-        if ($validated['status'] === 'completed') {
-            $application->load(['service.documents', 'documents']);
-
-            $missingRequired = $application->service->documents
-                ->where('is_active', true)
-                ->where('is_required', true)
-                ->whereNull('requirement_group')
-                ->filter(fn ($requirement) => ! $application->documents->contains(
-                    fn ($document) => mb_strtolower($document->document_name) === mb_strtolower($requirement->name)
-                        && $document->status === 'approved'
-                        && $document->hasAvailableFile()
-                ));
-
-            $grouped = $application->service->documents
-                ->where('is_active', true)
-                ->where('is_required', true)
-                ->whereNotNull('requirement_group')
-                ->groupBy('requirement_group');
-
-            $missingGroups = $grouped->filter(function ($requirements) use ($application) {
-                $minimum = max(1, (int) $requirements->max('minimum_required'));
-                $approved = $application->documents
-                    ->where('status', 'approved')
-                    ->filter(fn ($document) => $requirements->contains(
-                        fn ($requirement) => mb_strtolower($document->document_name) === mb_strtolower($requirement->name)
-                            && $document->hasAvailableFile()
-                    ))
-                    ->count();
-
-                return $approved < $minimum;
-            });
-
-            if ($missingRequired->isNotEmpty() || $missingGroups->isNotEmpty()) {
-                return back()->withErrors([
-                    'status' => __('This application cannot be completed until all required documents and requirement groups have approved documents.'),
+            if (! in_array($next, $allowed[$current] ?? [], true)) {
+                return __('Invalid status transition from :current to :next.', [
+                    'current' => $current,
+                    'next' => $next,
                 ]);
             }
-        }
 
-        $application->update(['status' => $validated['status']]);
+            if ($next === 'completed') {
+                $lockedApplication->load(['service.documents', 'documents']);
+
+                $missingRequired = $lockedApplication->service->documents
+                    ->where('is_active', true)
+                    ->where('is_required', true)
+                    ->whereNull('requirement_group')
+                    ->filter(fn ($requirement) => ! $lockedApplication->documents->contains(
+                        fn ($document) => mb_strtolower($document->document_name) === mb_strtolower($requirement->name)
+                            && $document->status === 'approved'
+                            && $document->hasAvailableFile()
+                    ));
+
+                $grouped = $lockedApplication->service->documents
+                    ->where('is_active', true)
+                    ->where('is_required', true)
+                    ->whereNotNull('requirement_group')
+                    ->groupBy('requirement_group');
+
+                $missingGroups = $grouped->filter(function ($requirements) use ($lockedApplication) {
+                    $minimum = max(1, (int) $requirements->max('minimum_required'));
+                    $approved = $lockedApplication->documents
+                        ->where('status', 'approved')
+                        ->filter(fn ($document) => $requirements->contains(
+                            fn ($requirement) => mb_strtolower($document->document_name) === mb_strtolower($requirement->name)
+                                && $document->hasAvailableFile()
+                        ))
+                        ->count();
+
+                    return $approved < $minimum;
+                });
+
+                if ($missingRequired->isNotEmpty() || $missingGroups->isNotEmpty()) {
+                    return __('This application cannot be completed until all required documents and requirement groups have approved documents.');
+                }
+            }
+
+            $lockedApplication->update(['status' => $next]);
+
+            return null;
+        });
+
+        if ($error) {
+            return back()->withErrors(['status' => $error]);
+        }
 
         return back()->with('success', __('Application status updated.'));
     }
@@ -183,19 +194,26 @@ class AdminController extends Controller
             'notes' => ['nullable', 'string', 'max:1000'],
         ]);
 
-        if ($document->application->status === 'completed') {
-            return back()->withErrors([
-                'status' => __('Documents for a completed application are locked and cannot be changed.'),
-            ]);
-        }
+        $error = DB::transaction(function () use ($document, $validated) {
+            $application = Application::query()->lockForUpdate()->findOrFail($document->application_id);
+            $lockedDocument = $application->documents()->lockForUpdate()->findOrFail($document->id);
 
-        if ($validated['status'] === 'approved' && ! $document->hasAvailableFile()) {
-            return back()->withErrors([
-                'status' => __('This document cannot be approved because the uploaded file is unavailable. Ask the customer to re-upload it.'),
-            ]);
-        }
+            if ($application->status === 'completed') {
+                return __('Documents for a completed application are locked and cannot be changed.');
+            }
 
-        $document->update($validated);
+            if ($validated['status'] === 'approved' && ! $lockedDocument->hasAvailableFile()) {
+                return __('This document cannot be approved because the uploaded file is unavailable. Ask the customer to re-upload it.');
+            }
+
+            $lockedDocument->update($validated);
+
+            return null;
+        });
+
+        if ($error) {
+            return back()->withErrors(['status' => $error]);
+        }
 
         return back()->with('success', __('Document status updated.'));
     }
