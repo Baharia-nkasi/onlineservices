@@ -13,6 +13,10 @@
         @apply bg-slate-50 text-slate-900 antialiased;
     }
 
+    html.dark body {
+        @apply bg-slate-950 text-slate-100;
+    }
+
     button,
     a,
     input,
@@ -40,7 +44,11 @@
     }
 
     .portal-card:hover {
-        @apply shadow-[0_10px_28px_rgba(15,23,42,0.10)];
+        @apply -translate-y-0.5 shadow-[0_10px_28px_rgba(15,23,42,0.10)];
+    }
+
+    .dark-mode-toggle {
+        @apply inline-flex h-10 w-10 items-center justify-center rounded-[12px] border border-slate-200 bg-white text-slate-700 shadow-sm hover:bg-slate-50 hover:text-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2;
     }
 
     .portal-button {
@@ -68,7 +76,11 @@
     }
 
     .glass-panel {
-        @apply border border-white/10 bg-white/10 backdrop-blur-xl;
+        @apply rounded-[12px] border border-white/20 bg-white/10 backdrop-blur-xl shadow-[0_8px_32px_rgba(15,23,42,0.12)];
+    }
+
+    .neumorphic-button {
+        @apply inline-flex items-center justify-center rounded-[12px] border border-slate-200 bg-slate-100 px-5 py-3 text-sm font-extrabold text-slate-700 shadow-[6px_6px_14px_rgba(15,23,42,0.10),-6px_-6px_14px_rgba(255,255,255,0.90)] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-[8px_8px_18px_rgba(15,23,42,0.12),-8px_-8px_18px_rgba(255,255,255,0.95)] active:translate-y-0 active:shadow-[inset_4px_4px_10px_rgba(15,23,42,0.10),inset_-4px_-4px_10px_rgba(255,255,255,0.90)];
     }
 
     .input-modern {
@@ -229,6 +241,14 @@
     .portal-button-secondary {
         @apply w-full;
     }
+}
+
+html.dark .portal-card,
+html.dark .portal-button-secondary,
+html.dark .input-modern {
+    border-color: rgb(51 65 85 / 0.8);
+    background-color: rgb(15 23 42);
+    color: rgb(226 232 240);
 }
 
 @media (prefers-reduced-motion: reduce) {
