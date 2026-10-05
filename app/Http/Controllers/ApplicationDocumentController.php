@@ -116,6 +116,8 @@ class ApplicationDocumentController extends Controller
             return back()->withErrors([
                 'document' => __('The document could not be saved. Please try again.'),
             ])->withInput();
+        } catch (HttpExceptionInterface $exception) {
+            throw $exception;
         } catch (\Throwable $exception) {
             report($exception);
             return back()->withErrors([
