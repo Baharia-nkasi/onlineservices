@@ -1,0 +1,75 @@
+<x-app-layout>
+<x-slot name="header">
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+            <p class="text-xs font-extrabold uppercase tracking-wider text-blue-700">{{ __('Management') }}</p>
+            <h2 class="text-2xl font-black tracking-tight text-slate-900">{{ __('Manage Services') }}</h2>
+        </div>
+        <a href="{{ route('admin.dashboard') }}" class="portal-button-secondary">← {{ __('Admin Dashboard') }}</a>
+    </div>
+</x-slot>
+
+<div class="min-h-screen bg-slate-50 page-enter">
+    <div class="mx-auto max-w-7xl space-y-6 px-4 py-8 sm:px-6 lg:px-8">
+        @if(session('success'))
+            <div class="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm font-semibold text-emerald-800">{{ session('success') }}</div>
+        @endif
+        @if($errors->any())
+            <div class="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                <ul class="list-disc pl-5">@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul>
+            </div>
+        @endif
+
+        <section class="portal-card p-6">
+            <h3 class="text-xl font-black text-slate-900">{{ __('Add New Service') }}</h3>
+            <p class="mt-1 text-sm text-slate-500">{{ __('Create a service that customers can request from the Services catalogue.') }}</p>
+            <form method="POST" action="{{ route('admin.services.store') }}" class="mt-6 grid gap-4 md:grid-cols-2">
+                @csrf
+                <div><label for="name" class="block text-sm font-extrabold text-slate-700">{{ __('Service name') }}</label><input id="name" name="name" value="{{ old('name') }}" required maxlength="255" class="input-modern mt-2 w-full" placeholder="{{ __('e.g. Passport Application') }}"></div>
+                <div><label for="slug" class="block text-sm font-extrabold text-slate-700">{{ __('Slug') }}</label><input id="slug" name="slug" value="{{ old('slug') }}" required maxlength="255" pattern="[A-Za-z0-9_-]+" class="input-modern mt-2 w-full" placeholder="passport-application"></div>
+                <div class="md:col-span-2"><label for="description" class="block text-sm font-extrabold text-slate-700">{{ __('Description') }}</label><textarea id="description" name="description" rows="3" maxlength="5000" class="input-modern mt-2 w-full">{{ old('description') }}</textarea></div>
+                <div><label for="government_fee" class="block text-sm font-extrabold text-slate-700">{{ __('Government fee (TSh)') }}</label><input id="government_fee" type="number" min="0" step="0.01" name="government_fee" value="{{ old('government_fee', 0) }}" required class="input-modern mt-2 w-full"></div>
+                <div><label for="service_fee" class="block text-sm font-extrabold text-slate-700">{{ __('Service fee (TSh)') }}</label><input id="service_fee" type="number" min="0" step="0.01" name="service_fee" value="{{ old('service_fee', 0) }}" required class="input-modern mt-2 w-full"></div>
+                <div class="md:col-span-2 flex items-center justify-between gap-4 border-t border-slate-100 pt-4">
+                    <label class="flex items-center gap-3 text-sm font-bold text-slate-700"><input type="hidden" name="is_active" value="0"><input type="checkbox" name="is_active" value="1" checked class="rounded border-slate-300 text-blue-700 focus:ring-blue-500">{{ __('Make service available to customers now') }}</label>
+                    <button type="submit" class="portal-button">{{ __('Add Service') }}</button>
+                </div>
+            </form>
+        </section>
+
+        <section class="portal-card overflow-hidden">
+            <div class="border-b border-slate-200 p-6">
+                <h3 class="text-xl font-black text-slate-900">{{ __('All Services') }}</h3>
+                <p class="mt-1 text-sm text-slate-500">{{ __('Activate, deactivate, edit or safely delete services.') }}</p>
+            </div>
+            <div class="divide-y divide-slate-100">
+                @forelse($services as $service)
+                    <article class="p-6">
+                        <form method="POST" action="{{ route('admin.services.update', $service) }}" class="grid gap-4 lg:grid-cols-12">
+                            @csrf @method('PATCH')
+                            <div class="lg:col-span-4"><label class="text-xs font-extrabold uppercase tracking-wide text-slate-400">{{ __('Service') }}</label><input name="name" value="{{ $service->name }}" required maxlength="255" class="input-modern mt-2 w-full"></div>
+                            <div class="lg:col-span-3"><label class="text-xs font-extrabold uppercase tracking-wide text-slate-400">{{ __('Slug') }}</label><input name="slug" value="{{ $service->slug }}" required maxlength="255" pattern="[A-Za-z0-9_-]+" class="input-modern mt-2 w-full"></div>
+                            <div class="lg:col-span-5"><label class="text-xs font-extrabold uppercase tracking-wide text-slate-400">{{ __('Description') }}</label><input name="description" value="{{ $service->description }}" maxlength="5000" class="input-modern mt-2 w-full"></div>
+                            <div class="lg:col-span-3"><label class="text-xs font-extrabold uppercase tracking-wide text-slate-400">{{ __('Government fee (TSh)') }}</label><input type="number" min="0" step="0.01" name="government_fee" value="{{ $service->government_fee }}" required class="input-modern mt-2 w-full"></div>
+                            <div class="lg:col-span-3"><label class="text-xs font-extrabold uppercase tracking-wide text-slate-400">{{ __('Service fee (TSh)') }}</label><input type="number" min="0" step="0.01" name="service_fee" value="{{ $service->service_fee }}" required class="input-modern mt-2 w-full"></div>
+                            <div class="lg:col-span-2 flex items-end"><label class="flex items-center gap-2 pb-3 text-sm font-bold {{ $service->is_active ? 'text-emerald-700' : 'text-slate-500' }}"><input type="hidden" name="is_active" value="0"><input type="checkbox" name="is_active" value="1" @checked($service->is_active) class="rounded border-slate-300 text-blue-700 focus:ring-blue-500">{{ $service->is_active ? __('Active') : __('Deactivated') }}</label></div>
+                            <div class="lg:col-span-4 flex flex-wrap items-end gap-2"><span class="rounded-xl bg-slate-100 px-3 py-2 text-xs font-bold text-slate-600">{{ $service->applications_count }} {{ __('applications') }}</span><span class="rounded-xl bg-slate-100 px-3 py-2 text-xs font-bold text-slate-600">{{ $service->active_documents_count }} {{ __('active requirements') }}</span><button type="submit" class="portal-button">{{ __('Save Changes') }}</button></div>
+                        </form>
+                        <div class="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 pt-4">
+                            <p class="text-xs text-slate-500">@if($service->is_active){{ __('Active services are visible to customers and can receive new requests.') }}@else{{ __('Deactivated services are hidden from new customer requests. Existing applications are preserved.') }}@endif</p>
+                            @if(!$service->is_active)
+                                <form method="POST" action="{{ route('admin.services.destroy', $service) }}" onsubmit="return confirm('{{ __('Delete this deactivated service permanently? This action cannot be undone.') }}');">@csrf @method('DELETE')<button type="submit" class="rounded-xl border border-red-200 bg-red-50 px-4 py-2.5 text-sm font-extrabold text-red-700 hover:bg-red-100">{{ __('Delete Deactivated Service') }}</button></form>
+                            @else
+                                <span class="text-xs font-bold text-slate-400">{{ __('Deactivate the service before deletion.') }}</span>
+                            @endif
+                        </div>
+                    </article>
+                @empty
+                    <div class="p-12 text-center text-slate-500">{{ __('No services have been created yet.') }}</div>
+                @endforelse
+            </div>
+            <div class="border-t border-slate-200 p-4">{{ $services->links() }}</div>
+        </section>
+    </div>
+</div>
+</x-app-layout>
