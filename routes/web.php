@@ -9,9 +9,12 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use App\Models\Service;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('welcome', [
+        'services' => Service::where('is_active', true)->latest()->limit(4)->get(),
+    ]);
 })->name('home');
 
 Route::get('/health', function () {
