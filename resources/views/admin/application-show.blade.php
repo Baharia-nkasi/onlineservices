@@ -148,7 +148,13 @@
                             </div>
 
                             <div class="flex flex-col gap-2 sm:flex-row">
-                                <a target="_blank" rel="noopener" href="{{ route('application.documents.view',$document) }}" class="portal-button-secondary text-center">View File</a>
+                                @if($document->hasAvailableFile())
+                                    <a target="_blank" rel="noopener" href="{{ route('application.documents.view',$document) }}" class="portal-button-secondary text-center">View File</a>
+                                @else
+                                    <span class="inline-flex items-center rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-extrabold text-amber-700 text-center">
+                                        File unavailable — ask customer to re-upload
+                                    </span>
+                                @endif
                                 <form method="POST" action="{{ route('admin.documents.status',$document) }}" class="flex flex-col gap-2 sm:flex-row">
                                     @csrf @method('PATCH')
                                     <select name="status" class="rounded-xl border-slate-300 text-sm" {{ $application->status === 'completed' ? 'disabled' : '' }}>
