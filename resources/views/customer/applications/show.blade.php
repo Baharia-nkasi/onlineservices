@@ -173,7 +173,13 @@
                             @endif
                         </div>
                         <div class="flex shrink-0 gap-2">
-                            <a target="_blank" rel="noopener" href="{{ route('application.documents.view',$document) }}" class="portal-button-secondary">View</a>
+                            @if($document->hasAvailableFile())
+                                <a target="_blank" rel="noopener" href="{{ route('application.documents.view',$document) }}" class="portal-button-secondary">View</a>
+                            @else
+                                <span class="inline-flex items-center rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-extrabold text-amber-700" title="Please upload this document again">
+                                    File unavailable — re-upload
+                                </span>
+                            @endif
                             @if($document->status === 'pending')
                                 <form method="POST" action="{{ route('application.documents.destroy',$document) }}" x-data="confirmAction('Delete this document?')" @submit="submit($event)">
                                     @csrf @method('DELETE')
