@@ -22,16 +22,14 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' \
     /etc/apache2/apache2.conf \
     /etc/apache2/conf-available/*.conf
 
-# Laravel uses public/.htaccess for clean routes such as /login and /dashboard.
-# Debian Apache disables .htaccess overrides by default, so explicitly enable them.
-RUN printf '%s\n' \
-    '<Directory /var/www/html/public>' \
-    '    Options -Indexes +FollowSymLinks' \
-    '    AllowOverride All' \
-    '    Require all granted' \
-    '</Directory>' \
-    > /etc/apache2/conf-available/laravel-public.conf \
-    && a2enconf laravel-public
+RUN cat > /etc/apache2/conf-available/laravel-public.conf <<'EOF'
+<Directory /var/www/html/public>
+    Options -Indexes +FollowSymLinks
+    AllowOverride All
+    Require all granted
+</Directory>
+EOF
+RUN a2enconf laravel-public
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
