@@ -34,14 +34,14 @@
 
         <div class="portal-card overflow-hidden">
             <div class="flex flex-col gap-3 border-b border-slate-200 p-5 sm:flex-row sm:items-center sm:justify-between">
-                <div><h3 class="text-lg font-black text-slate-900">{{ __('Recent Applications') }}</h3><p class="mt-1 text-sm text-slate-500">{{ __('Search, filter, review and process customer requests.') }}</p></div>
+                <div><h3 class="text-lg font-black text-slate-900">{{ __('Recent Applications') }}</h3><p class="mt-1 text-sm text-slate-500">{{ __('Search, filter, review and process active customer requests. Completed and rejected requests are kept in history.') }}</p></div>
                 <span id="admin-search-count" class="text-sm font-bold text-slate-400">{{ $applications->count() }} {{ __('results on this page') }}</span>
             </div>
             <form method="GET" data-admin-filter-form class="grid gap-3 border-b border-slate-100 bg-slate-50 p-4 md:grid-cols-[1fr_auto_auto]">
                 <input type="search" name="q" value="{{ request('q') }}" placeholder="{{ __('Search customer, email, service or application ID...') }}" class="input-modern" data-table-search="#admin-applications-table" data-count-target="#admin-search-count" autocomplete="off">
                 <select name="status" class="input-modern md:w-48">
                     <option value="">{{ __('All statuses') }}</option>
-                    @foreach(['pending','processing','completed','rejected'] as $status)
+                    @foreach(['pending','processing'] as $status)
                         <option value="{{ $status }}" @selected(request('status') === $status)>{{ __($status) }}</option>
                     @endforeach
                 </select>
