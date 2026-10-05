@@ -83,7 +83,7 @@
                             </div>
                         </div>
                     @empty
-                        <div class="p-12 text-center"><div class="text-4xl">📋</div><h4 class="mt-3 font-black">{{ __('No applications yet') }}</h4><p class="mt-1 text-sm text-slate-500">{{ __('Choose a service above to start your first application.') }}</p></div>
+                        <div class="p-12 text-center"><div class="text-4xl">📋</div><h4 class="mt-3 font-black">{{ __('No active applications') }}</h4><p class="mt-1 text-sm text-slate-500">{{ __('Rejected applications are removed from this list. Choose a service above to start a new application from the beginning.') }}</p></div>
                     @endforelse
                 </div>
             </section>
