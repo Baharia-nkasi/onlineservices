@@ -43,12 +43,12 @@
                     @endforeach
                 </select>
                 <div class="flex gap-2">
-                    <button class="portal-button">Filter</button>
+                    <button type="submit" class="portal-button">Filter</button>
                     @if(request()->hasAny(['q','status']))
                         <a href="{{ route('admin.dashboard') }}" class="portal-button-secondary">Clear</a>
                     @endif
                 </div>
-            </div>
+            </form>
             <div class="overflow-x-auto">
                 <table id="admin-applications-table" class="w-full text-left text-sm">
                     <thead class="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
