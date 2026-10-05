@@ -36,11 +36,16 @@ class ServiceSeeder extends Seeder
         ];
 
         foreach ($services as $service) {
-            Service::updateOrCreate(
+            // Seed defaults only when the service is new. Existing admin edits
+            // (name, description, fees, active state, etc.) must survive deploys.
+            Service::firstOrCreate(
                 ['slug' => $service['slug']],
                 [
                     'name' => $service['name'],
                     'description' => $service['description'],
+                    'government_fee' => 0,
+                    'service_fee' => 0,
+                    'is_active' => true,
                 ]
             );
         }
