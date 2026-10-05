@@ -1,6 +1,6 @@
 <x-app-layout>
 <x-slot name="header">
-    <div class="flex flex-col gap-2 sm:flex-row sm:{{ __('items') }}-center sm:justify-between">
+    <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
             <p class="text-xs font-extrabold uppercase tracking-wider text-blue-700">{{ __('Service catalogue') }}</p>
             <h2 class="text-2xl font-black tracking-tight text-slate-900">{{ __('Find a service') }}</h2>
@@ -24,7 +24,7 @@
                 <h1 class="mt-2 text-2xl font-black tracking-tight sm:text-4xl">{{ __('What service do you need?') }}</h1>
                 <p class="mt-3 max-w-2xl leading-7 text-slate-300">{{ __('Choose a service below. Review its requirements and fees before starting your application.') }}</p>
 
-                <div class="mt-6 flex max-w-xl {{ __('items') }}-center gap-3 rounded-[12px] bg-white px-4 py-3 text-slate-400 shadow-[0_8px_24px_rgba(15,23,42,0.12)]">
+                <div class="mt-6 flex max-w-xl items-center gap-3 rounded-[12px] bg-white px-4 py-3 text-slate-400 shadow-[0_8px_24px_rgba(15,23,42,0.12)]">
                     <span class="text-lg">⌕</span>
                     <input x-model="query" @input="filter()" type="search" autocomplete="off"
                         placeholder="{{ __('Search services...') }}"
@@ -39,8 +39,8 @@
             @forelse($services as $service)
                 <article class="service-card portal-card flex flex-col p-5"
                     data-name="{{ strtolower($service->name) }}">
-                    <div class="flex {{ __('items') }}-center justify-between">
-                        <span class="service-icon flex h-11 w-11 {{ __('items') }}-center justify-center rounded-[12px] bg-blue-50 text-xl transition-transform duration-200">📋</span>
+                    <div class="flex items-center justify-between">
+                        <span class="service-icon flex h-11 w-11 items-center justify-center rounded-[12px] bg-blue-50 text-xl transition-transform duration-200">📋</span>
                         <span class="status-pill bg-emerald-50 text-emerald-700">{{ __('Available') }}</span>
                     </div>
                     <h3 class="mt-5 text-lg font-extrabold text-slate-900">{{ $service->name }}</h3>
