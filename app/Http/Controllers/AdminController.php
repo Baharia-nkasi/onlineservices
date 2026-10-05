@@ -126,14 +126,14 @@ class AdminController extends Controller
 
             if ($missingRequired->isNotEmpty() || $missingGroups->isNotEmpty()) {
                 return back()->withErrors([
-                    'status' => 'This application cannot be completed until all required documents and requirement groups have approved documents.',
+                    'status' => __('This application cannot be completed until all required documents and requirement groups have approved documents.'),
                 ]);
             }
         }
 
         $application->update(['status' => $validated['status']]);
 
-        return back()->with('success', 'Application status updated.');
+        return back()->with('success', __('Application status updated.'));
     }
 
     /**
@@ -148,7 +148,7 @@ class AdminController extends Controller
 
         if ($application->status === 'completed') {
             return back()->withErrors([
-                'document' => 'Documents for a completed application are locked and cannot be deleted.',
+                'document' => __('Documents for a completed application are locked and cannot be deleted.'),
             ]);
         }
 
@@ -158,7 +158,7 @@ class AdminController extends Controller
 
         $document->delete();
 
-        return back()->with('success', 'Document deleted. The customer can upload a new file again.');
+        return back()->with('success', __('Document deleted. The customer can upload a new file again.'));
     }
 
     public function updateDocumentStatus(Request $request, ApplicationDocument $document)
@@ -172,13 +172,13 @@ class AdminController extends Controller
 
         if ($document->application->status === 'completed') {
             return back()->withErrors([
-                'status' => 'Documents for a completed application are locked and cannot be changed.',
+                'status' => __('Documents for a completed application are locked and cannot be changed.'),
             ]);
         }
 
         $document->update($validated);
 
-        return back()->with('success', 'Document status updated.');
+        return back()->with('success', __('Document status updated.'));
     }
 
     public function updateService(Request $request, Service $service)
@@ -193,6 +193,6 @@ class AdminController extends Controller
 
         $service->update($validated);
 
-        return back()->with('success', 'Service settings updated.');
+        return back()->with('success', __('Service settings updated.'));
     }
 }
