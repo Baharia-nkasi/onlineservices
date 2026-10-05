@@ -44,28 +44,27 @@ Route::middleware('locale')->group(function () {
 
     Route::middleware('auth')->group(function () {
         Route::middleware('customer')->group(function () {
-        Route::get('/services/{service}/apply', [ApplicationController::class, 'create'])
-            ->name('applications.create');
-        Route::post('/services/{service}/apply', [ApplicationController::class, 'store'])
-            ->name('applications.store');
+            Route::get('/services/{service}/apply', [ApplicationController::class, 'create'])
+                ->name('applications.create');
+            Route::post('/services/{service}/apply', [ApplicationController::class, 'store'])
+                ->name('applications.store');
 
-        Route::get('/my-applications', [CustomerApplicationController::class, 'index'])
-            ->name('customer.applications.index');
-        Route::get('/my-applications/{application}', [CustomerApplicationController::class, 'show'])
-            ->name('customer.applications.show');
+            Route::get('/my-applications', [CustomerApplicationController::class, 'index'])
+                ->name('customer.applications.index');
+            Route::get('/my-applications/{application}', [CustomerApplicationController::class, 'show'])
+                ->name('customer.applications.show');
 
-        Route::post('/my-applications/{application}/documents', [ApplicationDocumentController::class, 'store'])
-            ->middleware('throttle:20,1')->name('application.documents.store');
+            Route::post('/my-applications/{application}/documents', [ApplicationDocumentController::class, 'store'])
+                ->middleware('throttle:20,1')->name('application.documents.store');
+
+            Route::delete('/application-documents/{document}', [ApplicationDocumentController::class, 'destroy'])
+                ->middleware('throttle:20,1')->name('application.documents.destroy');
+        });
 
         Route::get('/application-documents/{document}/view', [ApplicationDocumentController::class, 'view'])
             ->name('application.documents.view');
         Route::get('/application-documents/{document}/download', [ApplicationDocumentController::class, 'download'])
             ->name('application.documents.download');
-
-        Route::delete('/application-documents/{document}', [ApplicationDocumentController::class, 'destroy'])
-            ->middleware('throttle:20,1')->name('application.documents.destroy');
-
-        });
 
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
