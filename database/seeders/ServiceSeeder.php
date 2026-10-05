@@ -41,9 +41,6 @@ class ServiceSeeder extends Seeder
                 [
                     'name' => $service['name'],
                     'description' => $service['description'],
-                    'government_fee' => 0,
-                    'service_fee' => 0,
-                    'is_active' => true,
                 ]
             );
         }
