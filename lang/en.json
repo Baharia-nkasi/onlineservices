@@ -77,5 +77,9 @@
     "Secure account": "Secure account",
     "Your applications stay connected to your account.": "Your applications stay connected to your account.",
     "Track progress": "Track progress",
-    "Follow pending, processing, completed, or rejected requests.": "Follow pending, processing, completed, or rejected requests."
+    "Follow pending, processing, completed, or rejected requests.": "Follow pending, processing, completed, or rejected requests.",
+    "pending": "Pending",
+    "processing": "Processing",
+    "completed": "Completed",
+    "rejected": "Rejected"
 }
