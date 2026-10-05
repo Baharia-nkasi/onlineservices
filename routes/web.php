@@ -42,7 +42,8 @@ Route::middleware('locale')->group(function () {
     Route::get('/services', [ServiceController::class, 'index'])
         ->name('services.index');
 
-    Route::middleware(['auth', 'customer'])->group(function () {
+    Route::middleware('auth')->group(function () {
+        Route::middleware('customer')->group(function () {
         Route::get('/services/{service}/apply', [ApplicationController::class, 'create'])
             ->name('applications.create');
         Route::post('/services/{service}/apply', [ApplicationController::class, 'store'])
@@ -63,6 +64,8 @@ Route::middleware('locale')->group(function () {
 
         Route::delete('/application-documents/{document}', [ApplicationDocumentController::class, 'destroy'])
             ->middleware('throttle:20,1')->name('application.documents.destroy');
+
+        });
 
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
