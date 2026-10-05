@@ -54,12 +54,49 @@
                 <div><strong class="block text-xl text-white"> {{ __('Trackable') }} </strong><span class="text-slate-400"> {{ __('application progress') }} </span></div>
             </div>
         </div>
-        <div class="relative hidden lg:block">
+        @php
+            $serviceSlides = $services->values()->map(function ($service) {
+                $slug = $service->slug;
+                $image = str_contains($slug, 'chuo') || str_contains($slug, 'elimu') || str_contains($slug, 'nactvet') || str_contains($slug, 'necta') || str_contains($slug, 'ufadhili')
+                    ? 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1400&q=85'
+                    : (str_contains($slug, 'pasipoti') || str_contains($slug, 'visa') || str_contains($slug, 'makazi') || str_contains($slug, 'udereva')
+                        ? 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1400&q=85'
+                        : (str_contains($slug, 'brela') || str_contains($slug, 'tin') || str_contains($slug, 'kampuni') || str_contains($slug, 'biashara')
+                            ? 'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1400&q=85'
+                            : (str_contains($slug, 'erita') || str_contains($slug, 'cheti') || str_contains($slug, 'nyaraka') || str_contains($slug, 'nida')
+                                ? 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1400&q=85'
+                                : 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1400&q=85'));
+                return ['name' => $service->name, 'description' => $service->description, 'url' => route('applications.create', $service), 'image' => $image];
+            });
+        @endphp
+        <div class="relative hidden lg:block" data-service-carousel>
             <div class="absolute -inset-6 rounded-[3rem] bg-blue-500/10 blur-3xl"></div>
-            <div class="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 p-3 shadow-2xl backdrop-blur">
-                <img src="{{ asset('images/online-services-hero.svg') }}"
-                     alt="{{ __('Online Services application and document tracking') }}"
-                     class="h-auto w-full rounded-[1.5rem]">
+            <div class="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 shadow-2xl backdrop-blur">
+                @forelse($serviceSlides as $index => $slide)
+                    <article class="service-hero-slide {{ $index === 0 ? '' : 'hidden' }}" data-service-slide data-slide-index="{{ $index }}">
+                        <img src="{{ $slide['image'] }}" alt="{{ $slide['name'] }}" class="h-[430px] w-full object-cover" loading="{{ $index === 0 ? 'eager' : 'lazy' }}">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/15 to-transparent"></div>
+                        <div class="absolute inset-x-0 bottom-0 p-7">
+                            <p class="text-xs font-black uppercase tracking-[0.2em] text-blue-200">{{ __('Featured service') }}</p>
+                            <h2 class="mt-2 text-2xl font-black text-white">{{ $slide['name'] }}</h2>
+                            <p class="mt-2 max-w-xl text-sm leading-6 text-slate-200">{{ $slide['description'] }}</p>
+                            <a href="{{ $slide['url'] }}" class="mt-4 inline-flex rounded-xl bg-white px-4 py-2.5 text-sm font-black text-slate-950 hover:bg-slate-100">{{ __('Start application →') }}</a>
+                        </div>
+                    </article>
+                @empty
+                    <div class="flex h-[430px] items-center justify-center p-8 text-center text-slate-300">{{ __('Services will appear here when they are available.') }}</div>
+                @endforelse
+                @if($serviceSlides->count() > 1)
+                    <div class="absolute bottom-5 right-5 flex items-center gap-2 rounded-full bg-slate-950/60 px-3 py-2 backdrop-blur">
+                        <button type="button" data-carousel-prev class="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20" aria-label="{{ __('Previous service') }}">‹</button>
+                        <div class="flex items-center gap-1.5" aria-label="{{ __('Featured services') }}">
+                            @foreach($serviceSlides as $index => $slide)
+                                <button type="button" data-carousel-dot="{{ $index }}" class="h-2 w-2 rounded-full {{ $index === 0 ? 'bg-white' : 'bg-white/35' }}" aria-label="{{ __('Show service') }} {{ $index + 1 }}"></button>
+                            @endforeach
+                        </div>
+                        <button type="button" data-carousel-next class="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20" aria-label="{{ __('Next service') }}">›</button>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
@@ -71,18 +108,21 @@
         <a href="{{ route('services.index') }}" class="font-bold text-blue-700 hover:text-blue-900"> {{ __('View all services →') }} </a>
     </div>
     <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        @foreach([
-            ['🎓','Education & Loans','University applications, HESLB and NACTVET services.'],
-            ['🪪','Identity & Certificates','NIDA, birth, death and certificate services.'],
-            ['🏢','Business & Tax','BRELA business registration and TRA/TIN services.'],
-            ['✈️','Travel & Immigration','Passport, visa and residence/work permit services.'],
-        ] as $service)
-            <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
-                <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-lg">{{ $service[0] }}</span>
-                <h3 class="mt-5 text-lg font-extrabold">{{ $service[1] }}</h3>
-                <p class="mt-2 text-sm leading-6 text-slate-500">{{ $service[2] }}</p>
+        @forelse($services as $service)
+            <article class="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
+                <div class="relative h-40 overflow-hidden">
+                    <img src="{{ str_contains($service->slug, 'erita') || str_contains($service->slug, 'cheti') ? 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=900&q=80' : (str_contains($service->slug, 'brela') || str_contains($service->slug, 'tin') || str_contains($service->slug, 'biashara') ? 'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=900&q=80' : (str_contains($service->slug, 'pasipoti') || str_contains($service->slug, 'visa') || str_contains($service->slug, 'udereva') ? 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=900&q=80' : 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=900&q=80')) }}" alt="{{ $service->name }}" class="h-full w-full object-cover transition duration-500 group-hover:scale-105" loading="lazy">
+                    <div class="absolute inset-0 bg-gradient-to-t from-slate-950/60 to-transparent"></div>
+                </div>
+                <div class="p-5">
+                    <h3 class="text-lg font-extrabold">{{ $service->name }}</h3>
+                    <p class="mt-2 line-clamp-3 text-sm leading-6 text-slate-500">{{ $service->description }}</p>
+                    <a href="{{ route('applications.create', $service) }}" class="mt-4 inline-flex text-sm font-black text-blue-700 group-hover:text-blue-900">{{ __('View requirements →') }}</a>
+                </div>
             </article>
-        @endforeach
+        @empty
+            <div class="col-span-full rounded-2xl border border-slate-200 bg-white p-10 text-center text-slate-500">{{ __('No services are currently available.') }}</div>
+        @endforelse
     </div>
 </section>
 
