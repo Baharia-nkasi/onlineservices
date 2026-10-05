@@ -17,7 +17,10 @@ class CustomerApplicationController extends Controller
         abort_unless($user?->isAdmin() || $user?->isCustomer(), 403);
 
         $applications = Application::with(['service', 'documents'])
-            ->when($user->isCustomer(), fn ($query) => $query->where('user_id', $user->id))
+            ->when($user->isCustomer(), function ($query) use ($user) {
+                $query->where('user_id', $user->id)
+                    ->whereIn('status', ['pending', 'processing', 'completed']);
+            })
             ->latest()
             ->paginate(10);
 
