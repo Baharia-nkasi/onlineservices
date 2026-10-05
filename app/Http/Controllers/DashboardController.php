@@ -33,7 +33,7 @@ class DashboardController extends Controller
             ->get();
 
         // Customer-facing updates: completed/rejected applications and document review results.
-        $recentCompletedApplications = Application::with('service')
+        $recentCompletedApplications = Application::with(['service.documents' => fn ($query) => $query->where('is_active', true)])
             ->where('user_id', $userId)
             ->where('status', 'completed')
             ->latest('updated_at')
