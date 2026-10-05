@@ -69,7 +69,7 @@
                 return ['name' => $service->name, 'description' => $service->description, 'url' => route('applications.create', $service), 'image' => $image];
             });
         @endphp
-        <div class="relative hidden lg:block" data-service-carousel>
+        <div class="relative block" data-service-carousel>
             <div class="absolute -inset-6 rounded-[3rem] bg-blue-500/10 blur-3xl"></div>
             <div class="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 shadow-2xl backdrop-blur">
                 @forelse($serviceSlides as $index => $slide)
