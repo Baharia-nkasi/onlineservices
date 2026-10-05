@@ -111,6 +111,7 @@ class AdminController extends Controller
 
             $grouped = $application->service->documents
                 ->where('is_active', true)
+                ->where('is_required', true)
                 ->whereNotNull('requirement_group')
                 ->groupBy('requirement_group');
 
@@ -282,6 +283,23 @@ class AdminController extends Controller
         if ($validated['requirement_type'] === 'single') {
             $validated['requirement_group'] = null;
             $validated['minimum_required'] = 1;
+        }
+
+        $serviceHasApplications = $document->service->applications()->exists();
+
+        if ($serviceHasApplications) {
+            $protectedFieldsChanged =
+                $document->name !== $validated['name']
+                || (bool) $document->is_required !== (bool) $validated['is_required']
+                || $document->requirement_type !== $validated['requirement_type']
+                || $document->requirement_group !== ($validated['requirement_group'] ?? null)
+                || (int) $document->minimum_required !== (int) $validated['minimum_required'];
+
+            if ($protectedFieldsChanged) {
+                return back()->withErrors([
+                    'document' => __('This requirement cannot change its name or completion rules because the service already has customer applications. Deactivate it instead and create a new requirement for future applications.'),
+                ]);
+            }
         }
 
         $document->update($validated);
