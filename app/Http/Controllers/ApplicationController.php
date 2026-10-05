@@ -51,11 +51,11 @@ class ApplicationController extends Controller
         if ($application->wasRecentlyCreated) {
             return redirect()
                 ->route('customer.applications.show', $application)
-                ->with('success', 'Application submitted successfully. Please upload the required documents.');
+                ->with('success', __('Application submitted successfully. Please upload the required documents.'));
         }
 
         return redirect()
             ->route('customer.applications.show', $application)
-            ->with('success', 'You already have an active application for this service.');
+            ->with('success', __('You already have an active application for this service.'));
     }
 }
