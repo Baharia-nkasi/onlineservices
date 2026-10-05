@@ -78,6 +78,7 @@ Route::middleware('locale')->group(function () {
             Route::delete('/documents/{document}', [AdminController::class, 'destroyDocument'])
                 ->middleware('throttle:20,1')->name('documents.destroy');
             Route::get('/services', [AdminController::class, 'services'])->name('services.index');
+            Route::get('/services/{service}', [AdminController::class, 'showService'])->name('services.show');
             Route::post('/services', [AdminController::class, 'storeService'])
                 ->middleware('throttle:20,1')->name('services.store');
             Route::patch('/services/{service}', [AdminController::class, 'updateService'])->name('services.update');
