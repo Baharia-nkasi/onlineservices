@@ -77,5 +77,9 @@
     "Secure account": "Akaunti salama",
     "Your applications stay connected to your account.": "Maombi yako yanaunganishwa na akaunti yako.",
     "Track progress": "Fuatilia maendeleo",
-    "Follow pending, processing, completed, or rejected requests.": "Fuatilia maombi yanayosubiri, yanayochakatwa, yaliyokamilika au yaliyokataliwa."
+    "Follow pending, processing, completed, or rejected requests.": "Fuatilia maombi yanayosubiri, yanayochakatwa, yaliyokamilika au yaliyokataliwa.",
+    "pending": "Inasubiri",
+    "processing": "Inachakatwa",
+    "completed": "Imekamilika",
+    "rejected": "Imekataliwa"
 }
