@@ -42,9 +42,9 @@
                 <h3 class="text-xl font-black text-slate-900">{{ __('All Services') }}</h3>
                 <p class="mt-1 text-sm text-slate-500">{{ __('Activate, deactivate, edit or safely delete services.') }}</p>
             </div>
-            <div class="divide-y divide-slate-100">
+            <div class="flex flex-wrap gap-5 bg-gradient-to-br from-cyan-50/70 via-sky-50/60 to-blue-50/70 p-5">
                 @forelse($services as $service)
-                    <article class="p-6">
+                    <article class="w-full rounded-[2rem] border border-cyan-200 bg-white p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:border-cyan-400 hover:shadow-lg lg:flex-1 lg:min-w-[calc(50%-0.625rem)]">
                         <form method="POST" action="{{ route('admin.services.update', $service) }}" class="grid gap-4 lg:grid-cols-12">
                             @csrf @method('PATCH')
                             <div class="lg:col-span-4"><label class="text-xs font-extrabold uppercase tracking-wide text-slate-400">{{ __('Service') }}</label><input name="name" value="{{ $service->name }}" required maxlength="255" class="input-modern mt-2 w-full"></div>
@@ -55,7 +55,7 @@
                             <div class="lg:col-span-2 flex items-end"><label class="flex items-center gap-2 pb-3 text-sm font-bold {{ $service->is_active ? 'text-emerald-700' : 'text-slate-500' }}"><input type="hidden" name="is_active" value="0"><input type="checkbox" name="is_active" value="1" @checked($service->is_active) class="rounded border-slate-300 text-blue-700 focus:ring-blue-500">{{ $service->is_active ? __('Active') : __('Deactivated') }}</label></div>
                             <div class="lg:col-span-4 flex flex-wrap items-end gap-2"><span class="rounded-xl bg-slate-100 px-3 py-2 text-xs font-bold text-slate-600">{{ $service->applications_count }} {{ __('applications') }}</span><span class="rounded-xl bg-slate-100 px-3 py-2 text-xs font-bold text-slate-600">{{ $service->active_documents_count }} {{ __('active requirements') }}</span><button type="submit" class="portal-button">{{ __('Save Changes') }}</button><a href="{{ route('admin.services.show', $service) }}" class="portal-button-secondary">{{ __('Manage Service') }} →</a></div>
                         </form>
-                        <details class="mt-5 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                        <details class="mt-5 rounded-3xl border border-sky-200 bg-gradient-to-br from-sky-50 to-cyan-50 p-4 shadow-inner">
                             <summary class="cursor-pointer text-sm font-extrabold text-slate-800">{{ __('Manage document requirements') }} ({{ $service->active_documents_count }})</summary>
                             <div class="mt-4 space-y-4">
                                 <form method="POST" action="{{ route('admin.services.documents.store', $service) }}" class="grid gap-3 md:grid-cols-2">
@@ -122,7 +122,7 @@
                     <div class="p-12 text-center text-slate-500">{{ __('No services have been created yet.') }}</div>
                 @endforelse
             </div>
-            <div class="border-t border-slate-200 p-4">{{ $services->links() }}</div>
+            <div class="border-t border-cyan-100 bg-white p-4">{{ $services->links() }}</div>
         </section>
     </div>
 </div>
