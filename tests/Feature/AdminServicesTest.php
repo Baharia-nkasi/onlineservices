@@ -276,4 +276,55 @@ class AdminServicesTest extends TestCase
         $this->assertDatabaseHas('service_documents', ['id' => $document->id]);
     }
 
+    public function test_requirement_group_rules_and_names_are_validated(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $service = Service::create([
+            'name' => 'Validation Service',
+            'slug' => 'validation-service',
+            'description' => 'Validation',
+            'government_fee' => 0,
+            'service_fee' => 0,
+            'is_active' => true,
+        ]);
+
+        $this->actingAs($admin)
+            ->post(route('admin.services.documents.store', $service), [
+                'name' => 'Passport Copy',
+                'description' => null,
+                'is_required' => 1,
+                'requirement_type' => 'choose_one',
+                'requirement_group' => null,
+                'minimum_required' => 1,
+                'sort_order' => 1,
+                'is_active' => 1,
+            ])
+            ->assertRedirect()
+            ->assertSessionHasErrors('requirement_group');
+
+        $service->documents()->create([
+            'name' => 'Passport Copy',
+            'description' => null,
+            'is_required' => true,
+            'requirement_type' => 'single',
+            'minimum_required' => 1,
+            'sort_order' => 1,
+            'is_active' => true,
+        ]);
+
+        $this->actingAs($admin)
+            ->post(route('admin.services.documents.store', $service), [
+                'name' => 'Passport Copy',
+                'description' => null,
+                'is_required' => 1,
+                'requirement_type' => 'single',
+                'requirement_group' => null,
+                'minimum_required' => 1,
+                'sort_order' => 2,
+                'is_active' => 1,
+            ])
+            ->assertRedirect()
+            ->assertSessionHasErrors('name');
+    }
+
 }
