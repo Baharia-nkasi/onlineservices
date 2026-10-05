@@ -81,5 +81,6 @@
     "pending": "Inasubiri",
     "processing": "Inachakatwa",
     "completed": "Imekamilika",
-    "rejected": "Imekataliwa"
+    "rejected": "Imekataliwa",
+    "Application": "Ombi"
 }
