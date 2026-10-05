@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Application;
 use App\Models\Service;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -44,4 +45,36 @@ class RoleAccessTest extends TestCase
             ->get(route('admin.dashboard'))
             ->assertForbidden();
     }
+
+    public function test_admin_can_access_application_centre_and_manage_application(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $customer = User::factory()->create(['role' => 'customer']);
+        $service = Service::create([
+            'name' => 'Admin Application Service',
+            'slug' => 'admin-application-service',
+            'description' => 'Test',
+            'government_fee' => 0,
+            'service_fee' => 0,
+            'is_active' => true,
+        ]);
+        $application = Application::create([
+            'user_id' => $customer->id,
+            'service_id' => $service->id,
+            'status' => 'pending',
+        ]);
+
+        $this->actingAs($admin)
+            ->get(route('customer.applications.index'))
+            ->assertOk()
+            ->assertSee('All Applications')
+            ->assertSee($customer->name)
+            ->assertSee('Manage Application');
+
+        $this->actingAs($admin)
+            ->get(route('customer.applications.show', $application))
+            ->assertOk()
+            ->assertSee($customer->name);
+    }
+
 }
