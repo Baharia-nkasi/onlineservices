@@ -8,9 +8,6 @@ use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
-    /**
-     * Display the customer dashboard.
-     */
     public function index()
     {
         if (Auth::user()->isAdmin()) {
@@ -19,35 +16,21 @@ class DashboardController extends Controller
 
         $userId = Auth::id();
 
-        // Customer applications
-        $applications = Application::with('service')
-            ->where('user_id', $userId)
-            ->latest()
-            ->get();
+        $totalApplications = Application::where('user_id', $userId)->count();
+        $pendingApplications = Application::where('user_id', $userId)->where('status', 'pending')->count();
+        $processingApplications = Application::where('user_id', $userId)->where('status', 'processing')->count();
+        $completedApplications = Application::where('user_id', $userId)->where('status', 'completed')->count();
 
-        // Application statistics
-        $totalApplications = $applications->count();
-
-        $pendingApplications = $applications
-            ->where('status', 'pending')
-            ->count();
-
-        $processingApplications = $applications
-            ->where('status', 'processing')
-            ->count();
-
-        $completedApplications = $applications
-            ->where('status', 'completed')
-            ->count();
-
-        // Active services
         $services = Service::where('is_active', true)
             ->latest()
             ->take(6)
             ->get();
 
-        // Recent applications
-        $recentApplications = $applications->take(5);
+        $recentApplications = Application::with('service')
+            ->where('user_id', $userId)
+            ->latest()
+            ->take(5)
+            ->get();
 
         return view('dashboard', compact(
             'totalApplications',
