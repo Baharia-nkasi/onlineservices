@@ -103,6 +103,16 @@
                                         <p class="font-black text-emerald-800">{{ __('Your application has been completed') }}</p>
                                         <p class="mt-1 text-sm text-slate-600">{{ $application->service->name }} — {{ __('The service work has been completed successfully.') }}</p>
                                         <p class="mt-2 text-xs font-semibold text-slate-500">{{ __('Keep your original identification and any documents related to this service for collection or future verification.') }}</p>
+                                        @if($application->service->documents->isNotEmpty())
+                                            <div class="mt-3 rounded-xl border border-slate-200 bg-slate-50 p-3">
+                                                <p class="text-xs font-black uppercase tracking-wide text-slate-500">{{ __('Important service documents') }}</p>
+                                                <ul class="mt-2 space-y-1 text-xs font-semibold text-slate-700">
+                                                    @foreach($application->service->documents as $requirement)
+                                                        <li>• {{ $requirement->name }}{{ $requirement->is_required ? ' — ' . __('Required') : ' — ' . __('Optional') }}</li>
+                                                    @endforeach
+                                                </ul>
+                                            </div>
+                                        @endif
                                         <a href="{{ route('customer.applications.show', $application) }}" class="mt-3 inline-flex text-sm font-black text-blue-700">{{ __('View application and documents →') }}</a>
                                     </div>
                                 </div>
