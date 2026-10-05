@@ -116,8 +116,9 @@ class AdminController extends Controller
             if ($next === 'completed') {
                 $lockedApplication->load(['service.documents', 'documents']);
 
-                $missingRequired = $lockedApplication->service->documents
-                    ->where('is_active', true)
+                $requirements = $lockedApplication->effectiveServiceRequirements();
+
+                $missingRequired = $requirements
                     ->where('is_required', true)
                     ->whereNull('requirement_group')
                     ->filter(fn ($requirement) => ! $lockedApplication->documents->contains(
@@ -126,8 +127,7 @@ class AdminController extends Controller
                             && $document->hasAvailableFile()
                     ));
 
-                $grouped = $lockedApplication->service->documents
-                    ->where('is_active', true)
+                $grouped = $requirements
                     ->where('is_required', true)
                     ->whereNotNull('requirement_group')
                     ->groupBy('requirement_group');
