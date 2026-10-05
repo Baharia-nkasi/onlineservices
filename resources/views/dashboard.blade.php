@@ -88,6 +88,72 @@
                 </div>
             </section>
 
+            <section class="grid gap-4 lg:grid-cols-2">
+                <div class="portal-card overflow-hidden">
+                    <div class="border-b border-slate-200 p-5">
+                        <h3 class="font-black text-slate-900">{{ __('Service Updates') }}</h3>
+                        <p class="mt-1 text-sm text-slate-500">{{ __('Important updates about your application and documents.') }}</p>
+                    </div>
+                    <div class="divide-y divide-slate-100">
+                        @forelse($recentCompletedApplications as $application)
+                            <div class="p-5">
+                                <div class="flex items-start gap-3">
+                                    <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">✓</span>
+                                    <div class="min-w-0">
+                                        <p class="font-black text-emerald-800">{{ __('Your application has been completed') }}</p>
+                                        <p class="mt-1 text-sm text-slate-600">{{ $application->service->name }} — {{ __('The service work has been completed successfully.') }}</p>
+                                        <p class="mt-2 text-xs font-semibold text-slate-500">{{ __('Keep your original identification and any documents related to this service for collection or future verification.') }}</p>
+                                        <a href="{{ route('customer.applications.show', $application) }}" class="mt-3 inline-flex text-sm font-black text-blue-700">{{ __('View application and documents →') }}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="p-5 text-sm text-slate-500">{{ __('No completed service updates yet.') }}</div>
+                        @endforelse
+
+                        @foreach($recentRejectedApplications as $application)
+                            <div class="p-5">
+                                <div class="flex items-start gap-3">
+                                    <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-red-50 text-red-700">!</span>
+                                    <div class="min-w-0">
+                                        <p class="font-black text-red-800">{{ __('Application requires your attention') }}</p>
+                                        <p class="mt-1 text-sm text-slate-600">{{ $application->service->name }} — {{ __('Please open the application to read the review and provide any required changes.') }}</p>
+                                        <a href="{{ route('customer.applications.show', $application) }}" class="mt-3 inline-flex text-sm font-black text-blue-700">{{ __('Review application →') }}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+
+                <div class="portal-card overflow-hidden">
+                    <div class="border-b border-slate-200 p-5">
+                        <h3 class="font-black text-slate-900">{{ __('Document Updates') }}</h3>
+                        <p class="mt-1 text-sm text-slate-500">{{ __('Approved or rejected documents from admin review.') }}</p>
+                    </div>
+                    <div class="divide-y divide-slate-100">
+                        @forelse($recentDocumentUpdates as $document)
+                            @php $approved = $document->status === 'approved'; @endphp
+                            <div class="p-5">
+                                <div class="flex items-start gap-3">
+                                    <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl {{ $approved ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700' }}">{{ $approved ? '✓' : '!' }}</span>
+                                    <div class="min-w-0">
+                                        <p class="font-black {{ $approved ? 'text-emerald-800' : 'text-red-800' }}">{{ $approved ? __('Document approved') : __('Document rejected') }}</p>
+                                        <p class="mt-1 text-sm text-slate-600">{{ $document->document_name }} — {{ $document->application->service->name }}</p>
+                                        @if($document->notes)
+                                            <p class="mt-2 rounded-xl bg-slate-50 px-3 py-2 text-xs leading-5 text-slate-600"><strong>{{ __('Admin note:') }}</strong> {{ $document->notes }}</p>
+                                        @endif
+                                        <a href="{{ route('customer.applications.show', $document->application) }}" class="mt-3 inline-flex text-sm font-black text-blue-700">{{ __('Open documents →') }}</a>
+                                    </div>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="p-5 text-sm text-slate-500">{{ __('No document review updates yet.') }}</div>
+                        @endforelse
+                    </div>
+                </div>
+            </section>
+
             <section class="grid gap-4 sm:grid-cols-3">
                 <div class="dashboard-help-card p-5"><span class="text-2xl">🔎</span><h4 class="mt-3 font-black">{{ __('Clear requirements') }}</h4><p class="mt-1 text-sm leading-6 text-slate-500">{{ __('Know what documents you need before applying.') }}</p></div>
                 <div class="portal-card p-5"><span class="text-2xl">🔐</span><h4 class="mt-3 font-black">{{ __('Secure account') }}</h4><p class="mt-1 text-sm leading-6 text-slate-500">{{ __('Your applications stay connected to your account.') }}</p></div>
