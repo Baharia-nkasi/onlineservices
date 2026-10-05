@@ -3,7 +3,7 @@
     <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
             <p class="text-xs font-extrabold uppercase tracking-wider text-blue-700">{{ __('Application portal') }}</p>
-            <h2 class="text-2xl font-black tracking-tight text-slate-900">Application #{{ $application->id }}</h2>
+            <h2 class="text-2xl font-black tracking-tight text-slate-900">{{ __('Application') }} #{{ $application->id }}</h2>
         </div>
         <a href="{{ route('customer.applications.index') }}" class="text-sm font-bold text-slate-500 hover:text-blue-700">{{ __('← My Applications') }}</a>
     </div>
@@ -14,7 +14,6 @@
         @if(session('success'))
             <div class="rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm font-semibold text-emerald-800 fade-up">{{ session('success') }}</div>
         @endif
-
         @if($errors->any())
             <div class="rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
                 <p class="font-extrabold">{{ __('Please check the following:') }}</p>
@@ -51,7 +50,7 @@
                 <div>
                     <p class="text-sm font-extrabold uppercase tracking-wider text-blue-300">{{ __('Service application') }}</p>
                     <h1 class="mt-2 text-2xl font-black sm:text-3xl">{{ $application->service->name }}</h1>
-                    <p class="mt-2 text-sm text-slate-300">Submitted {{ $application->created_at->format('d M Y, H:i') }}</p>
+                    <p class="mt-2 text-sm text-slate-300">{{ __('Submitted') }} {{ $application->created_at->format('d M Y, H:i') }}</p>
                 </div>
                 <span class="status-pill {{ $statusClasses }}">{{ __($application->status) }}</span>
             </div>
@@ -76,23 +75,16 @@
                 <p class="mt-1 text-sm text-slate-500">{{ __('Upload each required document. Accepted files: PDF, JPG or PNG, up to 5 MB.') }}</p>
                 @if($completionUnits > 0)
                     <div class="mt-4">
-                        <div class="mb-2 flex items-center justify-between text-xs font-extrabold text-slate-500">
-                            <span>{{ __('Approved requirements') }}</span>
-                            <span>{{ $completedUnits }}/{{ $completionUnits }}</span>
-                        </div>
-                        <div class="h-2 overflow-hidden rounded-full bg-slate-200">
-                            <div class="h-full rounded-full bg-blue-600 transition-all" style="width: {{ min(100, round(($completedUnits / $completionUnits) * 100)) }}%"></div>
-                        </div>
+                        <div class="mb-2 flex items-center justify-between text-xs font-extrabold text-slate-500"><span>{{ __('Approved requirements') }}</span><span>{{ $completedUnits }}/{{ $completionUnits }}</span></div>
+                        <div class="h-2 overflow-hidden rounded-full bg-slate-200"><div class="h-full rounded-full bg-blue-600 transition-all" style="width: {{ min(100, round(($completedUnits / $completionUnits) * 100)) }}%"></div></div>
                     </div>
                 @endif
                 @if(in_array($application->status, ['completed', 'rejected'], true))
                     <div class="mt-4 rounded-xl border border-slate-200 bg-slate-100 px-4 py-3 text-sm font-semibold text-slate-600">
-                        This application is {{ $application->status }}. {{ __('Document') }} changes are no longer allowed.
+                        {{ __('This application is') }} {{ __($application->status) }}. {{ __('Document') }} {{ __('changes are no longer allowed.') }}
                     </div>
                 @endif
             </div>
-
-            @php $requirementGroups = $requirements->whereNotNull('requirement_group')->groupBy('requirement_group'); @endphp
 
             @if($requirementGroups->isNotEmpty())
                 <div class="border-b border-blue-100 bg-blue-50 p-5">
@@ -103,7 +95,7 @@
                                 $type = $groupRequirements->first()->requirement_type;
                                 $minimum = max(1, (int) $groupRequirements->max('minimum_required'));
                             @endphp
-                            <p><strong>{{ ucfirst(str_replace('_', ' ', $group)) }}:</strong> {{ $type === 'choose_one' ? __('choose 1') : __('choose at least ').$minimum }} from the options below.</p>
+                            <p><strong>{{ ucfirst(str_replace('_', ' ', $group)) }}:</strong> {{ $type === 'choose_one' ? __('choose 1') : __('choose at least ').$minimum }} {{ __('from the options below.') }}</p>
                         @endforeach
                     </div>
                 </div>
@@ -114,18 +106,14 @@
                     @php $uploaded = $application->documents->first(fn($d) => mb_strtolower($d->document_name) === mb_strtolower($requirement->name)); @endphp
                     <div class="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
                         <div class="flex items-start gap-3">
-                            <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl {{ $uploaded?->status === 'approved' ? 'bg-emerald-100 text-emerald-700' : ($uploaded?->status === 'rejected' ? 'bg-red-100 text-red-700' : ($uploaded ? 'bg-amber-100 text-amber-700' : 'bg-blue-50 text-blue-700')) }} font-black">
-                                {{ $uploaded?->status === 'approved' ? '✓' : ($uploaded?->status === 'rejected' ? '!' : $loop->iteration) }}
-                            </span>
+                            <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl {{ $uploaded?->status === 'approved' ? 'bg-emerald-100 text-emerald-700' : ($uploaded?->status === 'rejected' ? 'bg-red-100 text-red-700' : ($uploaded ? 'bg-amber-100 text-amber-700' : 'bg-blue-50 text-blue-700')) }} font-black">{{ $uploaded?->status === 'approved' ? '✓' : ($uploaded?->status === 'rejected' ? '!' : $loop->iteration) }}</span>
                             <div>
                                 <div class="font-extrabold text-slate-900">{{ $requirement->name }}</div>
                                 @if($requirement->description)<p class="mt-1 text-sm leading-6 text-slate-500">{{ $requirement->description }}</p>@endif
                                 <span class="mt-1 inline-block text-xs font-bold {{ $requirement->is_required ? 'text-red-600' : 'text-slate-500' }}">{{ $requirement->is_required ? __('Required') : __('Optional') }}</span>
                             </div>
                         </div>
-                        <span class="status-pill {{ !$uploaded ? 'bg-amber-50 text-amber-700' : ($uploaded->status === 'rejected' ? 'bg-red-50 text-red-700' : ($uploaded->status === 'approved' ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700')) }}">
-                            {{ !$uploaded ? __('Not uploaded') : __($uploaded->status) }}
-                        </span>
+                        <span class="status-pill {{ !$uploaded ? 'bg-amber-50 text-amber-700' : ($uploaded->status === 'rejected' ? 'bg-red-50 text-red-700' : ($uploaded->status === 'approved' ? 'bg-emerald-50 text-emerald-700' : 'bg-amber-50 text-amber-700')) }}">{{ !$uploaded ? __('Not uploaded') : __($uploaded->status) }}</span>
                     </div>
                 @empty
                     <div class="p-10 text-center text-sm text-slate-500">{{ __('No document requirements configured.') }}</div>
@@ -154,31 +142,28 @@
                             <p class="mt-2 text-xs text-slate-500" x-text="fileName || __('Maximum file size: 5 MB')"></p>
                         </div>
                     </div>
-                    <button type="submit" class="portal-button mt-5">Upload {{ __('Document') }}</button>
+                    <button type="submit" class="portal-button mt-5">{{ __('Upload Document') }}</button>
                 </form>
             @endif
         </section>
 
         <section class="portal-card overflow-hidden">
-            <div class="border-b border-slate-200 p-5"><h2 class="font-black text-lg text-slate-900">{{ __('Uploaded Documents') }}</h2></div>
+            <div class="border-b border-slate-200 p-5"><h2 class="font-black text-lg text-slate-900">{{ __('Uploaded Documents') }}</h2><p class="mt-1 text-sm text-slate-500">{{ __('View or download the files you have submitted.') }}</p></div>
             <div class="divide-y divide-slate-100">
                 @forelse($application->documents as $document)
                     <div class="flex flex-col gap-4 p-5 md:flex-row md:items-center md:justify-between">
                         <div class="min-w-0">
                             <div class="font-extrabold text-slate-900">{{ $document->document_name }}</div>
                             <div class="mt-1 truncate text-sm text-slate-500">{{ $document->file_name }} · {{ number_format(($document->file_size ?? 0)/1024,1) }} KB</div>
-                            <div class="mt-2 text-xs font-bold {{ $document->status === 'approved' ? 'text-emerald-700' : ($document->status === 'rejected' ? 'text-red-700' : 'text-amber-700') }}">Review: {{ ucfirst($document->status) }}</div>
-                            @if($document->notes)
-                                <div class="mt-2 rounded-xl bg-red-50 px-3 py-2 text-xs leading-5 text-red-700"><strong>{{ __('Review note:') }}</strong> {{ $document->notes }}</div>
-                            @endif
+                            <div class="mt-2 text-xs font-bold {{ $document->status === 'approved' ? 'text-emerald-700' : ($document->status === 'rejected' ? 'text-red-700' : 'text-amber-700') }}">{{ __('Review') }}: {{ __($document->status) }}</div>
+                            @if($document->notes)<div class="mt-2 rounded-xl bg-red-50 px-3 py-2 text-xs leading-5 text-red-700"><strong>{{ __('Review note:') }}</strong> {{ $document->notes }}</div>@endif
                         </div>
-                        <div class="flex shrink-0 gap-2">
-                            @if($document->hasAvailable{{ __('File') }}())
+                        <div class="flex flex-wrap shrink-0 gap-2">
+                            @if($document->hasAvailableFile())
                                 <a target="_blank" rel="noopener" href="{{ route('application.documents.view',$document) }}" class="portal-button-secondary">{{ __('View') }}</a>
+                                <a href="{{ route('application.documents.download',$document) }}" class="portal-button-secondary">{{ __('Download') }}</a>
                             @else
-                                <span class="inline-flex items-center rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-extrabold text-amber-700" title="Please upload this document again">
-                                    {{ __('File unavailable — re-upload') }}
-                                </span>
+                                <span class="inline-flex items-center rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-extrabold text-amber-700" title="{{ __('Please upload this document again') }}">{{ __('File unavailable — re-upload') }}</span>
                             @endif
                             @if($document->status === 'pending')
                                 <form method="POST" action="{{ route('application.documents.destroy',$document) }}" x-data="confirmAction('{{ __('Delete') }} this document?')" @submit="submit($event)">
