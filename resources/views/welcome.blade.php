@@ -55,18 +55,33 @@
             </div>
         </div>
         @php
-            $serviceSlides = $services->values()->map(function ($service) {
-                $slug = $service->slug;
-                $image = str_contains($slug, 'chuo') || str_contains($slug, 'elimu') || str_contains($slug, 'nactvet') || str_contains($slug, 'necta') || str_contains($slug, 'ufadhili')
-                    ? 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1400&q=85'
-                    : (str_contains($slug, 'pasipoti') || str_contains($slug, 'visa') || str_contains($slug, 'makazi') || str_contains($slug, 'udereva')
-                        ? 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1400&q=85'
-                        : (str_contains($slug, 'brela') || str_contains($slug, 'tin') || str_contains($slug, 'kampuni') || str_contains($slug, 'biashara')
-                            ? 'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=1400&q=85'
-                            : (str_contains($slug, 'erita') || str_contains($slug, 'cheti') || str_contains($slug, 'nyaraka') || str_contains($slug, 'nida')
-                                ? 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1400&q=85'
-                                : 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1400&q=85')));
-                return ['name' => $service->name, 'description' => $service->description, 'url' => route('applications.create', $service), 'image' => $image];
+            $serviceImage = static function (string $slug, int $width = 1400): string {
+                if (str_contains($slug, 'chuo') || str_contains($slug, 'elimu') || str_contains($slug, 'nactvet') || str_contains($slug, 'necta') || str_contains($slug, 'ufadhili')) {
+                    return "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w={$width}&q=85";
+                }
+
+                if (str_contains($slug, 'pasipoti') || str_contains($slug, 'visa') || str_contains($slug, 'makazi') || str_contains($slug, 'udereva')) {
+                    return "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w={$width}&q=85";
+                }
+
+                if (str_contains($slug, 'brela') || str_contains($slug, 'tin') || str_contains($slug, 'kampuni') || str_contains($slug, 'biashara')) {
+                    return "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w={$width}&q=85";
+                }
+
+                if (str_contains($slug, 'erita') || str_contains($slug, 'cheti') || str_contains($slug, 'nyaraka') || str_contains($slug, 'nida')) {
+                    return "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w={$width}&q=85";
+                }
+
+                return "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w={$width}&q=85";
+            };
+
+            $serviceSlides = $services->values()->map(function ($service) use ($serviceImage) {
+                return [
+                    'name' => $service->name,
+                    'description' => $service->description,
+                    'url' => route('applications.create', $service),
+                    'image' => $serviceImage($service->slug),
+                ];
             });
         @endphp
         <div class="relative block" data-service-carousel>
@@ -111,7 +126,7 @@
         @forelse($services as $service)
             <article class="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
                 <div class="relative h-40 overflow-hidden">
-                    <img src="{{ str_contains($service->slug, 'erita') || str_contains($service->slug, 'cheti') ? 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=900&q=80' : (str_contains($service->slug, 'brela') || str_contains($service->slug, 'tin') || str_contains($service->slug, 'biashara') ? 'https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=900&q=80' : (str_contains($service->slug, 'pasipoti') || str_contains($service->slug, 'visa') || str_contains($service->slug, 'udereva') ? 'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=900&q=80' : 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=900&q=80')) }}" alt="{{ $service->name }}" class="h-full w-full object-cover transition duration-500 group-hover:scale-105" loading="lazy">
+                    <img src="{{ $serviceImage($service->slug, 900) }}" alt="{{ $service->name }}" class="h-full w-full object-cover transition duration-500 group-hover:scale-105" loading="lazy">
                     <div class="absolute inset-0 bg-gradient-to-t from-slate-950/60 to-transparent"></div>
                 </div>
                 <div class="p-5">
