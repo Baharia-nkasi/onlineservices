@@ -81,6 +81,12 @@ Route::middleware('locale')->group(function () {
             Route::patch('/services/{service}', [AdminController::class, 'updateService'])->name('services.update');
             Route::delete('/services/{service}', [AdminController::class, 'destroyService'])
                 ->middleware('throttle:20,1')->name('services.destroy');
+            Route::post('/services/{service}/documents', [AdminController::class, 'storeServiceDocument'])
+                ->middleware('throttle:20,1')->name('services.documents.store');
+            Route::patch('/service-documents/{document}', [AdminController::class, 'updateServiceDocument'])
+                ->name('service-documents.update');
+            Route::delete('/service-documents/{document}', [AdminController::class, 'destroyServiceDocument'])
+                ->middleware('throttle:20,1')->name('service-documents.destroy');
         });
     });
 
