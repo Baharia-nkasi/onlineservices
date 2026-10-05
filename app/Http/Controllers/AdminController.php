@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Application;
 use App\Models\ApplicationDocument;
 use App\Models\Service;
+use App\Models\ServiceDocument;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -236,6 +237,71 @@ class AdminController extends Controller
         $service->update($validated);
 
         return back()->with('success', __('Service settings updated.'));
+    }
+
+    public function storeServiceDocument(Request $request, Service $service)
+    {
+        $this->guard();
+
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string', 'max:2000'],
+            'is_required' => ['required', 'boolean'],
+            'requirement_type' => ['required', 'in:single,choose_one,choose_many'],
+            'requirement_group' => ['nullable', 'string', 'max:100', 'regex:/^[A-Za-z0-9_-]+$/'],
+            'minimum_required' => ['required', 'integer', 'min:1', 'max:100'],
+            'sort_order' => ['required', 'integer', 'min:0', 'max:10000'],
+            'is_active' => ['required', 'boolean'],
+        ]);
+
+        if ($validated['requirement_type'] === 'single') {
+            $validated['requirement_group'] = null;
+            $validated['minimum_required'] = 1;
+        }
+
+        $service->documents()->create($validated);
+
+        return back()->with('success', __('Document requirement added successfully.'));
+    }
+
+    public function updateServiceDocument(Request $request, ServiceDocument $document)
+    {
+        $this->guard();
+
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string', 'max:2000'],
+            'is_required' => ['required', 'boolean'],
+            'requirement_type' => ['required', 'in:single,choose_one,choose_many'],
+            'requirement_group' => ['nullable', 'string', 'max:100', 'regex:/^[A-Za-z0-9_-]+$/'],
+            'minimum_required' => ['required', 'integer', 'min:1', 'max:100'],
+            'sort_order' => ['required', 'integer', 'min:0', 'max:10000'],
+            'is_active' => ['required', 'boolean'],
+        ]);
+
+        if ($validated['requirement_type'] === 'single') {
+            $validated['requirement_group'] = null;
+            $validated['minimum_required'] = 1;
+        }
+
+        $document->update($validated);
+
+        return back()->with('success', __('Document requirement updated successfully.'));
+    }
+
+    public function destroyServiceDocument(ServiceDocument $document)
+    {
+        $this->guard();
+
+        if ($document->service->applications()->exists()) {
+            return back()->withErrors([
+                'document' => __('This requirement cannot be deleted because the service has customer applications. Deactivate it instead to preserve application history.'),
+            ]);
+        }
+
+        $document->delete();
+
+        return back()->with('success', __('Document requirement deleted successfully.'));
     }
 
     public function destroyService(Service $service)
