@@ -49,17 +49,19 @@ Route::middleware('locale')->group(function () {
             Route::post('/services/{service}/apply', [ApplicationController::class, 'store'])
                 ->name('applications.store');
 
-            Route::get('/my-applications', [CustomerApplicationController::class, 'index'])
-                ->name('customer.applications.index');
-            Route::get('/my-applications/{application}', [CustomerApplicationController::class, 'show'])
-                ->name('customer.applications.show');
-
             Route::post('/my-applications/{application}/documents', [ApplicationDocumentController::class, 'store'])
                 ->middleware('throttle:20,1')->name('application.documents.store');
 
             Route::delete('/application-documents/{document}', [ApplicationDocumentController::class, 'destroy'])
                 ->middleware('throttle:20,1')->name('application.documents.destroy');
         });
+
+        // Both admins and customers may open the application centre.
+        // The controller applies the correct ownership/scope for each role.
+        Route::get('/my-applications', [CustomerApplicationController::class, 'index'])
+            ->name('customer.applications.index');
+        Route::get('/my-applications/{application}', [CustomerApplicationController::class, 'show'])
+            ->name('customer.applications.show');
 
         Route::get('/application-documents/{document}/view', [ApplicationDocumentController::class, 'view'])
             ->name('application.documents.view');
