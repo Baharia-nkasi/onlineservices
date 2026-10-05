@@ -13,17 +13,17 @@
 
         @auth
             <div class="hidden items-center gap-6 md:flex">
-                <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">Dashboard</x-nav-link>
-                <x-nav-link :href="route('services.index')" :active="request()->routeIs('services.*')">Services</x-nav-link>
-                <x-nav-link :href="route('customer.applications.index')" :active="request()->routeIs('customer.applications.*')">My Applications</x-nav-link>
+                <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">{{ __('Dashboard') }}</x-nav-link>
+                <x-nav-link :href="route('services.index')" :active="request()->routeIs('services.*')">{{ __('Services') }}</x-nav-link>
+                <x-nav-link :href="route('customer.applications.index')" :active="request()->routeIs('customer.applications.*')">{{ __('My Applications') }}</x-nav-link>
                 @if(Auth::user()->isAdmin())
-                    <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')">Admin</x-nav-link>
+                    <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')">{{ __('Admin') }}</x-nav-link>
                 @endif
             </div>
         @else
             <div class="hidden items-center gap-6 md:flex">
-                <x-nav-link :href="route('home')" :active="request()->routeIs('home')">Home</x-nav-link>
-                <x-nav-link :href="route('services.index')" :active="request()->routeIs('services.*')">Services</x-nav-link>
+                <x-nav-link :href="route('home')" :active="request()->routeIs('home')">{{ __('Home') }}</x-nav-link>
+                <x-nav-link :href="route('services.index')" :active="request()->routeIs('services.*')">{{ __('Services') }}</x-nav-link>
             </div>
         @endauth
     </div>
@@ -47,21 +47,21 @@
                     </button>
                 </x-slot>
                 <x-slot name="content">
-                    <x-dropdown-link :href="route('profile.edit')">Profile</x-dropdown-link>
+                    <x-dropdown-link :href="route('profile.edit')">{{ __('Profile') }}</x-dropdown-link>
                     @if(Auth::user()->isAdmin())
-                        <x-dropdown-link :href="route('admin.dashboard')">Admin Panel</x-dropdown-link>
+                        <x-dropdown-link :href="route('admin.dashboard')">{{ __('Admin Panel') }}</x-dropdown-link>
                     @endif
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <x-dropdown-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">Log Out</x-dropdown-link>
+                        <x-dropdown-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">{{ __('Log Out') }}</x-dropdown-link>
                     </form>
                 </x-slot>
             </x-dropdown>
         </div>
     @else
         <div class="hidden items-center gap-2 md:flex">
-            <a href="{{ route('login') }}" class="rounded-xl px-4 py-2.5 text-sm font-bold text-slate-700 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Sign in</a>
-            <a href="{{ route('register') }}" class="rounded-xl bg-blue-700 px-4 py-2.5 text-sm font-bold text-white hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">Get started</a>
+            <a href="{{ route('login') }}" class="rounded-xl px-4 py-2.5 text-sm font-bold text-slate-700 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">{{ __('Sign in') }}</a>
+            <a href="{{ route('register') }}" class="rounded-xl bg-blue-700 px-4 py-2.5 text-sm font-bold text-white hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">{{ __('Get started') }}</a>
         </div>
     @endauth
 
@@ -81,22 +81,22 @@
 </div></div>
     <div class="space-y-1">
         @auth
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">Dashboard</x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('services.index')" :active="request()->routeIs('services.*')">Services</x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('customer.applications.index')" :active="request()->routeIs('customer.applications.*')">My Applications</x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">{{ __('Dashboard') }}</x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('services.index')" :active="request()->routeIs('services.*')">{{ __('Services') }}</x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('customer.applications.index')" :active="request()->routeIs('customer.applications.*')">{{ __('My Applications') }}</x-responsive-nav-link>
             @if(Auth::user()->isAdmin())
-                <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')">Admin</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.*')">{{ __('Admin') }}</x-responsive-nav-link>
             @endif
-            <x-responsive-nav-link :href="route('profile.edit')">Profile</x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('profile.edit')">{{ __('Profile') }}</x-responsive-nav-link>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
-                <x-responsive-nav-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">Log Out</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">{{ __('Log Out') }}</x-responsive-nav-link>
             </form>
         @else
-            <x-responsive-nav-link :href="route('home')" :active="request()->routeIs('home')">Home</x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('services.index')" :active="request()->routeIs('services.*')">Services</x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('login')">Sign in</x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('register')">Get started</x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('home')" :active="request()->routeIs('home')">{{ __('Home') }}</x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('services.index')" :active="request()->routeIs('services.*')">{{ __('Services') }}</x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('login')">{{ __('Sign in') }}</x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('register')">{{ __('Get started') }}</x-responsive-nav-link>
         @endauth
     </div>
 </div>
