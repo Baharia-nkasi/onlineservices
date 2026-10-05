@@ -69,7 +69,7 @@ class ApplicationDocumentController extends Controller
                 }
 
                 $existing = $lockedApplication->documents()
-                    ->whereRaw('LOWER(document_name) = ?', [mb_strtolower($documentName)])
+                    ->whereRaw('LOWER(TRIM(document_name)) = ?', [mb_strtolower($documentName)])
                     ->lockForUpdate()
                     ->first();
 
