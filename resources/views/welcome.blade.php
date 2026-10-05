@@ -12,7 +12,7 @@
     <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         <a href="{{ url('/') }}" class="flex items-center gap-3">
             <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-700 text-lg font-black text-white shadow-sm">OS</span>
-            <span><span class="block text-base font-extrabold leading-none">Online Services</span><span class="mt-1 block text-xs text-slate-500">Simple. Secure. Convenient.</span></span>
+            <span><span class="block text-base font-extrabold leading-none">Online Services</span><span class="mt-1 block text-xs text-slate-500">{{ __('Simple. Secure. Convenient.') }}</span></span>
         </a>
         <nav class="hidden items-center gap-7 text-sm font-semibold text-slate-600 md:flex">
             <a href="{{ url('/') }}" class="hover:text-blue-700">{{ __('Home') }}</a>
@@ -43,9 +43,9 @@
             <h1 class="mt-6 text-4xl font-black tracking-tight text-white sm:text-6xl">{{ __('Access services.') }}<br><span class="text-blue-300">{{ __('Apply with ease.') }}</span></h1>
             <p class="mt-6 max-w-xl text-lg leading-8 text-slate-300">{{ __('Find the service you need, understand the requirements, submit your application and follow its progress from one secure online platform.') }}</p>
             <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-                <a href="{{ route('services.index') }}" class="rounded-xl bg-white px-6 py-3.5 text-center font-extrabold text-slate-950 hover:bg-slate-100">Explore services →</a>
+                <a href="{{ route('services.index') }}" class="rounded-xl bg-white px-6 py-3.5 text-center font-extrabold text-slate-950 hover:bg-slate-100">{{ __('Explore services →') }}</a>
                 @guest
-                    <a href="{{ route('register') }}" class="rounded-xl border border-white/20 bg-white/10 px-6 py-3.5 text-center font-extrabold text-white hover:bg-white/15">Create account</a>
+                    <a href="{{ route('register') }}" class="rounded-xl border border-white/20 bg-white/10 px-6 py-3.5 text-center font-extrabold text-white hover:bg-white/15">{{ __('Create account') }}</a>
                 @endguest
             </div>
             <div class="mt-8 grid max-w-xl grid-cols-3 gap-4 border-t border-white/10 pt-6 text-sm">
@@ -58,7 +58,7 @@
             <div class="absolute -inset-6 rounded-[3rem] bg-blue-500/10 blur-3xl"></div>
             <div class="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 p-3 shadow-2xl backdrop-blur">
                 <img src="{{ asset('images/online-services-hero.svg') }}"
-                     alt="Online Services application and document tracking"
+                     alt="{{ __('Online Services application and document tracking') }}"
                      class="h-auto w-full rounded-[1.5rem]">
             </div>
         </div>
@@ -90,7 +90,7 @@
     <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div class="text-center"><p class="text-sm font-extrabold uppercase tracking-wider text-blue-700"> {{ __('How it works') }} </p><h2 class="mt-2 text-3xl font-black"> {{ __('A clear process from start to finish') }} </h2></div>
         <div class="mt-10 grid gap-5 md:grid-cols-4">
-            @foreach([['01','Choose','{{ __('Find the service and read its requirements.') }}'],['02','Apply','{{ __('Enter your information through a guided application.') }}'],['03','Upload','{{ __('Submit the required documents securely.') }}'],['04','Track','{{ __('Follow your application until completion.') }}']] as $step)
+            @foreach([['01', __('Choose'), __('Find the service and read its requirements.')],['02', __('Apply'), __('Enter your information through a guided application.')],['03', __('Upload'), __('Submit the required documents securely.')],['04', __('Track'), __('Follow your application until completion.')]] as $step)
                 <div class="relative rounded-2xl border border-slate-200 bg-slate-50 p-6"><span class="text-sm font-black text-blue-700">{{ $step[0] }}</span><h3 class="mt-3 font-extrabold">{{ $step[1] }}</h3><p class="mt-2 text-sm leading-6 text-slate-500">{{ $step[2] }}</p></div>
             @endforeach
         </div>
@@ -107,8 +107,8 @@
 
 <footer class="border-t border-slate-200 bg-slate-950 text-slate-300">
     <div class="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-10 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
-        <div><p class="font-extrabold text-white">Online Services</p><p class="mt-1 text-sm text-slate-400">A simple portal for service applications and tracking.</p></div>
-        <p class="text-sm text-slate-500">© {{ date('Y') }} Online Services. All rights reserved.</p>
+        <div><p class="font-extrabold text-white">Online Services</p><p class="mt-1 text-sm text-slate-400">{{ __('A simple portal for service applications and tracking.') }}</p></div>
+        <p class="text-sm text-slate-500">© {{ date('Y') }} {{ __('Online Services') }}. {{ __('All rights reserved.') }}</p>
     </div>
 </footer>
 </body>
