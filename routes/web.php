@@ -87,6 +87,10 @@ Route::middleware('auth')->group(function () {
         Route::patch('/documents/{document}/status', [AdminController::class, 'updateDocumentStatus'])
             ->name('documents.status');
 
+        Route::delete('/documents/{document}', [AdminController::class, 'destroyDocument'])
+            ->middleware('throttle:20,1')
+            ->name('documents.destroy');
+
         Route::patch('/services/{service}', [AdminController::class, 'updateService'])
             ->name('services.update');
     });
