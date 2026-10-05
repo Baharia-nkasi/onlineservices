@@ -22,14 +22,14 @@
                         <p class="dashboard-hero-text">{{ __('Manage your applications, upload documents, and follow every step from one simple portal.') }}</p>
                         <div class="mt-6 flex flex-col gap-3 sm:flex-row">
                             <a href="{{ route('services.index') }}" class="dashboard-hero-action">{{ __('Explore Services →') }}</a>
-                            <a href="{{ route('customer.applications.index') }}" class="dashboard-hero-action-secondary">{{ __('Track {{ __('Applications') }}') }}</a>
+                            <a href="{{ route('customer.applications.index') }}" class="dashboard-hero-action-secondary">{{ __('Track Applications') }}</a>
                         </div>
                     </div>
                     <div class="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-2">
-                        <div class="dashboard-stat"><div class="dashboard-stat-value">{{ $total{{ __('Applications') }} }}</div><div class="dashboard-stat-label">{{ __('Applications') }}</div></div>
-                        <div class="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur"><div class="text-2xl font-black">{{ $pending{{ __('Applications') }} }}</div><div class="mt-1 text-xs text-slate-400">{{ __('Pending') }}</div></div>
-                        <div class="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur"><div class="text-2xl font-black">{{ $processing{{ __('Applications') }} }}</div><div class="mt-1 text-xs text-slate-400">{{ __('Processing') }}</div></div>
-                        <div class="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur"><div class="text-2xl font-black">{{ $completed{{ __('Applications') }} }}</div><div class="mt-1 text-xs text-slate-400">{{ __('Completed') }}</div></div>
+                        <div class="dashboard-stat"><div class="dashboard-stat-value">{{ $totalApplications }}</div><div class="dashboard-stat-label">{{ __('Applications') }}</div></div>
+                        <div class="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur"><div class="text-2xl font-black">{{ $pendingApplications }}</div><div class="mt-1 text-xs text-slate-400">{{ __('Pending') }}</div></div>
+                        <div class="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur"><div class="text-2xl font-black">{{ $processingApplications }}</div><div class="mt-1 text-xs text-slate-400">{{ __('Processing') }}</div></div>
+                        <div class="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur"><div class="text-2xl font-black">{{ $completedApplications }}</div><div class="mt-1 text-xs text-slate-400">{{ __('Completed') }}</div></div>
                     </div>
                 </div>
             </section>
@@ -48,7 +48,7 @@
                             </div>
                             <h4 class="mt-4 font-black text-slate-900">{{ $service->name }}</h4>
                             <p class="mt-2 line-clamp-2 text-sm leading-6 text-slate-500">{{ $service->description }}</p>
-                            <a href="{{ route('applications.create', $service) }}" class="mt-4 inline-flex text-sm font-black text-blue-700 group-hover:text-blue-900">View {{ __('requirements') }} →</a>
+                            <a href="{{ route('applications.create', $service) }}" class="mt-4 inline-flex text-sm font-black text-blue-700 group-hover:text-blue-900">{{ __('View requirements →') }}</a>
                         </article>
                     @empty
                         <div class="portal-card col-span-full p-10 text-center text-slate-500">{{ __('No services are currently available.') }}</div>
@@ -58,11 +58,11 @@
 
             <section class="dashboard-recent">
                 <div class="dashboard-recent-header">
-                    <div><h3 class="font-black text-slate-900">Recent {{ __('Applications') }}</h3><p class="text-sm text-slate-500">{{ __('Your latest service requests.') }}</p></div>
+                    <div><h3 class="font-black text-slate-900">{{ __('Recent Applications') }}</h3><p class="text-sm text-slate-500">{{ __('Your latest service requests.') }}</p></div>
                     <a href="{{ route('customer.applications.index') }}" class="text-sm font-black text-blue-700">{{ __('View all →') }}</a>
                 </div>
                 <div class="divide-y divide-slate-100">
-                    @forelse($recent{{ __('Applications') }} as $application)
+                    @forelse($recentApplications as $application)
                         @php
                             $badge = match($application->status) {
                                 'pending' => 'bg-amber-50 text-amber-700',
@@ -89,7 +89,7 @@
             </section>
 
             <section class="grid gap-4 sm:grid-cols-3">
-                <div class="dashboard-help-card p-5"><span class="text-2xl">🔎</span><h4 class="mt-3 font-black">Clear {{ __('requirements') }}</h4><p class="mt-1 text-sm leading-6 text-slate-500">{{ __('Know what documents you need before applying.') }}</p></div>
+                <div class="dashboard-help-card p-5"><span class="text-2xl">🔎</span><h4 class="mt-3 font-black">{{ __('Clear requirements') }}</h4><p class="mt-1 text-sm leading-6 text-slate-500">{{ __('Know what documents you need before applying.') }}</p></div>
                 <div class="portal-card p-5"><span class="text-2xl">🔐</span><h4 class="mt-3 font-black">{{ __('Secure account') }}</h4><p class="mt-1 text-sm leading-6 text-slate-500">{{ __('Your applications stay connected to your account.') }}</p></div>
                 <div class="portal-card p-5"><span class="text-2xl">📈</span><h4 class="mt-3 font-black">{{ __('Track progress') }}</h4><p class="mt-1 text-sm leading-6 text-slate-500">{{ __('Follow pending, processing, completed, or rejected requests.') }}</p></div>
             </section>
