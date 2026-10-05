@@ -188,5 +188,14 @@
     "from the options below.": "kutoka kwenye chaguo hapa chini.",
     "No document requirements configured.": "Hakuna mahitaji ya nyaraka yaliyowekwa.",
     "No documents uploaded yet.": "Bado hakuna nyaraka zilizopakiwa.",
-    "This document cannot be approved because the uploaded file is unavailable. Ask the customer to re-upload it.": "Nyaraka hii haiwezi kuidhinishwa kwa sababu faili iliyopakiwa haipatikani. Mwambie mteja aipakie tena."
+    "This document cannot be approved because the uploaded file is unavailable. Ask the customer to re-upload it.": "Nyaraka hii haiwezi kuidhinishwa kwa sababu faili iliyopakiwa haipatikani. Mwambie mteja aipakie tena.",
+    "Masasisho ya Huduma": "Taarifa muhimu kuhusu ombi na nyaraka zako.",
+    "Ombi lako limekamilika": "Kazi ya huduma imekamilika kikamilifu.",
+    "Hifadhi kitambulisho chako halisi na nyaraka zozote zinazohusiana na huduma hii kwa ajili ya kuchukua au uthibitisho wa baadaye.": "Nyaraka muhimu za huduma",
+    "Bado hakuna taarifa za huduma zilizokamilika.": "Ombi linahitaji uangalizi wako",
+    "Tafadhali fungua ombi hili kusoma maelekezo ya mapitio na kufanya mabadiliko yanayohitajika.": "Kagua ombi →",
+    "Masasisho ya Nyaraka": "Nyaraka zilizoidhinishwa au kukataliwa baada ya mapitio ya msimamizi.",
+    "Nyaraka imeidhinishwa": "Nyaraka imekataliwa",
+    "Maelezo ya msimamizi:": "Fungua nyaraka →",
+    "Bado hakuna taarifa za mapitio ya nyaraka.": "Angalia ombi na nyaraka →"
 }
