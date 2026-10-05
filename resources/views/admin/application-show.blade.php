@@ -155,6 +155,10 @@
                                         File unavailable — ask customer to re-upload
                                     </span>
                                 @endif
+                                <form method="POST" action="{{ route('admin.documents.destroy',$document) }}" class="shrink-0" onsubmit="return confirm('Delete this file? The customer will need to upload it again.');">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-extrabold text-red-700 hover:bg-red-100" {{ $application->status === 'completed' ? 'disabled' : '' }}>Delete File</button>
+                                </form>
                                 <form method="POST" action="{{ route('admin.documents.status',$document) }}" class="flex flex-col gap-2 sm:flex-row">
                                     @csrf @method('PATCH')
                                     <select name="status" class="rounded-xl border-slate-300 text-sm" {{ $application->status === 'completed' ? 'disabled' : '' }}>
