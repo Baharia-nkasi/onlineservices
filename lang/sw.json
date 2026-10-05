@@ -187,5 +187,6 @@
     "This application is": "Ombi hili ni",
     "from the options below.": "kutoka kwenye chaguo hapa chini.",
     "No document requirements configured.": "Hakuna mahitaji ya nyaraka yaliyowekwa.",
-    "No documents uploaded yet.": "Bado hakuna nyaraka zilizopakiwa."
+    "No documents uploaded yet.": "Bado hakuna nyaraka zilizopakiwa.",
+    "This document cannot be approved because the uploaded file is unavailable. Ask the customer to re-upload it.": "Nyaraka hii haiwezi kuidhinishwa kwa sababu faili iliyopakiwa haipatikani. Mwambie mteja aipakie tena."
 }
