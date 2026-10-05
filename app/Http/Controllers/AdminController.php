@@ -8,6 +8,7 @@ use App\Models\Service;
 use App\Models\ServiceDocument;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
 class AdminController extends Controller
 {
@@ -245,7 +246,10 @@ class AdminController extends Controller
         $this->guard();
 
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'name' => [
+                'required', 'string', 'max:255',
+                Rule::unique('service_documents', 'name')->where(fn ($query) => $query->where('service_id', $service->id)),
+            ],
             'description' => ['nullable', 'string', 'max:2000'],
             'is_required' => ['required', 'boolean'],
             'requirement_type' => ['required', 'in:single,choose_one,choose_many'],
@@ -258,6 +262,10 @@ class AdminController extends Controller
         if ($validated['requirement_type'] === 'single') {
             $validated['requirement_group'] = null;
             $validated['minimum_required'] = 1;
+        } elseif (blank($validated['requirement_group'])) {
+            return back()->withErrors([
+                'requirement_group' => __('A requirement group is required for choose-one or choose-many rules.'),
+            ])->withInput();
         }
 
         $service->documents()->create($validated);
@@ -270,7 +278,12 @@ class AdminController extends Controller
         $this->guard();
 
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'name' => [
+                'required', 'string', 'max:255',
+                Rule::unique('service_documents', 'name')
+                    ->where(fn ($query) => $query->where('service_id', $document->service_id))
+                    ->ignore($document->id),
+            ],
             'description' => ['nullable', 'string', 'max:2000'],
             'is_required' => ['required', 'boolean'],
             'requirement_type' => ['required', 'in:single,choose_one,choose_many'],
@@ -283,6 +296,10 @@ class AdminController extends Controller
         if ($validated['requirement_type'] === 'single') {
             $validated['requirement_group'] = null;
             $validated['minimum_required'] = 1;
+        } elseif (blank($validated['requirement_group'])) {
+            return back()->withErrors([
+                'requirement_group' => __('A requirement group is required for choose-one or choose-many rules.'),
+            ])->withInput();
         }
 
         $serviceHasApplications = $document->service->applications()->exists();
