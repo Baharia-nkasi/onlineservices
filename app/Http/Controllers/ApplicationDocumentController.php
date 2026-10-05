@@ -52,7 +52,7 @@ class ApplicationDocumentController extends Controller
 
         $file = $request->file('document');
 
-        if ($existing && $existing->status !== 'rejected') {
+        if ($existing && $existing->status !== 'rejected' && $existing->hasAvailableFile()) {
             return back()->withErrors([
                 'document_name' => 'This document has already been uploaded and is under review or approved.',
             ])->withInput();
