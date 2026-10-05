@@ -64,33 +64,50 @@ class ApplicationDocumentController extends Controller
         $storedPath = 'database://application-documents/'.bin2hex(random_bytes(16));
 
         try {
-            if ($existing) {
-                $originalPath = $existing->file_path;
-                $existing->update([
-                    'file_name' => $fileName,
-                    'file_path' => $storedPath,
-                    'file_content' => null,
-                    'file_type' => $fileType,
-                    'file_size' => $fileSize,
-                    'status' => 'pending',
-                    'notes' => null,
-                ]);
+            $originalPath = null;
 
-                $this->storeBinaryContent($existing, $fileContent);
+            DB::transaction(function () use (
+                $application,
+                $requirement,
+                $existing,
+                $fileName,
+                $storedPath,
+                $fileContent,
+                $fileType,
+                $fileSize,
+                &$originalPath
+            ) {
+                if ($existing) {
+                    $originalPath = $existing->file_path;
 
-                if ($originalPath && ! str_starts_with($originalPath, 'database://')) {
-                    Storage::disk('local')->delete($originalPath);
+                    $existing->update([
+                        'file_name' => $fileName,
+                        'file_path' => $storedPath,
+                        'file_content' => null,
+                        'file_type' => $fileType,
+                        'file_size' => $fileSize,
+                        'status' => 'pending',
+                        'notes' => null,
+                    ]);
+
+                    $this->storeBinaryContent($existing, $fileContent);
+                } else {
+                    $newDocument = $application->documents()->create([
+                        'document_name' => $requirement->name,
+                        'file_name' => $fileName,
+                        'file_path' => $storedPath,
+                        'file_content' => null,
+                        'file_type' => $fileType,
+                        'file_size' => $fileSize,
+                        'status' => 'pending',
+                    ]);
+
+                    $this->storeBinaryContent($newDocument, $fileContent);
                 }
-            } else {
-                $application->documents()->create([
-                    'document_name' => $requirement->name,
-                    'file_name' => $fileName,
-                    'file_path' => $storedPath,
-                    'file_content' => $fileContent,
-                    'file_type' => $fileType,
-                    'file_size' => $fileSize,
-                    'status' => 'pending',
-                ]);
+            });
+
+            if ($originalPath && ! str_starts_with($originalPath, 'database://')) {
+                Storage::disk('local')->delete($originalPath);
             }
         } catch (QueryException $exception) {
             if ($exception->getCode() === '23505') {
@@ -98,7 +115,18 @@ class ApplicationDocumentController extends Controller
                     'document_name' => __('This document has already been uploaded. Please refresh the application and try again.'),
                 ])->withInput();
             }
-            throw $exception;
+
+            report($exception);
+
+            return back()->withErrors([
+                'document' => __('The document could not be saved. Please try again.'),
+            ])->withInput();
+        } catch (\Throwable $exception) {
+            report($exception);
+
+            return back()->withErrors([
+                'document' => __('The document could not be saved. Please try again.'),
+            ])->withInput();
         }
 
         return redirect()->route('customer.applications.show', $application)
