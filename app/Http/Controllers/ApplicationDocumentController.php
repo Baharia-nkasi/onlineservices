@@ -16,7 +16,7 @@ class ApplicationDocumentController extends Controller
      */
     public function store(Request $request, Application $application)
     {
-        abort_if($application->user_id !== Auth::id(), 403);
+        abort_unless(Auth::check() && $application->user_id === Auth::id(), 403);
         abort_if(in_array($application->status, ['completed', 'rejected'], true), 422, 'Documents cannot be changed after this application is completed or rejected.');
 
         $validated = $request->validate([
@@ -105,7 +105,7 @@ class ApplicationDocumentController extends Controller
      */
     public function destroy(ApplicationDocument $document)
     {
-        abort_if($document->application->user_id !== Auth::id(), 403);
+        abort_unless(Auth::check() && $document->application->user_id === Auth::id(), 403);
         abort_if($document->status !== 'pending', 422, 'Only pending documents can be deleted.');
         abort_if(in_array($document->application->status, ['completed', 'rejected'], true), 422, 'Documents cannot be changed after this application is completed or rejected.');
 
