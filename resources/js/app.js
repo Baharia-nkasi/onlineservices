@@ -38,7 +38,10 @@ function initLiveValidation() {
         form.dataset.liveReady = '1';
 
         const email = form.querySelector('#email');
+        const name = form.querySelector('#name');
         const password = form.querySelector('#password');
+        const confirmation = form.querySelector('#password_confirmation');
+        const nameError = form.querySelector('#name-live-error');
         const emailError = form.querySelector('#email-live-error');
         const passwordError = form.querySelector('#password-live-error');
 
@@ -55,8 +58,24 @@ function initLiveValidation() {
 
         const validatePassword = () => {
             const value = password?.value ?? '';
-            const valid = value.length >= 8;
+            const valid = form.dataset.liveValidate === 'login' ? value.length > 0 : value.length >= 8;
             setLiveFieldState(password, passwordError, valid, valid ? '' : 'Password must contain at least 8 characters.');
+            return valid;
+        };
+
+        const validateName = () => {
+            if (!name) return true;
+            const value = name.value.trim();
+            const valid = value.length >= 2 && value.length <= 255;
+            setLiveFieldState(name, nameError, valid, valid ? '' : 'Name must contain at least 2 characters.');
+            return valid;
+        };
+
+        const validateConfirmation = () => {
+            if (!confirmation) return true;
+            const valid = confirmation.value.length > 0 && confirmation.value === password?.value;
+            const error = form.querySelector('#password-confirmation-live-error');
+            setLiveFieldState(confirmation, error, valid, valid ? '' : 'Passwords do not match.');
             return valid;
         };
 
@@ -64,9 +83,14 @@ function initLiveValidation() {
         email?.addEventListener('blur', validateEmail);
         password?.addEventListener('input', validatePassword);
         password?.addEventListener('blur', validatePassword);
+        password?.addEventListener('input', () => { validatePassword(); validateConfirmation(); });
+        confirmation?.addEventListener('input', validateConfirmation);
+        name?.addEventListener('input', validateName);
+        name?.addEventListener('blur', validateName);
 
         form.addEventListener('submit', (event) => {
-            if (!validateEmail() || !validatePassword()) {
+            const valid = validateEmail() && validatePassword() && validateName() && validateConfirmation();
+            if (!valid) {
                 event.preventDefault();
                 (form.querySelector('[aria-invalid="true"]') || email)?.focus();
             }
