@@ -25,7 +25,7 @@ class ApplicationDocumentController extends Controller
         abort_if(
             in_array($application->status, ['completed', 'rejected'], true),
             422,
-            'Documents cannot be changed after this application is completed or rejected.'
+            __('Documents cannot be changed after this application is completed or rejected.')
         );
 
         $validated = $request->validate([
@@ -42,7 +42,7 @@ class ApplicationDocumentController extends Controller
 
         if (! $requirement) {
             return back()->withErrors([
-                'document_name' => 'Please select a valid document requirement for this service.',
+                'document_name' => __('Please select a valid document requirement for this service.'),
             ])->withInput();
         }
 
@@ -54,7 +54,7 @@ class ApplicationDocumentController extends Controller
 
         if ($existing && $existing->status !== 'rejected' && $existing->hasAvailableFile()) {
             return back()->withErrors([
-                'document_name' => 'This document has already been uploaded and is under review or approved.',
+                'document_name' => __('This document has already been uploaded and is under review or approved.'),
             ])->withInput();
         }
 
@@ -66,7 +66,7 @@ class ApplicationDocumentController extends Controller
 
         if ($fileContent === false) {
             return back()->withErrors([
-                'document' => 'The uploaded file could not be read. Please try again.',
+                'document' => __('The uploaded file could not be read. Please try again.'),
             ])->withInput();
         }
 
@@ -103,7 +103,7 @@ class ApplicationDocumentController extends Controller
         } catch (QueryException $exception) {
             if ($exception->getCode() === '23505') {
                 return back()->withErrors([
-                    'document_name' => 'This document has already been uploaded. Please refresh the application and try again.',
+                    'document_name' => __('This document has already been uploaded. Please refresh the application and try again.'),
                 ])->withInput();
             }
 
@@ -112,7 +112,7 @@ class ApplicationDocumentController extends Controller
 
         return redirect()
             ->route('customer.applications.show', $application)
-            ->with('success', 'Document uploaded successfully.');
+            ->with('success', __('Document uploaded successfully.'));
     }
 
     /**
@@ -163,7 +163,7 @@ class ApplicationDocumentController extends Controller
                 $application
             )
             ->withErrors([
-                'document' => 'This uploaded file is no longer available on the server. Please upload the document again.',
+                'document' => __('This uploaded file is no longer available on the server. Please upload the document again.'),
             ]);
     }
 
@@ -173,11 +173,11 @@ class ApplicationDocumentController extends Controller
     public function destroy(ApplicationDocument $document)
     {
         abort_unless(Auth::check() && $document->application->user_id === Auth::id(), 403);
-        abort_if($document->status !== 'pending', 422, 'Only pending documents can be deleted.');
+        abort_if($document->status !== 'pending', 422, __('Only pending documents can be deleted.'));
         abort_if(
             in_array($document->application->status, ['completed', 'rejected'], true),
             422,
-            'Documents cannot be changed after this application is completed or rejected.'
+            __('Documents cannot be changed after this application is completed or rejected.')
         );
 
         $applicationId = $document->application_id;
@@ -190,6 +190,6 @@ class ApplicationDocumentController extends Controller
 
         return redirect()
             ->route('customer.applications.show', $applicationId)
-            ->with('success', 'Document deleted successfully.');
+            ->with('success', __('Document deleted successfully.'));
     }
 }
