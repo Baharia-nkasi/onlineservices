@@ -157,7 +157,14 @@ class ApplicationDocumentController extends Controller
             );
         }
 
-        abort(404, 'This document file is no longer available. Please upload the document again.');
+        return redirect()
+            ->route(
+                $user->isAdmin() ? 'admin.applications.show' : 'customer.applications.show',
+                $application
+            )
+            ->withErrors([
+                'document' => 'This uploaded file is no longer available on the server. Please upload the document again.',
+            ]);
     }
 
     /**
