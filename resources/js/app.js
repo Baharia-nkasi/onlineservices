@@ -33,7 +33,7 @@ function setLiveFieldState(input, messageElement, valid, message = '') {
 }
 
 function initLiveValidation() {
-    document.querySelectorAll('form[data-live-validate="login"]').forEach((form) => {
+    document.querySelectorAll('form[data-live-validate]').forEach((form) => {
         if (form.dataset.liveReady === '1') return;
         form.dataset.liveReady = '1';
 
@@ -59,7 +59,7 @@ function initLiveValidation() {
         const validatePassword = () => {
             const value = password?.value ?? '';
             const valid = form.dataset.liveValidate === 'login' ? value.length > 0 : value.length >= 8;
-            setLiveFieldState(password, passwordError, valid, valid ? '' : 'Password must contain at least 8 characters.');
+            setLiveFieldState(password, passwordError, valid, valid ? '' : (form.dataset.liveValidate === 'login' ? 'Password is required.' : 'Password must contain at least 8 characters.'));
             return valid;
         };
 
