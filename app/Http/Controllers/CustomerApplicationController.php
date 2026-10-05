@@ -36,10 +36,14 @@ class CustomerApplicationController extends Controller
         abort_unless($user?->isAdmin() || $user?->isCustomer(), 403);
         abort_if($user->isCustomer() && $application->user_id !== $user->id, 403);
 
+        if ($user->isAdmin()) {
+            return app(AdminController::class)->showApplication($application);
+        }
+
         $application->load([
-    'service',
-    'documents',
-]);
+            'service',
+            'documents',
+        ]);
 
         return view('customer.applications.show', [
             'application' => $application,
