@@ -32,10 +32,10 @@
         <div class="portal-card overflow-hidden">
             <div class="flex flex-col gap-3 border-b border-slate-200 p-5 sm:flex-row sm:items-center sm:justify-between">
                 <div><h3 class="text-lg font-black text-slate-900">Recent Applications</h3><p class="mt-1 text-sm text-slate-500">Search, filter, review and process customer requests.</p></div>
-                <span class="text-sm font-bold text-slate-400">{{ $applications->total() }} matching</span>
+                <span id="admin-search-count" class="text-sm font-bold text-slate-400">{{ $applications->count() }} results on this page</span>
             </div>
-            <form method="GET" class="grid gap-3 border-b border-slate-100 bg-slate-50 p-4 md:grid-cols-[1fr_auto_auto]">
-                <input type="search" name="q" value="{{ request('q') }}" placeholder="Search customer, email, service or application ID..." class="input-modern">
+            <form method="GET" data-admin-filter-form class="grid gap-3 border-b border-slate-100 bg-slate-50 p-4 md:grid-cols-[1fr_auto_auto]">
+                <input type="search" name="q" value="{{ request('q') }}" placeholder="Search customer, email, service or application ID..." class="input-modern" data-table-search="#admin-applications-table" data-count-target="#admin-search-count" autocomplete="off">
                 <select name="status" class="input-modern md:w-48">
                     <option value="">All statuses</option>
                     @foreach(['pending','processing','completed','rejected'] as $status)
@@ -50,7 +50,7 @@
                 </div>
             </div>
             <div class="overflow-x-auto">
-                <table class="w-full text-left text-sm">
+                <table id="admin-applications-table" class="w-full text-left text-sm">
                     <thead class="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
                         <tr><th class="p-4">ID</th><th class="p-4">Customer</th><th class="p-4">Service</th><th class="p-4">Status</th><th class="p-4">Date</th><th class="p-4"></th></tr>
                     </thead>
@@ -65,7 +65,7 @@
                                 default=>'bg-slate-100 text-slate-700'
                             };
                         @endphp
-                        <tr class="border-t border-slate-100 transition hover:bg-slate-50">
+                        <tr data-search-row data-search-text="{{ strtolower($application->id . ' ' . $application->user->name . ' ' . $application->user->email . ' ' . $application->service->name . ' ' . $application->status) }}" class="border-t border-slate-100 transition hover:bg-slate-50">
                             <td class="p-4 font-black">#{{ $application->id }}</td>
                             <td class="p-4"><div class="font-bold text-slate-900">{{ $application->user->name }}</div><div class="text-xs text-slate-500">{{ $application->user->email }}</div></td>
                             <td class="p-4 font-medium">{{ $application->service->name }}</td>
@@ -78,6 +78,7 @@
                     @endforelse
                     </tbody>
                 </table>
+                <div data-table-search-empty class="hidden p-10 text-center text-sm text-slate-500">No matching applications found on this page.</div>
             </div>
             <div class="border-t border-slate-200 p-4">{{ $applications->links() }}</div>
         </div>
