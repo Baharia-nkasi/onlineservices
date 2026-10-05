@@ -39,6 +39,10 @@ class DashboardWorkflowTest extends TestCase
             ->assertSee('#'.$processing->id)
             ->assertDontSee('#'.$completed->id)
             ->assertDontSee('#'.$rejected->id);
+
+        $this->actingAs($admin)
+            ->get(route('admin.dashboard', ['status' => 'completed']))
+            ->assertSessionHasErrors('status');
     }
 
     public function test_customer_sees_own_completion_and_document_review_updates(): void
