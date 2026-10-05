@@ -1,8 +1,8 @@
 <x-app-layout>
     <x-slot name="header">
         <div>
-            <p class="text-xs font-extrabold uppercase tracking-wider text-blue-700">{{ __('Customer portal') }}</p>
-            <h2 class="text-2xl font-black tracking-tight text-slate-900">{{ __('My Applications') }}</h2>
+            <p class="text-xs font-extrabold uppercase tracking-wider text-blue-700">{{ Auth::user()->isAdmin() ? __('Admin portal') : __('Customer portal') }}</p>
+            <h2 class="text-2xl font-black tracking-tight text-slate-900">{{ Auth::user()->isAdmin() ? __('All Applications') : __('My Applications') }}</h2>
         </div>
     </x-slot>
 
@@ -12,11 +12,13 @@
                 <div class="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-blue-600/20 blur-3xl"></div>
                 <div class="relative flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
                     <div>
-                        <p class="text-sm font-extrabold uppercase tracking-wider text-blue-300">{{ __('Application center') }}</p>
-                        <h1 class="mt-2 text-3xl font-black tracking-tight sm:text-4xl">{{ __('Track your applications') }}</h1>
-                        <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-300">{{ __('Monitor progress, upload documents, and review updates for every service request in one place.') }}</p>
+                        <p class="text-sm font-extrabold uppercase tracking-wider text-blue-300">{{ Auth::user()->isAdmin() ? __('Application management') : __('Application center') }}</p>
+                        <h1 class="mt-2 text-3xl font-black tracking-tight sm:text-4xl">{{ Auth::user()->isAdmin() ? __('Manage all applications') : __('Track your applications') }}</h1>
+                        <p class="mt-2 max-w-2xl text-sm leading-6 text-slate-300">{{ Auth::user()->isAdmin() ? __('Review customer applications and open each request to manage its documents and status.') : __('Monitor progress, upload documents, and review updates for every service request in one place.') }}</p>
                     </div>
-                    <a href="{{ route('services.index') }}" class="portal-button shrink-0">{{ __('Start New Application') }}</a>
+                    @if(!Auth::user()->isAdmin())
+                        <a href="{{ route('services.index') }}" class="portal-button shrink-0">{{ __('Start New Application') }}</a>
+                    @endif
                 </div>
             </section>
 
@@ -58,7 +60,7 @@
                                             <span class="ml-2 font-black text-emerald-700">{{ $approvedCount }} {{ __('approved') }}</span>
                                         @endif
                                     </div>
-                                    <a href="{{ route('customer.applications.show', $application) }}" class="portal-button-secondary">{{ __('View Details →') }}</a>
+                                    <a href="{{ Auth::user()->isAdmin() ? route('admin.applications.show', $application) : route('customer.applications.show', $application) }}" class="portal-button-secondary">{{ Auth::user()->isAdmin() ? __('Manage Application →') : __('View Details →') }}</a>
                                 </div>
                             </div>
                         </div>
