@@ -119,6 +119,7 @@ class AdminController extends Controller
                     ->where('status', 'approved')
                     ->filter(fn ($document) => $requirements->contains(
                         fn ($requirement) => mb_strtolower($document->document_name) === mb_strtolower($requirement->name)
+                            && $document->hasAvailableFile()
                     ))
                     ->count();
 
