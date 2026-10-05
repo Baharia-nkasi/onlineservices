@@ -30,6 +30,7 @@ class DashboardController extends Controller
 
         $recentApplications = Application::with('service')
             ->where('user_id', $userId)
+            ->whereIn('status', ['pending', 'processing', 'completed'])
             ->latest()
             ->take(5)
             ->get();
