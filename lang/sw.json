@@ -157,5 +157,6 @@
     "Uploaded Documents": "Nyaraka Zilizopakiwa",
     "File unavailable — re-upload": "Faili haipatikani — pakia tena",
     "choose 1": "chagua 1",
-    "choose at least ": "chagua angalau "
+    "choose at least ": "chagua angalau ",
+    "Invalid status transition from :current to :next.": "Mabadiliko ya hali kutoka :current kwenda :next hayaruhusiwi."
 }
