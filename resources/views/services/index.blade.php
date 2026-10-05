@@ -1,11 +1,11 @@
 <x-app-layout>
 <x-slot name="header">
-    <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+    <div class="flex flex-col gap-2 sm:flex-row sm:{{ __('items') }}-center sm:justify-between">
         <div>
-            <p class="text-xs font-extrabold uppercase tracking-wider text-blue-700">Service catalogue</p>
-            <h2 class="text-2xl font-black tracking-tight text-slate-900">Find a service</h2>
+            <p class="text-xs font-extrabold uppercase tracking-wider text-blue-700">{{ __('Service catalogue') }}</p>
+            <h2 class="text-2xl font-black tracking-tight text-slate-900">{{ __('Find a service') }}</h2>
         </div>
-        <span class="text-sm text-slate-500">{{ $services->count() }} available services</span>
+        <span class="text-sm text-slate-500">{{ $services->count() }} {{ __('available services') }}</span>
     </div>
 </x-slot>
 
@@ -21,16 +21,16 @@
             <div class="pointer-events-none absolute -right-16 -top-20 h-64 w-64 rounded-full bg-blue-600/20 blur-3xl"></div>
             <div class="relative">
                 <p class="text-sm font-extrabold uppercase tracking-wider text-blue-300">Online Services</p>
-                <h1 class="mt-2 text-2xl font-black tracking-tight sm:text-4xl">What service do you need?</h1>
-                <p class="mt-3 max-w-2xl leading-7 text-slate-300">Choose a service below. Review its requirements and fees before starting your application.</p>
+                <h1 class="mt-2 text-2xl font-black tracking-tight sm:text-4xl">{{ __('What service do you need?') }}</h1>
+                <p class="mt-3 max-w-2xl leading-7 text-slate-300">{{ __('Choose a service below. Review its requirements and fees before starting your application.') }}</p>
 
-                <div class="mt-6 flex max-w-xl items-center gap-3 rounded-[12px] bg-white px-4 py-3 text-slate-400 shadow-[0_8px_24px_rgba(15,23,42,0.12)]">
+                <div class="mt-6 flex max-w-xl {{ __('items') }}-center gap-3 rounded-[12px] bg-white px-4 py-3 text-slate-400 shadow-[0_8px_24px_rgba(15,23,42,0.12)]">
                     <span class="text-lg">⌕</span>
                     <input x-model="query" @input="filter()" type="search" autocomplete="off"
-                        placeholder="Search services..."
+                        placeholder="{{ __('Search services...') }}"
                         class="w-full border-0 p-0 text-sm text-slate-900 outline-none focus:ring-0">
                     <button type="button" x-show="query" x-cloak @click="query=''; filter()"
-                        class="rounded-lg px-2 py-1 text-xs font-bold text-slate-500 hover:bg-slate-100">Clear</button>
+                        class="rounded-lg px-2 py-1 text-xs font-bold text-slate-500 hover:bg-slate-100">{{ __('Clear') }}</button>
                 </div>
             </div>
         </div>
@@ -39,17 +39,17 @@
             @forelse($services as $service)
                 <article class="service-card portal-card flex flex-col p-5"
                     data-name="{{ strtolower($service->name) }}">
-                    <div class="flex items-center justify-between">
-                        <span class="service-icon flex h-11 w-11 items-center justify-center rounded-[12px] bg-blue-50 text-xl transition-transform duration-200">📋</span>
-                        <span class="status-pill bg-emerald-50 text-emerald-700">Available</span>
+                    <div class="flex {{ __('items') }}-center justify-between">
+                        <span class="service-icon flex h-11 w-11 {{ __('items') }}-center justify-center rounded-[12px] bg-blue-50 text-xl transition-transform duration-200">📋</span>
+                        <span class="status-pill bg-emerald-50 text-emerald-700">{{ __('Available') }}</span>
                     </div>
                     <h3 class="mt-5 text-lg font-extrabold text-slate-900">{{ $service->name }}</h3>
                     <p class="mt-2 flex-1 text-sm leading-6 text-slate-500">{{ $service->description }}</p>
                     <div class="mt-5 grid grid-cols-2 gap-3 border-t border-slate-100 pt-4 text-sm">
-                        <div><span class="block text-xs text-slate-400">Requirements</span><strong>{{ $service->documents->where('is_active',true)->count() }}</strong></div>
-                        <div><span class="block text-xs text-slate-400">Service fee</span><strong>TSh {{ number_format($service->service_fee,0) }}</strong></div>
+                        <div><span class="block text-xs text-slate-400">{{ __('Requirements') }}</span><strong>{{ $service->documents->where('is_active',true)->count() }}</strong></div>
+                        <div><span class="block text-xs text-slate-400">{{ __('Service fee') }}</span><strong>TSh {{ number_format($service->service_fee,0) }}</strong></div>
                     </div>
-                    <a href="{{ route('applications.create',$service) }}" class="portal-button mt-5 w-full">View requirements & Apply →</a>
+                    <a href="{{ route('applications.create',$service) }}" class="portal-button mt-5 w-full">{{ __('View requirements & Apply →') }}</a>
                 </article>
             @empty
                 <div class="col-span-full rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center text-slate-500">No services are currently available.</div>
@@ -57,8 +57,8 @@
 
             <div data-search-empty class="hidden col-span-full rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center">
                 <div class="text-3xl">🔎</div>
-                <h3 class="mt-3 font-black text-slate-900">No service found</h3>
-                <p class="mt-1 text-sm text-slate-500">Try another search term.</p>
+                <h3 class="mt-3 font-black text-slate-900">{{ __('No service found') }}</h3>
+                <p class="mt-1 text-sm text-slate-500">{{ __('Try another search term.') }}</p>
             </div>
         </div>
     </div>
