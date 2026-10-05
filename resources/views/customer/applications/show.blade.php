@@ -142,8 +142,8 @@
                                 <option value="">Select a requirement</option>
                                 @foreach($requirements as $requirement)
                                     @php $uploadedRequirement = $application->documents->first(fn($d) => mb_strtolower($d->document_name) === mb_strtolower($requirement->name)); @endphp
-                                    <option value="{{ $requirement->name }}" @disabled($uploadedRequirement && $uploadedRequirement->status !== 'rejected')>
-                                        {{ $requirement->name }}{{ $requirement->is_required ? ' *' : '' }}{{ $uploadedRequirement ? ($uploadedRequirement->status === 'rejected' ? ' — re-upload required' : ' — uploaded') : '' }}
+                                    <option value="{{ $requirement->name }}" @disabled($uploadedRequirement && $uploadedRequirement->status !== 'rejected' && $uploadedRequirement->hasAvailableFile())>
+                                        {{ $requirement->name }}{{ $requirement->is_required ? ' *' : '' }}{{ $uploadedRequirement ? ($uploadedRequirement->status === 'rejected' || ! $uploadedRequirement->hasAvailableFile() ? ' — re-upload required' : ' — uploaded') : '' }}
                                     </option>
                                 @endforeach
                             </select>
