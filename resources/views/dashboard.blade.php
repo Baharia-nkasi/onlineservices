@@ -127,8 +127,8 @@
                                     <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-red-50 text-red-700">!</span>
                                     <div class="min-w-0">
                                         <p class="font-black text-red-800">{{ __('Application requires your attention') }}</p>
-                                        <p class="mt-1 text-sm text-slate-600">{{ $application->service->name }} — {{ __('Please open the application to read the review and provide any required changes.') }}</p>
-                                        <a href="{{ route('customer.applications.show', $application) }}" class="mt-3 inline-flex text-sm font-black text-blue-700">{{ __('Review application →') }}</a>
+                                        <p class="mt-1 text-sm text-slate-600">{{ $application->service->name }} — {{ __('This application was rejected. Please start a new application from the beginning.') }}</p>
+                                        <a href="{{ route('applications.create', $application->service) }}" class="mt-3 inline-flex text-sm font-black text-blue-700">{{ __('Re-apply from beginning →') }}</a>
                                     </div>
                                 </div>
                             </div>
