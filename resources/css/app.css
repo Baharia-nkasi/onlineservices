@@ -614,8 +614,7 @@ html.dark .theme-toggle-dock {
 
 /* Keep intentionally dark hero sections dark in both themes. */
 html.dark .dashboard-hero,
-html.dark .portal-gradient,
-html.dark .bg-slate-950 {
+html.dark .portal-gradient {
     background-color: #020617 !important;
 }
 
