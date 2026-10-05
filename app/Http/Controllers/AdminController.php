@@ -136,6 +136,31 @@ class AdminController extends Controller
         return back()->with('success', 'Application status updated.');
     }
 
+    /**
+     * Delete a customer-uploaded document when an admin confirms it is wrong.
+     * Completed applications remain locked.
+     */
+    public function destroyDocument(ApplicationDocument $document)
+    {
+        $this->guard();
+
+        $application = $document->application;
+
+        if ($application->status === 'completed') {
+            return back()->withErrors([
+                'document' => 'Documents for a completed application are locked and cannot be deleted.',
+            ]);
+        }
+
+        if ($document->file_path && ! str_starts_with($document->file_path, 'database://')) {
+            \Illuminate\Support\Facades\Storage::disk('local')->delete($document->file_path);
+        }
+
+        $document->delete();
+
+        return back()->with('success', 'Document deleted. The customer can upload a new file again.');
+    }
+
     public function updateDocumentStatus(Request $request, ApplicationDocument $document)
     {
         $this->guard();
