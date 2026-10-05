@@ -710,3 +710,13 @@ html.dark ::selection {
     background: #1d4ed8;
     color: #eff6ff;
 }
+
+
+.theme-transition,
+.theme-transition *,
+.theme-transition *::before,
+.theme-transition *::after {
+    transition-property: background-color, color, border-color, box-shadow;
+    transition-duration: 0.3s;
+    transition-timing-function: ease;
+}
