@@ -29,4 +29,22 @@ class Application extends Model
     {
         return $this->hasMany(ApplicationDocument::class);
     }
+
+    /**
+     * Requirements that applied when this application was created.
+     *
+     * A requirement created after the application is ignored, while a requirement
+     * deactivated after the application was created remains part of its history.
+     */
+    public function effectiveServiceRequirements()
+    {
+        return $this->service->documents->filter(function (ServiceDocument $requirement) {
+            if (! $requirement->created_at || ! $this->created_at) {
+                return $requirement->is_active;
+            }
+
+            return $requirement->created_at <= $this->created_at
+                && ($requirement->is_active || $requirement->updated_at > $this->created_at);
+        });
+    }
 }
