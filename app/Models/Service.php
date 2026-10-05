@@ -21,4 +21,9 @@ class Service extends Model
         return $this->hasMany(ServiceDocument::class)
             ->orderBy('sort_order');
     }
+
+    public function applications(): HasMany
+    {
+        return $this->hasMany(Application::class);
+    }
 }
