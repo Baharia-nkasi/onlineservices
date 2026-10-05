@@ -105,6 +105,7 @@ class AdminController extends Controller
                 ->filter(fn ($requirement) => ! $application->documents->contains(
                     fn ($document) => mb_strtolower($document->document_name) === mb_strtolower($requirement->name)
                         && $document->status === 'approved'
+                        && $document->hasAvailableFile()
                 ));
 
             $grouped = $application->service->documents
@@ -173,6 +174,12 @@ class AdminController extends Controller
         if ($document->application->status === 'completed') {
             return back()->withErrors([
                 'status' => __('Documents for a completed application are locked and cannot be changed.'),
+            ]);
+        }
+
+        if ($validated['status'] === 'approved' && ! $document->hasAvailableFile()) {
+            return back()->withErrors([
+                'status' => __('This document cannot be approved because the uploaded file is unavailable. Ask the customer to re-upload it.'),
             ]);
         }
 
