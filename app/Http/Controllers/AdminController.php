@@ -9,6 +9,7 @@ use App\Models\ServiceDocument;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
 class AdminController extends Controller
@@ -169,19 +170,29 @@ class AdminController extends Controller
     {
         $this->guard();
 
-        $application = $document->application;
+        $oldPath = null;
 
-        if ($application->status === 'completed') {
-            return back()->withErrors([
-                'document' => __('Documents for a completed application are locked and cannot be deleted.'),
-            ]);
+        $error = DB::transaction(function () use ($document, &$oldPath) {
+            $application = Application::query()->lockForUpdate()->findOrFail($document->application_id);
+            $lockedDocument = $application->documents()->lockForUpdate()->findOrFail($document->id);
+
+            if (in_array($application->status, ['completed', 'rejected'], true)) {
+                return __('Documents for a completed or rejected application are locked and cannot be deleted.');
+            }
+
+            $oldPath = $lockedDocument->file_path;
+            $lockedDocument->delete();
+
+            return null;
+        });
+
+        if ($error) {
+            return back()->withErrors(['document' => $error]);
         }
 
-        if ($document->file_path && ! str_starts_with($document->file_path, 'database://')) {
-            \Illuminate\Support\Facades\Storage::disk('local')->delete($document->file_path);
+        if ($oldPath && ! str_starts_with($oldPath, 'database://')) {
+            Storage::disk('local')->delete($oldPath);
         }
-
-        $document->delete();
 
         return back()->with('success', __('Document deleted. The customer can upload a new file again.'));
     }
