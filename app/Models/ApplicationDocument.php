@@ -20,9 +20,6 @@ class ApplicationDocument extends Model
         'notes',
     ];
 
-    protected $casts = [
-        'file_content' => 'string',
-    ];
 
     public function application(): BelongsTo
     {
@@ -30,11 +27,29 @@ class ApplicationDocument extends Model
     }
 
     /**
+     * Read PostgreSQL bytea content safely when PDO returns it as a stream.
+     */
+    public function binaryContent(): ?string
+    {
+        $value = $this->getRawOriginal('file_content');
+
+        if ($value === null) {
+            return null;
+        }
+
+        if (is_resource($value)) {
+            $value = stream_get_contents($value);
+        }
+
+        return is_string($value) ? $value : null;
+    }
+
+    /**
      * Determine whether the actual uploaded file is available for viewing.
      */
     public function hasAvailableFile(): bool
     {
-        return $this->file_content !== null
+        return $this->binaryContent() !== null
             || ($this->file_path
                 && ! str_starts_with($this->file_path, 'database://')
                 && Storage::disk('local')->exists($this->file_path));
