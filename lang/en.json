@@ -187,5 +187,6 @@
     "This application is": "This application is",
     "from the options below.": "from the options below.",
     "No document requirements configured.": "No document requirements configured.",
-    "No documents uploaded yet.": "No documents uploaded yet."
+    "No documents uploaded yet.": "No documents uploaded yet.",
+    "This document cannot be approved because the uploaded file is unavailable. Ask the customer to re-upload it.": "This document cannot be approved because the uploaded file is unavailable. Ask the customer to re-upload it."
 }
