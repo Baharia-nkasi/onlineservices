@@ -75,10 +75,10 @@
                         <div class="dashboard-recent-row">
                             <div class="flex min-w-0 items-center gap-3">
                                 <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100">📋</span>
-                                <div class="min-w-0"><p class="truncate font-bold">{{ $application->service->name }}</p><p class="text-xs text-slate-400">Application #{{ $application->id }} · {{ $application->created_at->format('d M Y, H:i') }}</p></div>
+                                <div class="min-w-0"><p class="truncate font-bold">{{ $application->service->name }}</p><p class="text-xs text-slate-400">{{ __('Application') }} #{{ $application->id }} · {{ $application->created_at->format('d M Y, H:i') }}</p></div>
                             </div>
                             <div class="flex items-center justify-between gap-4 sm:justify-end">
-                                <span class="status-pill {{ $badge }}">{{ ucfirst($application->status) }}</span>
+                                <span class="status-pill {{ $badge }}">{{ __($application->status) }}</span>
                                 <a href="{{ route('customer.applications.show', $application) }}" class="text-sm font-black text-blue-700">{{ __('Details →') }}</a>
                             </div>
                         </div>
