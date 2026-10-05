@@ -188,5 +188,14 @@
     "from the options below.": "from the options below.",
     "No document requirements configured.": "No document requirements configured.",
     "No documents uploaded yet.": "No documents uploaded yet.",
-    "This document cannot be approved because the uploaded file is unavailable. Ask the customer to re-upload it.": "This document cannot be approved because the uploaded file is unavailable. Ask the customer to re-upload it."
+    "This document cannot be approved because the uploaded file is unavailable. Ask the customer to re-upload it.": "This document cannot be approved because the uploaded file is unavailable. Ask the customer to re-upload it.",
+    "Service Updates": "Important updates about your application and documents.",
+    "Your application has been completed": "The service work has been completed successfully.",
+    "Keep your original identification and any documents related to this service for collection or future verification.": "Important service documents",
+    "No completed service updates yet.": "Application requires your attention",
+    "Please open the application to read the review and provide any required changes.": "Review application →",
+    "Document Updates": "Approved or rejected documents from admin review.",
+    "Document approved": "Document rejected",
+    "Admin note:": "Open documents →",
+    "No document review updates yet.": "View application and documents →"
 }
