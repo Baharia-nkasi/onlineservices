@@ -638,3 +638,76 @@ html.dark .theme-toggle-dock + * {
         justify-content: center;
     }
 }
+
+
+/* Navigation and account controls */
+html.dark .site-navigation .text-slate-900,
+html.dark .site-navigation .text-gray-700,
+html.dark .site-navigation .text-slate-500,
+html.dark .site-navigation .text-slate-600 {
+    color: var(--text-color) !important;
+}
+
+html.dark .site-navigation a:hover {
+    color: #93c5fd !important;
+}
+
+html.dark .site-navigation .bg-slate-50,
+html.dark .site-navigation .bg-slate-100,
+html.dark .site-navigation .bg-white {
+    background-color: var(--soft-bg) !important;
+}
+
+html.dark .site-navigation .border-slate-200,
+html.dark .site-navigation .border-slate-300 {
+    border-color: var(--border-color) !important;
+}
+
+html.dark .site-navigation .bg-blue-50 {
+    background-color: #172554 !important;
+}
+
+html.dark .site-navigation .text-blue-700 {
+    color: #93c5fd !important;
+}
+
+html.dark .site-navigation .border-blue-200 {
+    border-color: #1d4ed8 !important;
+}
+
+html.dark .mobile-menu .text-slate-600 {
+    color: #cbd5e1 !important;
+}
+
+/* Admin table, filters and service-management controls */
+html.dark table thead,
+html.dark .bg-slate-50 {
+    background-color: var(--softest-bg) !important;
+}
+
+html.dark .admin-management-card .bg-white,
+html.dark .admin-management-step .bg-white {
+    background-color: var(--card-bg) !important;
+}
+
+html.dark .admin-management-card .bg-slate-100,
+html.dark .admin-management-step .bg-slate-100 {
+    background-color: var(--soft-bg) !important;
+    color: #cbd5e1 !important;
+}
+
+html.dark .admin-management-card .border-slate-100,
+html.dark .admin-management-step .border-slate-100 {
+    border-color: var(--border-color) !important;
+}
+
+html.dark .admin-management-card .text-slate-400,
+html.dark .admin-management-step .text-slate-400 {
+    color: #94a3b8 !important;
+}
+
+/* Theme-aware focus rings and selection */
+html.dark ::selection {
+    background: #1d4ed8;
+    color: #eff6ff;
+}
