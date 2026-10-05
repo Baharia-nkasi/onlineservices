@@ -20,7 +20,10 @@
             <a href="#how-it-works" class="hover:text-blue-700">How it works</a>
             <a href="#about" class="hover:text-blue-700">About</a>
         </nav>
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2"><div class="flex items-center gap-1 rounded-xl border border-slate-200 bg-white/90 p-1 shadow-sm" role="group" aria-label="Language">
+ <a href="{{ route('language.switch', 'en') }}" class="rounded-lg px-2.5 py-1.5 text-xs font-extrabold {{ app()->getLocale() === 'en' ? 'bg-blue-50 text-blue-700' : 'text-slate-500' }}">EN</a>
+ <a href="{{ route('language.switch', 'sw') }}" class="rounded-lg px-2.5 py-1.5 text-xs font-extrabold {{ app()->getLocale() === 'sw' ? 'bg-blue-50 text-blue-700' : 'text-slate-500' }}">SW</a>
+</div>
             @auth
                 <a href="{{ route('dashboard') }}" class="rounded-xl bg-blue-700 px-4 py-2.5 text-sm font-bold text-white hover:bg-blue-800">Dashboard</a>
             @else
