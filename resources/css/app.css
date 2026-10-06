@@ -1037,3 +1037,30 @@ html.dark .admin-document-chevron {
     background: rgb(15 23 42 / 0.62);
     color: #fbbf24;
 }
+
+/* Compact service navigation numbers */
+@layer components {
+    .admin-services-pagination .admin-service-dot {
+        min-width: 30px;
+        height: 30px;
+        padding-left: 0.45rem;
+        padding-right: 0.45rem;
+        border-radius: 9px;
+        font-size: 11px;
+        line-height: 1;
+    }
+
+    .admin-services-pagination {
+        gap: 0.65rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .admin-services-pagination .admin-service-dot {
+        min-width: 28px;
+        height: 28px;
+        padding-left: 0.4rem;
+        padding-right: 0.4rem;
+        font-size: 10px;
+    }
+}
