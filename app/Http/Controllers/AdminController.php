@@ -203,7 +203,7 @@ class AdminController extends Controller
         $this->guard();
 
         $validated = $request->validate([
-            'status' => ['required', 'in:pending,approved,rejected'],
+            'status' => ['required', 'in:pending,processing,approved,rejected'],
             'notes' => ['nullable', 'string', 'max:1000'],
         ]);
 
