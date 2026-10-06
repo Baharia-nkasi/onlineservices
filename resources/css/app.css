@@ -720,3 +720,218 @@ html.dark ::selection {
     transition-duration: 0.3s;
     transition-timing-function: ease;
 }
+
+
+/* --------------------------------------------------------------------------
+   Admin Service Management UI
+   Purpose: comfortable flex layouts, readable surfaces and restrained radius.
+   -------------------------------------------------------------------------- */
+@layer components {
+    .admin-add-service-card {
+        background:
+            radial-gradient(circle at 100% 0%, rgb(219 234 254 / 0.72), transparent 34%),
+            linear-gradient(135deg, #ffffff 0%, #f8fbff 100%);
+    }
+
+    .admin-management-heading {
+        @apply flex items-start gap-4;
+    }
+
+    .admin-management-icon {
+        @apply inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-blue-700 text-2xl font-black leading-none text-white shadow-lg shadow-blue-700/20;
+    }
+
+    .admin-management-kicker {
+        @apply mb-1 text-[11px] font-black uppercase tracking-[0.18em] text-blue-700;
+    }
+
+    .admin-service-form {
+        @apply grid gap-4 md:grid-cols-2;
+    }
+
+    .admin-service-form-footer {
+        @apply flex flex-col items-stretch justify-between gap-4 border-t border-slate-200 pt-5 sm:flex-row sm:items-center;
+    }
+
+    .admin-check-row {
+        @apply flex items-start gap-3 text-sm font-bold leading-6 text-slate-700;
+    }
+
+    .admin-add-service-button,
+    .admin-document-add-button {
+        @apply min-h-11 gap-2;
+    }
+
+    .admin-button-plus {
+        @apply inline-flex h-7 w-7 items-center justify-center rounded-full bg-white/15 text-lg font-black leading-none;
+    }
+
+    .admin-services-panel {
+        @apply border-slate-200/90;
+    }
+
+    .admin-services-toolbar {
+        background: var(--card-bg);
+    }
+
+    .admin-services-stage {
+        background:
+            radial-gradient(circle at 10% 0%, rgb(219 234 254 / 0.9), transparent 28%),
+            radial-gradient(circle at 90% 100%, rgb(207 250 254 / 0.72), transparent 32%),
+            var(--softest-bg);
+    }
+
+    .admin-service-card {
+        @apply rounded-[20px] border border-slate-200 bg-white shadow-[0_8px_26px_rgba(15,23,42,0.07)];
+    }
+
+    .admin-service-edit-form {
+        @apply flex flex-wrap items-end gap-4;
+    }
+
+    .admin-field {
+        @apply min-w-0;
+    }
+
+    .admin-field-service { flex: 1 1 260px; }
+    .admin-field-slug { flex: 1 1 190px; }
+    .admin-field-description { flex: 2 1 320px; }
+    .admin-field-fee { flex: 1 1 180px; }
+
+    .admin-service-status {
+        @apply flex min-h-11 items-center;
+    }
+
+    .admin-service-actions {
+        @apply flex min-h-11 flex-1 flex-wrap items-center justify-end gap-2;
+    }
+
+    .admin-document-panel {
+        @apply overflow-hidden rounded-[18px] border border-sky-200 bg-sky-50/70 shadow-inner;
+    }
+
+    .admin-document-summary {
+        @apply flex cursor-pointer list-none items-center gap-3 px-4 py-4 text-sm text-slate-800 transition-all duration-200 hover:bg-sky-100/70;
+    }
+
+    .admin-document-summary::-webkit-details-marker { display: none; }
+
+    .admin-document-summary-icon {
+        @apply inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-blue-700 text-lg font-black text-white shadow-sm;
+    }
+
+    .admin-document-summary strong {
+        @apply block font-black;
+    }
+
+    .admin-document-summary small {
+        @apply mt-0.5 block text-xs font-semibold text-slate-500;
+    }
+
+    .admin-document-chevron {
+        @apply ml-auto text-lg font-black text-slate-400 transition-transform duration-200;
+    }
+
+    .admin-document-panel[open] .admin-document-chevron {
+        transform: rotate(180deg);
+    }
+
+    .admin-document-form {
+        @apply flex flex-wrap gap-3 border-t border-sky-200 p-4;
+    }
+
+    .admin-document-form > * {
+        flex: 1 1 220px;
+        min-width: min(100%, 220px);
+    }
+
+    .admin-document-form > .admin-document-add-button {
+        flex: 0 0 auto;
+    }
+
+    .admin-document-row {
+        @apply flex flex-wrap items-end gap-3 rounded-[14px] border border-slate-200 bg-white p-4 shadow-sm;
+    }
+
+    .admin-document-row > input,
+    .admin-document-row > select {
+        flex: 1 1 180px;
+        min-width: min(100%, 180px);
+    }
+
+    .admin-document-row > div {
+        @apply flex flex-wrap items-center gap-3;
+    }
+
+    .admin-document-delete-row {
+        @apply px-1;
+    }
+
+    .admin-service-footer {
+        @apply flex flex-col gap-3 border-t border-slate-200 pt-4 sm:flex-row sm:items-center sm:justify-between;
+    }
+
+    .admin-services-pagination {
+        background: var(--card-bg);
+    }
+
+    .admin-service-dot {
+        @apply inline-flex h-9 min-w-9 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 px-2 text-xs font-black text-slate-600 transition-all duration-200 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700;
+    }
+
+    .admin-service-dot.is-active {
+        @apply border-blue-700 bg-blue-700 text-white shadow-md shadow-blue-700/20;
+    }
+}
+
+@media (max-width: 640px) {
+    .admin-management-heading { align-items: flex-start; }
+    .admin-service-actions { justify-content: flex-start; }
+    .admin-document-form > *,
+    .admin-document-row > input,
+    .admin-document-row > select {
+        flex-basis: 100%;
+        min-width: 100%;
+    }
+    .admin-document-form > .admin-document-add-button {
+        width: 100%;
+    }
+    .admin-service-dot { min-width: 34px; height: 34px; }
+}
+
+html.dark .admin-add-service-card {
+    background:
+        radial-gradient(circle at 100% 0%, rgb(30 64 175 / 0.24), transparent 34%),
+        linear-gradient(135deg, #0f172a 0%, #0b1220 100%);
+}
+
+html.dark .admin-services-stage {
+    background:
+        radial-gradient(circle at 10% 0%, rgb(30 64 175 / 0.24), transparent 28%),
+        radial-gradient(circle at 90% 100%, rgb(8 145 178 / 0.16), transparent 32%),
+        var(--softest-bg);
+}
+
+html.dark .admin-service-card,
+html.dark .admin-document-row {
+    border-color: var(--border-color);
+    background-color: var(--card-bg);
+}
+
+html.dark .admin-document-panel {
+    border-color: #164e63;
+    background: rgb(8 47 73 / 0.35);
+}
+
+html.dark .admin-document-summary:hover {
+    background-color: rgb(14 116 144 / 0.16);
+}
+
+html.dark .admin-document-summary,
+html.dark .admin-service-footer {
+    border-color: var(--border-color);
+}
+
+html.dark .admin-document-summary small {
+    color: var(--muted-text-color);
+}
