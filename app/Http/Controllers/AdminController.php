@@ -90,10 +90,12 @@ class AdminController extends Controller
 
         $validated = $request->validate([
             'status' => ['required', 'in:pending,processing,approved,completed,rejected'],
+            'approval_remark' => ['nullable', 'string', 'max:2000'],
         ]);
 
         $next = $validated['status'];
-        $error = DB::transaction(function () use ($application, $next) {
+        $approvalRemark = trim((string) ($validated['approval_remark'] ?? ''));
+        $error = DB::transaction(function () use ($application, $next, $approvalRemark) {
             // Serialize admin status changes so two admins cannot complete/reject
             // the same application against stale document/status data.
             $lockedApplication = Application::query()->lockForUpdate()->findOrFail($application->id);
@@ -151,7 +153,12 @@ class AdminController extends Controller
                 }
             }
 
-            $lockedApplication->update(['status' => $next]);
+            $lockedApplication->update([
+                'status' => $next,
+                'approval_remark' => $next === 'approved'
+                    ? ($approvalRemark !== '' ? $approvalRemark : $lockedApplication->approval_remark)
+                    : $lockedApplication->approval_remark,
+            ]);
 
             return null;
         });
