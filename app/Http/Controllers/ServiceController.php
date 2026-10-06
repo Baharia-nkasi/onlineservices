@@ -10,7 +10,7 @@ class ServiceController extends Controller
     {
         $services = Service::where('is_active', true)
             ->withCount(['documents as active_documents_count' => fn ($query) => $query->where('is_active', true)])
-            ->orderBy('name')
+            ->orderBy('id')
             ->get();
 
         return view('services.index', compact('services'));
