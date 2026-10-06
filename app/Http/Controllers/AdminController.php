@@ -47,13 +47,13 @@ class AdminController extends Controller
 
         $validated = request()->validate([
             'q' => ['nullable', 'string', 'max:100'],
-            'status' => ['nullable', 'in:pending,processing'],
+            'status' => ['nullable', 'in:pending,processing,rejected'],
         ]);
 
         // The dashboard is an action queue: only applications that still need admin work appear here.
         // Completed and rejected applications remain available through My Applications/customer history and stats.
         $applications = Application::with(['user', 'service', 'documents'])
-            ->whereIn('status', ['pending', 'processing'])
+            ->whereIn('status', ['pending', 'processing', 'rejected'])
             ->when($validated['q'] ?? null, function ($query, $search) {
                 $search = trim($search);
 
@@ -76,7 +76,7 @@ class AdminController extends Controller
             })
             ->when($validated['status'] ?? null, function ($query, $status) {
                 // Keep the admin work queue limited to actionable states.
-                if (in_array($status, ['pending', 'processing'], true)) {
+                if (in_array($status, ['pending', 'processing', 'rejected'], true)) {
                     $query->where('status', $status);
                 }
             })
