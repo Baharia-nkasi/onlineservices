@@ -6,6 +6,7 @@ use App\Http\Controllers\ApplicationDocumentController;
 use App\Http\Controllers\CustomerApplicationController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HelpDeskContactController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\DB;
@@ -67,6 +68,11 @@ Route::middleware('locale')->group(function () {
             ->name('application.documents.view');
         Route::get('/application-documents/{document}/download', [ApplicationDocumentController::class, 'download'])
             ->name('application.documents.download');
+
+        Route::get('/notifications/{notification}', [NotificationController::class, 'open'])
+            ->name('notifications.open');
+        Route::post('/notifications/read-all', [NotificationController::class, 'markAllRead'])
+            ->middleware('throttle:20,1')->name('notifications.read-all');
 
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
