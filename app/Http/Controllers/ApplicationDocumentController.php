@@ -211,8 +211,8 @@ class ApplicationDocumentController extends Controller
 
             abort_unless($lockedApplication->user_id === Auth::id(), 403);
             abort_if($lockedDocument->status !== 'pending', 422, __('Only pending documents can be deleted.'));
-            abort_if(in_array($lockedApplication->status, ['completed', 'rejected'], true), 422,
-                __('Documents cannot be changed after this application is completed or rejected.'));
+            abort_if(in_array($lockedApplication->status, ['approved', 'completed', 'rejected'], true), 422,
+                __('Documents cannot be changed after this application is approved, completed or rejected.'));
 
             $oldPath = $lockedDocument->file_path;
             $lockedDocument->delete();
