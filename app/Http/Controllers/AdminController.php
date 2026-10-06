@@ -475,19 +475,25 @@ class AdminController extends Controller
              * catalog entry. This removes the previous blocking error while preserving
              * the requirement that applied to existing applications.
              */
-            DB::transaction(function () use ($document, $validated) {
+            $newRequirementId = null;
+
+            DB::transaction(function () use ($document, $validated, &$newRequirementId) {
+                // Retire the previous version from the active catalogue and soft-delete
+                // it so the same requirement name can be reused without losing history.
                 $document->update([
                     'is_active' => false,
                 ]);
+                $document->delete();
 
                 $newRequirement = $validated;
                 $newRequirement['service_id'] = $document->service_id;
 
-                ServiceDocument::create($newRequirement);
+                $created = ServiceDocument::create($newRequirement);
+                $newRequirementId = $created->id;
             });
 
             return back()->with('success', __('Requirement updated for future applications. The previous version remains preserved for existing application history.'))
-                ->withFragment('document-requirements');
+                ->withFragment($newRequirementId ? 'document-requirement-'.$newRequirementId : 'document-requirements');
         }
 
         $document->update($validated);
