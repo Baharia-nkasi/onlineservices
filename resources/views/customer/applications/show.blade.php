@@ -63,6 +63,26 @@
             <div class="portal-card p-5"><p class="text-xs font-bold uppercase tracking-wide text-slate-400">{{ __('Total uploaded') }}</p><p class="mt-2 text-2xl font-black text-slate-900">{{ $application->documents->count() }}</p></div>
         </section>
 
+        @if($application->status === 'rejected')
+            <section class="overflow-hidden rounded-2xl border border-red-200 bg-red-50 shadow-sm">
+                <div class="border-b border-red-200 bg-red-100/70 px-5 py-4">
+                    <div class="flex items-center gap-3">
+                        <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-red-600 text-lg font-black text-white">!</span>
+                        <div>
+                            <h2 class="font-black text-red-950">{{ __('Application Rejected') }}</h2>
+                            <p class="text-xs font-semibold text-red-700">{{ __('Please review the administrator remark and start a new application.') }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-4 px-5 py-4">
+                    @if($application->approval_remark)
+                        <p class="text-sm leading-6 text-red-900">{{ $application->approval_remark }}</p>
+                    @endif
+                    <a href="{{ route('services.index') }}" class="portal-button inline-flex">{{ __('Start New Application') }}</a>
+                </div>
+            </section>
+        @endif
+
         @if($application->status === 'approved' && $application->approval_remark)
             <section class="overflow-hidden rounded-2xl border border-emerald-200 bg-emerald-50 shadow-sm">
                 <div class="border-b border-emerald-200 bg-emerald-100/70 px-5 py-4">
