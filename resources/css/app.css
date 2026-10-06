@@ -1038,29 +1038,70 @@ html.dark .admin-document-chevron {
     color: #fbbf24;
 }
 
-/* Compact service navigation numbers */
+/* Compact, responsive service navigation */
 @layer components {
-    .admin-services-pagination .admin-service-dot {
-        min-width: 30px;
-        height: 30px;
-        padding-left: 0.45rem;
-        padding-right: 0.45rem;
-        border-radius: 9px;
-        font-size: 11px;
-        line-height: 1;
+    .admin-services-pagination {
+        @apply flex flex-col gap-2.5 border-t border-slate-200 bg-white px-3 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-4 sm:py-3;
     }
 
-    .admin-services-pagination {
-        gap: 0.65rem;
+    .admin-services-pagination > div:first-child {
+        @apply flex min-w-0 items-center justify-center gap-1.5 sm:justify-start;
+    }
+
+    .admin-services-pagination #service-dots {
+        @apply min-w-0 max-w-full flex-nowrap overflow-x-auto px-0.5 py-0.5;
+        scrollbar-width: thin;
+    }
+
+    .admin-services-pagination #service-prev,
+    .admin-services-pagination #service-next {
+        @apply h-8 min-h-0 shrink-0 rounded-lg px-2.5 py-1.5 text-[11px] font-extrabold leading-none shadow-sm;
+    }
+
+    .admin-services-pagination .admin-service-dot {
+        min-width: 24px;
+        width: 24px;
+        height: 24px;
+        padding: 0;
+        border-radius: 7px;
+        font-size: 10px;
+        line-height: 1;
+        flex: 0 0 24px;
+    }
+
+    .admin-services-pagination #service-step-label {
+        @apply text-[11px] leading-none sm:min-w-[42px];
     }
 }
 
 @media (max-width: 640px) {
+    .admin-services-pagination {
+        @apply items-stretch px-2.5 py-2.5;
+    }
+
+    .admin-services-pagination > div:first-child {
+        @apply w-full gap-1;
+    }
+
+    .admin-services-pagination #service-prev,
+    .admin-services-pagination #service-next {
+        @apply px-2 text-[10px];
+    }
+
+    .admin-services-pagination #service-dots {
+        flex: 1 1 auto;
+    }
+
     .admin-services-pagination .admin-service-dot {
-        min-width: 28px;
-        height: 28px;
-        padding-left: 0.4rem;
-        padding-right: 0.4rem;
-        font-size: 10px;
+        min-width: 23px;
+        width: 23px;
+        height: 23px;
+        flex-basis: 23px;
+        border-radius: 6px;
+        font-size: 9px;
+    }
+
+    .admin-services-pagination #service-step-label {
+        @apply mt-0.5 text-[10px];
     }
 }
