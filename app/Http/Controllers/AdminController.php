@@ -398,7 +398,11 @@ class AdminController extends Controller
         $validated = $request->validate([
             'name' => [
                 'required', 'string', 'max:255',
-                Rule::unique('service_documents', 'name')->where(fn ($query) => $query->where('service_id', $service->id)),
+                Rule::unique('service_documents', 'name')
+                    ->where(fn ($query) => $query
+                        ->where('service_id', $service->id)
+                        ->where('is_active', true)
+                        ->whereNull('deleted_at')),
             ],
             'description' => ['nullable', 'string', 'max:2000'],
             'is_required' => ['required', 'boolean'],
