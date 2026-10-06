@@ -96,7 +96,7 @@
                         @csrf @method('PATCH')
                         <label for="status" class="block text-sm font-extrabold text-slate-800">Application status</label>
                         <div class="mt-2 flex flex-col gap-3 sm:flex-row">
-                            <select id="status" name="status" class="input-modern flex-1" {{ $application->status === 'completed' ? 'disabled' : '' }}>
+                            <select id="status" name="status" x-model="status" class="input-modern flex-1" {{ $application->status === 'completed' ? 'disabled' : '' }}>
                                 @foreach($statusOptions as $status)
                                     <option value="{{ $status }}" @selected($application->status === $status)>{{ ucfirst($status) }}</option>
                                 @endforeach
@@ -107,18 +107,25 @@
                             <button class="portal-button" {{ $application->status === 'completed' ? 'disabled' : '' }}>Update Status</button>
                         </div>
 
-                        <div class="mt-4">
-                            <label for="approval_remark" class="block text-sm font-extrabold text-slate-800">Remark to customer</label>
+                        <div class="mt-4" x-data="{ status: @js($application->status) }">
+                            <label for="approval_remark" class="block text-sm font-extrabold text-slate-800">
+                                <span x-show="status === 'rejected'">Rejection remark to customer</span>
+                                <span x-show="status !== 'rejected'">Remark to customer</span>
+                            </label>
                             <textarea
                                 id="approval_remark"
                                 name="approval_remark"
                                 rows="3"
                                 maxlength="2000"
                                 class="input-modern mt-2"
-                                placeholder="Write a short remark for the customer. It will appear on their application dashboard when the application is approved."
+                                :required="status === 'rejected'"
+                                :placeholder="status === 'rejected'
+                                    ? 'Explain briefly why this application was rejected and what the customer should correct before re-applying.'
+                                    : 'Write a short remark for the customer. It will appear on their application dashboard when the application is approved.'"
                                 {{ $application->status === 'completed' ? 'disabled' : '' }}
                             >{{ old('approval_remark', $application->approval_remark) }}</textarea>
-                            <p class="mt-2 text-xs font-semibold text-slate-500">This remark is saved with the application and shown to the customer.</p>
+                            <p class="mt-2 text-xs font-semibold text-slate-500" x-show="status === 'rejected'">A rejection remark is required. After rejection, this application leaves the active admin queue and the customer receives a notification with a direct link to start a new application.</p>
+                            <p class="mt-2 text-xs font-semibold text-slate-500" x-show="status !== 'rejected'">This remark is saved with the application and shown to the customer.</p>
                         </div>
 
                         @if($application->status === 'completed')
