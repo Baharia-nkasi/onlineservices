@@ -544,21 +544,25 @@ class AdminController extends Controller
     {
         $this->guard();
 
-        if ($service->is_active) {
-            return back()->withErrors([
-                'service' => __('Only deactivated services can be deleted. Deactivate the service first.'),
-            ]);
-        }
-
+        /*
+         * Permanent deletion is intentionally limited to services that have
+         * never received a customer application. Once application history
+         * exists, the service must remain as a deactivated historical record.
+         */
         if ($service->applications()->exists()) {
             return back()->withErrors([
-                'service' => __('This service cannot be deleted because it has customer applications. Keep it deactivated to preserve application history.'),
+                'service' => __('This service cannot be permanently deleted because it has customer applications. Deactivate it instead to preserve application history.'),
             ]);
         }
 
-        $service->delete();
+        DB::transaction(function () use ($service) {
+            // Requirements belong exclusively to this service. Remove both
+            // active and soft-deleted requirement versions before the service.
+            $service->documents()->withTrashed()->forceDelete();
+            $service->forceDelete();
+        });
 
         return redirect()->route('admin.services.index')
-            ->with('success', __('Service deleted successfully.'));
+            ->with('success', __('Service permanently deleted. It is no longer available in the catalogue.'));
     }
 }
