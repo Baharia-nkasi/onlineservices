@@ -1,4 +1,5 @@
 <x-app-layout>
+    @php use App\Support\ServiceImage; @endphp
 <x-slot name="header">
     <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
@@ -97,11 +98,31 @@
             <div id="service-management-carousel" class="admin-services-stage p-3 sm:p-5 lg:p-6">
                 @forelse($services as $service)
                     <article data-service-step class="admin-management-step admin-service-card hidden w-full p-4 sm:p-5 lg:p-6">
+                        <div class="mb-5 overflow-hidden rounded-[20px] border border-slate-200 bg-slate-100">
+                            <img
+                                src="{{ $service->image_url ?: ServiceImage::fallbackDataUri($service) }}"
+                                data-service-fallback="{{ ServiceImage::fallbackDataUri($service) }}"
+                                alt="{{ $service->name }}"
+                                class="h-48 w-full object-cover sm:h-56"
+                                loading="lazy"
+                                referrerpolicy="no-referrer"
+                                onerror="this.onerror=null;this.src=this.dataset.serviceFallback;"
+                            >
+                            <div class="flex items-center justify-between gap-3 border-t border-slate-200 bg-white px-4 py-3">
+                                <span class="text-xs font-extrabold uppercase tracking-wider text-slate-500">{{ __('Service image preview') }}</span>
+                                <span class="text-xs font-bold text-slate-400">{{ __('External image + embedded fallback') }}</span>
+                            </div>
+                        </div>
                         <form method="POST" action="{{ route('admin.services.update', $service) }}" class="admin-service-edit-form">
                             @csrf @method('PATCH')
                             <div class="admin-field admin-field-service"><label class="text-xs font-extrabold uppercase tracking-wide text-slate-400">{{ __('Service') }}</label><input name="name" value="{{ $service->name }}" required maxlength="255" class="admin-management-input mt-2 w-full"></div>
                             <div class="admin-field admin-field-slug"><label class="text-xs font-extrabold uppercase tracking-wide text-slate-400">{{ __('Slug') }}</label><input name="slug" value="{{ $service->slug }}" required maxlength="255" pattern="[A-Za-z0-9_-]+" class="admin-management-input mt-2 w-full"></div>
                             <div class="admin-field admin-field-description"><label class="text-xs font-extrabold uppercase tracking-wide text-slate-400">{{ __('Description') }}</label><input name="description" value="{{ $service->description }}" maxlength="5000" class="admin-management-input mt-2 w-full"></div>
+                            <div class="admin-field md:col-span-2">
+                                <label class="text-xs font-extrabold uppercase tracking-wide text-slate-400">{{ __('Service image URL') }}</label>
+                                <input type="url" name="image_url" value="{{ $service->image_url }}" maxlength="2048" class="admin-management-input mt-2 w-full" placeholder="https://example.com/service-image.jpg">
+                                <p class="mt-1 text-xs text-slate-500">{{ __('If the remote image fails, the system automatically uses an embedded service-specific image.') }}</p>
+                            </div>
                             <div class="admin-field admin-field-fee"><label class="text-xs font-extrabold uppercase tracking-wide text-slate-400">{{ __('Government fee (TSh)') }}</label><input type="number" min="0" step="0.01" name="government_fee" value="{{ $service->government_fee }}" required class="admin-management-input mt-2 w-full"></div>
                             <div class="admin-field admin-field-fee"><label class="text-xs font-extrabold uppercase tracking-wide text-slate-400">{{ __('Service fee (TSh)') }}</label><input type="number" min="0" step="0.01" name="service_fee" value="{{ $service->service_fee }}" required class="admin-management-input mt-2 w-full"></div>
                             <div class="admin-service-status"><label class="flex items-center gap-2 pb-3 text-sm font-bold {{ $service->is_active ? 'text-emerald-700' : 'text-slate-500' }}"><input type="hidden" name="is_active" value="0"><input type="checkbox" name="is_active" value="1" @checked($service->is_active) class="rounded border-slate-300 text-blue-700 focus:ring-blue-500">{{ $service->is_active ? __('Active') : __('Deactivated') }}</label></div>
