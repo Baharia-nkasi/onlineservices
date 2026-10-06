@@ -545,24 +545,43 @@ class AdminController extends Controller
         $this->guard();
 
         /*
-         * Permanent deletion is intentionally limited to services that have
-         * never received a customer application. Once application history
-         * exists, the service must remain as a deactivated historical record.
+         * This is an intentional hard-delete action for catalogue cleanup.
+         * A service and everything that belongs exclusively to it is removed
+         * together: applications, uploaded document rows, notifications tied
+         * to those applications, and document-requirement versions.
+         *
+         * The confirmation in the admin UI makes the destructive nature clear.
          */
-        if ($service->applications()->exists()) {
-            return back()->withErrors([
-                'service' => __('This service cannot be permanently deleted because it has customer applications. Deactivate it instead to preserve application history.'),
-            ]);
-        }
+        $applicationIds = $service->applications()->pluck('id');
 
-        DB::transaction(function () use ($service) {
-            // Requirements belong exclusively to this service. Remove both
-            // active and soft-deleted requirement versions before the service.
+        DB::transaction(function () use ($service, $applicationIds) {
+            // Remove notification records that point to applications of this service.
+            // Notification data is polymorphic JSON/text, so match application IDs
+            // safely in PHP instead of depending on database-specific JSON syntax.
+            if ($applicationIds->isNotEmpty()) {
+                $notifications = DB::table('notifications')->get(['id', 'data']);
+
+                $notificationIds = $notifications
+                    ->filter(function ($notification) use ($applicationIds) {
+                        $data = json_decode((string) $notification->data, true);
+
+                        return isset($data['application_id'])
+                            && $applicationIds->contains((int) $data['application_id']);
+                    })
+                    ->pluck('id');
+
+                if ($notificationIds->isNotEmpty()) {
+                    DB::table('notifications')->whereIn('id', $notificationIds)->delete();
+                }
+            }
+
+            // application_documents and applications use cascadeOnDelete,
+            // so deleting the service removes all dependent application history.
             $service->documents()->withTrashed()->forceDelete();
             $service->forceDelete();
         });
 
         return redirect()->route('admin.services.index')
-            ->with('success', __('Service permanently deleted. It is no longer available in the catalogue.'));
+            ->with('success', __('Service and its related application history were permanently deleted. The catalogue is now clean for new services.'));
     }
 }
