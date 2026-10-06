@@ -34,26 +34,63 @@
                 </div>
             </section>
 
-            <section>
+            <section class="dashboard-services-section" aria-labelledby="dashboard-services-title">
                 <div class="mb-4 flex items-end justify-between gap-4">
-                    <div><p class="dashboard-kicker">{{ __('Quick Start') }}</p><h3 class="dashboard-section-title">{{ __('Popular services') }}</h3></div>
+                    <div>
+                        <p class="dashboard-kicker">{{ __('Quick Start') }}</p>
+                        <h3 id="dashboard-services-title" class="dashboard-section-title">{{ __('Our Services') }}</h3>
+                    </div>
                     <a href="{{ route('services.index') }}" class="dashboard-link">{{ __('View all →') }}</a>
                 </div>
-                <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                    @forelse($services as $service)
-                        <article class="dashboard-service-card group">
-                            <div class="flex items-center justify-between">
-                                <span class="dashboard-icon">📄</span>
-                                <span class="text-xs font-bold text-slate-400">{{ $service->documents->where('is_active', true)->count() }} {{ __('requirements') }}</span>
+
+                @if($services->count())
+                    <div class="dashboard-services-carousel" data-services-carousel>
+                        <div class="dashboard-services-viewport">
+                            <div class="dashboard-services-track" data-services-track>
+                                @foreach($services as $service)
+                                    <article class="dashboard-service-slide" data-service-slide>
+                                        <a href="{{ route('applications.create', $service) }}" class="dashboard-service-card group">
+                                            <div class="dashboard-service-image-wrap">
+                                                @if($service->image_url)
+                                                    <img
+                                                        src="{{ $service->image_url }}"
+                                                        alt="{{ $service->name }}"
+                                                        class="dashboard-service-image"
+                                                        loading="lazy"
+                                                        referrerpolicy="no-referrer"
+                                                        onerror="this.classList.add('is-broken'); this.nextElementSibling.classList.remove('hidden');"
+                                                    >
+                                                @endif
+                                                <div class="dashboard-service-image-fallback {{ $service->image_url ? 'hidden' : '' }}" aria-hidden="true">
+                                                    <span>📋</span>
+                                                </div>
+                                                <span class="dashboard-service-image-badge">{{ __('Available') }}</span>
+                                            </div>
+
+                                            <div class="dashboard-service-content">
+                                                <div class="flex items-start justify-between gap-3">
+                                                    <h4 class="min-w-0 flex-1 font-black text-slate-900 group-hover:text-blue-700">{{ $service->name }}</h4>
+                                                    <span class="shrink-0 text-xs font-bold text-slate-400">{{ $service->active_documents_count }} {{ __('requirements') }}</span>
+                                                </div>
+                                                <p class="mt-2 line-clamp-2 text-sm leading-6 text-slate-500">{{ $service->description }}</p>
+                                                <span class="mt-4 inline-flex items-center text-sm font-black text-blue-700 transition-transform duration-200 group-hover:translate-x-1">{{ __('View requirements →') }}</span>
+                                            </div>
+                                        </a>
+                                    </article>
+                                @endforeach
                             </div>
-                            <h4 class="mt-4 font-black text-slate-900">{{ $service->name }}</h4>
-                            <p class="mt-2 line-clamp-2 text-sm leading-6 text-slate-500">{{ $service->description }}</p>
-                            <a href="{{ route('applications.create', $service) }}" class="mt-4 inline-flex text-sm font-black text-blue-700 group-hover:text-blue-900">{{ __('View requirements →') }}</a>
-                        </article>
-                    @empty
-                        <div class="portal-card col-span-full p-10 text-center text-slate-500">{{ __('No services are currently available.') }}</div>
-                    @endforelse
-                </div>
+                        </div>
+
+                        <div class="dashboard-services-controls">
+                            <button type="button" class="dashboard-carousel-button" data-services-prev aria-label="{{ __('Previous service') }}">←</button>
+                            <div class="dashboard-carousel-dots" data-services-dots aria-label="{{ __('Service navigation') }}"></div>
+                            <button type="button" class="dashboard-carousel-button" data-services-next aria-label="{{ __('Next service') }}">→</button>
+                        </div>
+                        <p class="dashboard-carousel-label" data-services-label></p>
+                    </div>
+                @else
+                    <div class="portal-card p-10 text-center text-slate-500">{{ __('No services are currently available.') }}</div>
+                @endif
             </section>
 
             <section class="dashboard-recent">
