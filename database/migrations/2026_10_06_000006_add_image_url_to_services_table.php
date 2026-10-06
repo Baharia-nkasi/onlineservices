@@ -10,14 +10,12 @@ return new class extends Migration
     {
         Schema::table('services', function (Blueprint $table) {
             $table->text('image_url')->nullable()->after('description');
-            $table->index('is_active');
         });
     }
 
     public function down(): void
     {
         Schema::table('services', function (Blueprint $table) {
-            $table->dropIndex(['is_active']);
             $table->dropColumn('image_url');
         });
     }
