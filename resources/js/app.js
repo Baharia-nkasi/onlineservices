@@ -227,11 +227,26 @@ function initServiceCarousel() {
     });
 }
 
+function initServiceManagementShortcuts() {
+    const search = document.getElementById('service-search');
+    if (!search || search.dataset.shortcutReady === '1') return;
+
+    search.dataset.shortcutReady = '1';
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key !== '/' || event.ctrlKey || event.metaKey || event.altKey) return;
+        if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName)) return;
+        event.preventDefault();
+        search.focus();
+    });
+}
+
 function initInteractiveUi() {
     initServiceCarousel();
     initThemeToggle();
     initLiveValidation();
     initDynamicTableSearch();
+    initServiceManagementShortcuts();
 }
 
 document.addEventListener('DOMContentLoaded', initInteractiveUi);
