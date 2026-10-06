@@ -24,7 +24,9 @@ Route::get('/language/{locale}', function (string $locale) {
 Route::middleware('locale')->group(function () {
     Route::get('/', function () {
         return view('welcome', [
-            'services' => Service::where('is_active', true)->latest()->limit(4)->get(),
+            // Keep the public hero carousel in the same stable order as the
+            // customer catalogue and include every active service.
+            'services' => Service::where('is_active', true)->orderBy('id')->get(),
         ]);
     })->name('home');
 
