@@ -43,9 +43,12 @@ Route::middleware('locale')->group(function () {
         ->name('services.index');
 
     Route::middleware('auth')->group(function () {
+        // Customers can submit applications, while admins may open the same page
+        // to inspect service requirements from the catalogue. Submission remains customer-only.
+        Route::get('/services/{service}/apply', [ApplicationController::class, 'create'])
+            ->name('applications.create');
+
         Route::middleware('customer')->group(function () {
-            Route::get('/services/{service}/apply', [ApplicationController::class, 'create'])
-                ->name('applications.create');
             Route::post('/services/{service}/apply', [ApplicationController::class, 'store'])
                 ->name('applications.store');
 
