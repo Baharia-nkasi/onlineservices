@@ -37,19 +37,36 @@
 
         <div id="service-grid" class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             @forelse($services as $service)
-                <article class="service-card portal-card flex flex-col p-5"
+                <article class="service-card portal-card flex flex-col overflow-hidden p-0"
                     data-name="{{ strtolower($service->name) }}">
-                    <div class="flex items-center justify-between">
-                        <span class="service-icon flex h-11 w-11 items-center justify-center rounded-[12px] bg-blue-50 text-xl transition-transform duration-200">📋</span>
-                        <span class="status-pill bg-emerald-50 text-emerald-700">{{ __('Available') }}</span>
-                    </div>
-                    <h3 class="mt-5 text-lg font-extrabold text-slate-900">{{ $service->name }}</h3>
-                    <p class="mt-2 flex-1 text-sm leading-6 text-slate-500">{{ $service->description }}</p>
-                    <div class="mt-5 grid grid-cols-2 gap-3 border-t border-slate-100 pt-4 text-sm">
-                        <div><span class="block text-xs text-slate-400">{{ __('Requirements') }}</span><strong>{{ $service->documents->where('is_active',true)->count() }}</strong></div>
-                        <div><span class="block text-xs text-slate-400">{{ __('Service fee') }}</span><strong>TSh {{ number_format($service->service_fee,0) }}</strong></div>
-                    </div>
-                    <a href="{{ route('applications.create',$service) }}" class="portal-button mt-5 w-full">{{ __('View requirements & Apply →') }}</a>
+                    <a href="{{ route('applications.create',$service) }}" class="group block">
+                        <div class="service-card-image-wrap">
+                            @if($service->image_url)
+                                <img
+                                    src="{{ $service->image_url }}"
+                                    alt="{{ $service->name }}"
+                                    class="service-card-image"
+                                    loading="lazy"
+                                    referrerpolicy="no-referrer"
+                                    onerror="this.classList.add('is-broken'); this.nextElementSibling.classList.remove('hidden');"
+                                >
+                            @endif
+                            <div class="service-card-image-fallback {{ $service->image_url ? 'hidden' : '' }}" aria-hidden="true">📋</div>
+                            <span class="service-card-availability">{{ __('Available') }}</span>
+                        </div>
+                        <div class="flex flex-col p-5">
+                            <div class="flex items-start justify-between gap-3">
+                                <h3 class="min-w-0 flex-1 text-lg font-extrabold text-slate-900 group-hover:text-blue-700">{{ $service->name }}</h3>
+                                <span class="shrink-0 text-xs font-bold text-slate-400">{{ $service->active_documents_count }} {{ __('requirements') }}</span>
+                            </div>
+                            <p class="mt-2 min-h-[48px] flex-1 text-sm leading-6 text-slate-500">{{ $service->description }}</p>
+                            <div class="mt-5 grid grid-cols-2 gap-3 border-t border-slate-100 pt-4 text-sm">
+                                <div><span class="block text-xs text-slate-400">{{ __('Requirements') }}</span><strong>{{ $service->active_documents_count }}</strong></div>
+                                <div><span class="block text-xs text-slate-400">{{ __('Service fee') }}</span><strong>TSh {{ number_format($service->service_fee,0) }}</strong></div>
+                            </div>
+                            <span class="portal-button mt-5 w-full text-center">{{ __('View requirements & Apply →') }}</span>
+                        </div>
+                    </a>
                 </article>
             @empty
                 <div class="col-span-full rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center text-slate-500">No services are currently available.</div>
