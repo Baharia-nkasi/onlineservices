@@ -108,8 +108,8 @@
                         </form>
                         <details class="admin-document-panel mt-5">
                             <summary class="admin-document-summary">
-                                <span class="admin-document-summary-icon" aria-hidden="true">+</span>
-                                <span class="min-w-0"><strong>{{ __('Manage document requirements') }}</strong><small>{{ $service->active_documents_count }} {{ __('active requirement(s)') }}</small></span>
+                                <span class="admin-document-summary-icon" aria-hidden="true"><span class="admin-document-plus">+</span></span>
+                                <span class="admin-document-summary-copy"><strong>{{ __('Manage document requirements') }}</strong><span class="admin-document-count"><span class="admin-document-count-dot" aria-hidden="true"></span>{{ $service->active_documents_count }} {{ __('active requirement(s)') }}</span></span>
                                 <span class="admin-document-chevron" aria-hidden="true">⌄</span>
                             </summary>
                             <div class="mt-4 space-y-4">
