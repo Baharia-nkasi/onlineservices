@@ -21,8 +21,13 @@
         @endif
 
         <section class="admin-management-card p-6">
-            <h3 class="text-xl font-black text-slate-900">{{ __('Add New Service') }}</h3>
-            <p class="mt-1 text-sm text-slate-500">{{ __('Create a service that customers can request from the Services catalogue.') }}</p>
+            <div class="flex items-start gap-3">
+                <span class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-blue-100 text-2xl font-black leading-none text-blue-800" aria-hidden="true">+</span>
+                <div>
+                    <h3 class="text-xl font-black text-slate-900">{{ __('Add New Service') }}</h3>
+                    <p class="mt-1 text-sm text-slate-500">{{ __('Create a service that customers can request from the Services catalogue.') }}</p>
+                </div>
+            </div>
             <form method="POST" action="{{ route('admin.services.store') }}" class="mt-6 grid gap-4 md:grid-cols-2">
                 @csrf
                 <div><label for="name" class="block text-sm font-extrabold text-slate-700">{{ __('Service name') }}</label><input id="name" name="name" value="{{ old('name') }}" required maxlength="255" class="admin-management-input mt-2 w-full" placeholder="{{ __('e.g. Passport Application') }}"></div>
@@ -32,15 +37,60 @@
                 <div><label for="service_fee" class="block text-sm font-extrabold text-slate-700">{{ __('Service fee (TSh)') }}</label><input id="service_fee" type="number" min="0" step="0.01" name="service_fee" value="{{ old('service_fee', 0) }}" required class="admin-management-input mt-2 w-full"></div>
                 <div class="md:col-span-2 flex items-center justify-between gap-4 border-t border-slate-100 pt-4">
                     <label class="flex items-center gap-3 text-sm font-bold text-slate-700"><input type="hidden" name="is_active" value="0"><input type="checkbox" name="is_active" value="1" checked class="rounded border-slate-300 text-blue-700 focus:ring-blue-500">{{ __('Make service available to customers now') }}</label>
-                    <button type="submit" class="portal-button shadow-lg shadow-blue-800/20">{{ __('Add Service') }}</button>
+                    <button type="submit" class="portal-button shadow-lg shadow-blue-800/20">
+                        <span class="mr-2 text-lg font-black leading-none" aria-hidden="true">+</span>
+                        {{ __('Add Service') }}
+                    </button>
                 </div>
             </form>
         </section>
 
         <section class="portal-card overflow-hidden">
-            <div class="border-b border-slate-200 p-6">
-                <h3 class="text-xl font-black text-slate-900">{{ __('All Services') }}</h3>
-                <p class="mt-1 text-sm text-slate-500">{{ __('Activate, deactivate, edit or safely delete services.') }}</p>
+            <div class="border-b border-slate-200 p-5 sm:p-6">
+                <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+                    <div>
+                        <h3 class="text-xl font-black text-slate-900">{{ __('All Services') }}</h3>
+                        <p class="mt-1 text-sm text-slate-500">{{ __('Activate, deactivate, edit or safely delete services.') }}</p>
+                    </div>
+
+                    <form method="GET" action="{{ route('admin.services.index') }}" class="w-full lg:max-w-xl" role="search">
+                        <label for="service-search" class="sr-only">{{ __('Search services') }}</label>
+                        <div class="flex flex-col gap-2 sm:flex-row">
+                            <div class="relative flex-1">
+                                <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400" aria-hidden="true">⌕</span>
+                                <input
+                                    id="service-search"
+                                    type="search"
+                                    name="q"
+                                    value="{{ $search ?? '' }}"
+                                    maxlength="100"
+                                    autocomplete="off"
+                                    class="admin-management-input w-full pl-11 pr-4"
+                                    placeholder="{{ __('Search service name, slug or description...') }}"
+                                >
+                            </div>
+                            <button type="submit" class="portal-button !w-auto whitespace-nowrap">
+                                {{ __('Search') }}
+                            </button>
+                            @if(!empty($search))
+                                <a href="{{ route('admin.services.index') }}" class="portal-button-secondary !w-auto whitespace-nowrap">
+                                    {{ __('Clear') }}
+                                </a>
+                            @endif
+                        </div>
+                    </form>
+                </div>
+
+                @if(!empty($search))
+                    <div class="mt-4 flex flex-wrap items-center gap-2 text-sm">
+                        <span class="rounded-full bg-blue-50 px-3 py-1.5 font-bold text-blue-800">
+                            {{ $services->total() }} {{ __('matching service(s)') }}
+                        </span>
+                        <span class="text-slate-500">
+                            {{ __('Search results for') }} “{{ $search }}”
+                        </span>
+                    </div>
+                @endif
             </div>
             <div id="service-management-carousel" class="bg-gradient-to-br from-blue-50 via-white to-cyan-50 p-4 sm:p-6">
                 @forelse($services as $service)
