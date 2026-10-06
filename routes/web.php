@@ -65,9 +65,9 @@ Route::middleware('locale')->group(function () {
             ->name('customer.applications.show');
 
         Route::get('/application-documents/{document}/view', [ApplicationDocumentController::class, 'view'])
-            ->name('application.documents.view');
+            ->middleware('throttle:60,1')->name('application.documents.view');
         Route::get('/application-documents/{document}/download', [ApplicationDocumentController::class, 'download'])
-            ->name('application.documents.download');
+            ->middleware('throttle:60,1')->name('application.documents.download');
 
         Route::get('/notifications/{notification}', [NotificationController::class, 'open'])
             ->name('notifications.open');
@@ -81,21 +81,24 @@ Route::middleware('locale')->group(function () {
         Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
             Route::get('/', [AdminController::class, 'index'])->name('dashboard');
             Route::get('/applications/{application}', [AdminController::class, 'showApplication'])->name('applications.show');
-            Route::patch('/applications/{application}/status', [AdminController::class, 'updateApplicationStatus'])->name('applications.status');
-            Route::patch('/documents/{document}/status', [AdminController::class, 'updateDocumentStatus'])->name('documents.status');
+            Route::patch('/applications/{application}/status', [AdminController::class, 'updateApplicationStatus'])
+                ->middleware('throttle:30,1')->name('applications.status');
+            Route::patch('/documents/{document}/status', [AdminController::class, 'updateDocumentStatus'])
+                ->middleware('throttle:30,1')->name('documents.status');
             Route::delete('/documents/{document}', [AdminController::class, 'destroyDocument'])
                 ->middleware('throttle:20,1')->name('documents.destroy');
             Route::get('/services', [AdminController::class, 'services'])->name('services.index');
             Route::get('/services/{service}', [AdminController::class, 'showService'])->name('services.show');
             Route::post('/services', [AdminController::class, 'storeService'])
                 ->middleware('throttle:20,1')->name('services.store');
-            Route::patch('/services/{service}', [AdminController::class, 'updateService'])->name('services.update');
+            Route::patch('/services/{service}', [AdminController::class, 'updateService'])
+                ->middleware('throttle:30,1')->name('services.update');
             Route::delete('/services/{service}', [AdminController::class, 'destroyService'])
                 ->middleware('throttle:20,1')->name('services.destroy');
             Route::post('/services/{service}/documents', [AdminController::class, 'storeServiceDocument'])
                 ->middleware('throttle:20,1')->name('services.documents.store');
             Route::patch('/service-documents/{document}', [AdminController::class, 'updateServiceDocument'])
-                ->name('service-documents.update');
+                ->middleware('throttle:30,1')->name('service-documents.update');
             Route::delete('/service-documents/{document}', [AdminController::class, 'destroyServiceDocument'])
                 ->middleware('throttle:20,1')->name('service-documents.destroy');
 
