@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
+use App\Notifications\ApplicationStatusUpdated;
 
 class AdminController extends Controller
 {
@@ -95,7 +96,9 @@ class AdminController extends Controller
 
         $next = $validated['status'];
         $approvalRemark = trim((string) ($validated['approval_remark'] ?? ''));
-        $error = DB::transaction(function () use ($application, $next, $approvalRemark) {
+        $notificationData = null;
+
+        $error = DB::transaction(function () use ($application, $next, $approvalRemark, &$notificationData) {
             // Serialize admin status changes so two admins cannot complete/reject
             // the same application against stale document/status data.
             $lockedApplication = Application::query()->lockForUpdate()->findOrFail($application->id);
@@ -153,18 +156,49 @@ class AdminController extends Controller
                 }
             }
 
+            $previousStatus = $lockedApplication->status;
+            $previousRemark = (string) $lockedApplication->approval_remark;
+            $nextRemark = $next === 'approved'
+                ? ($approvalRemark !== '' ? $approvalRemark : $lockedApplication->approval_remark)
+                : $lockedApplication->approval_remark;
+
             $lockedApplication->update([
                 'status' => $next,
-                'approval_remark' => $next === 'approved'
-                    ? ($approvalRemark !== '' ? $approvalRemark : $lockedApplication->approval_remark)
-                    : $lockedApplication->approval_remark,
+                'approval_remark' => $nextRemark,
             ]);
+
+            $notificationData = [
+                'previous_status' => $previousStatus,
+                'status' => $next,
+                'remark_changed' => $previousRemark !== (string) $nextRemark,
+                'remark' => $nextRemark,
+            ];
 
             return null;
         });
 
         if ($error) {
             return back()->withErrors(['status' => $error]);
+        }
+
+        if (
+            $notificationData
+            && $application->user
+            && $application->user->isCustomer()
+            && in_array($notificationData['status'], ['processing', 'approved', 'rejected'], true)
+            && (
+                $notificationData['previous_status'] !== $notificationData['status']
+                || ($notificationData['status'] === 'approved' && $notificationData['remark_changed'])
+            )
+        ) {
+            $application->loadMissing('service');
+
+            $application->user->notify(new ApplicationStatusUpdated(
+                $application,
+                $notificationData['status'],
+                $notificationData['remark'],
+                $notificationData['status'] === 'approved' && $notificationData['remark_changed'],
+            ));
         }
 
         return back()->with('success', __('Application status updated.'));
