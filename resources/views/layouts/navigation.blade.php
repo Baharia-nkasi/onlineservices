@@ -19,6 +19,7 @@
                 @if(Auth::user()->isAdmin())
                     <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">{{ __('Admin') }}</x-nav-link>
                     <x-nav-link :href="route('admin.services.index')" :active="request()->routeIs('admin.services.*')">{{ __('Manage Services') }}</x-nav-link>
+                    <x-nav-link :href="route('admin.help-desk.index')" :active="request()->routeIs('admin.help-desk.*')">{{ __('Help Desk') }}</x-nav-link>
                 @endif
             </div>
         @else
@@ -47,6 +48,7 @@
                     <x-dropdown-link :href="route('profile.edit')">{{ __('Profile') }}</x-dropdown-link>
                     @if(Auth::user()->isAdmin())
                         <x-dropdown-link :href="route('admin.dashboard')">{{ __('Admin Panel') }}</x-dropdown-link>
+                        <x-dropdown-link :href="route('admin.help-desk.index')">{{ __('Help Desk Contacts') }}</x-dropdown-link>
                     @endif
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
@@ -86,6 +88,7 @@
             @if(Auth::user()->isAdmin())
                 <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">{{ __('Admin') }}</x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('admin.services.index')" :active="request()->routeIs('admin.services.*')">{{ __('Manage Services') }}</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('admin.help-desk.index')" :active="request()->routeIs('admin.help-desk.*')">{{ __('Help Desk') }}</x-responsive-nav-link>
             @endif
             <x-responsive-nav-link :href="route('profile.edit')">{{ __('Profile') }}</x-responsive-nav-link>
             <form method="POST" action="{{ route('logout') }}">
