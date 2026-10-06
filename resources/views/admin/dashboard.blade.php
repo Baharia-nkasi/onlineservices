@@ -4,6 +4,7 @@
         <div><p class="text-xs font-extrabold uppercase tracking-wider text-blue-700">{{ __('Management') }}</p><h2 class="text-2xl font-black tracking-tight text-slate-900">{{ __('Admin Dashboard') }}</h2></div>
         <div class="flex gap-2">
             <a href="{{ route('admin.services.index') }}" class="portal-button hidden sm:inline-flex">{{ __('Manage Services') }}</a>
+            <a href="{{ route('admin.customers.index') }}" class="portal-button hidden sm:inline-flex">👤 {{ __('Manage Customers') }}</a>
             <a href="{{ route('services.index') }}" class="portal-button-secondary hidden sm:inline-flex">{{ __('View Services') }}</a>
             <a href="{{ route('admin.help-desk.index') }}" class="portal-button hidden sm:inline-flex">☎ {{ __('Help Desk') }}</a>
         </div>
