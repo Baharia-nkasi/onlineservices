@@ -44,13 +44,9 @@
                     'rejected' => 'bg-red-100 text-red-800',
                     default => 'bg-slate-100 text-slate-700',
                 };
-                $allowedTransitions = match($application->status) {
-                    'pending' => ['pending', 'processing', 'approved', 'rejected'],
-                    'processing' => ['processing', 'approved', 'completed', 'rejected'],
-                    'approved' => ['approved', 'completed'],
-                    'rejected' => ['rejected', 'processing'],
-                    default => ['completed'],
-                };
+                // Keep the four main review states visible in the status selector.
+                // Backend transition rules still protect invalid state changes.
+                $statusOptions = ['pending', 'processing', 'approved', 'rejected'];
             @endphp
 
             <section class="relative overflow-hidden rounded-3xl bg-slate-950 p-7 text-white shadow-xl sm:p-9">
@@ -97,7 +93,7 @@
                         <label for="status" class="block text-sm font-extrabold text-slate-800">Application status</label>
                         <div class="mt-2 flex flex-col gap-3 sm:flex-row">
                             <select id="status" name="status" class="input-modern flex-1" {{ $application->status === 'completed' ? 'disabled' : '' }}>
-                                @foreach($allowedTransitions as $status)
+                                @foreach($statusOptions as $status)
                                     <option value="{{ $status }}" @selected($application->status === $status)>{{ ucfirst($status) }}</option>
                                 @endforeach
                             </select>
@@ -165,7 +161,7 @@
                                 <form method="POST" action="{{ route('admin.documents.status',$document) }}" class="flex flex-col gap-2 sm:flex-row">
                                     @csrf @method('PATCH')
                                     <select name="status" class="rounded-xl border-slate-300 text-sm" {{ $application->status === 'completed' ? 'disabled' : '' }}>
-                                        @foreach(['pending','approved','rejected'] as $status)
+                                        @foreach(['pending','processing','approved','rejected'] as $status)
                                             <option value="{{ $status }}" @selected($document->status === $status)>{{ ucfirst($status) }}</option>
                                         @endforeach
                                     </select>
