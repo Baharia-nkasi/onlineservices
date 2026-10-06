@@ -114,7 +114,7 @@ class AdminController extends Controller
             'status' => ['required', 'in:pending,processing,approved,completed,rejected'],
             'approval_remark' => [
                 'nullable', 'string', 'max:2000',
-                Rule::requiredIf($validated['status'] === 'rejected'),
+                Rule::requiredIf(fn () => $request->input('status') === 'rejected'),
             ],
         ]);
 
