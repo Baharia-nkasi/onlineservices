@@ -187,7 +187,6 @@
                     <p id="service-step-label" class="text-center text-sm font-bold text-slate-500"></p>
                 </div>
             @endif
-            <div class="border-t border-slate-200 bg-white p-4">{{ $services->links() }}</div>
         </section>
     </div>
 </div>
