@@ -102,6 +102,21 @@
                             @endif
                             <button class="portal-button" {{ $application->status === 'completed' ? 'disabled' : '' }}>Update Status</button>
                         </div>
+
+                        <div class="mt-4">
+                            <label for="approval_remark" class="block text-sm font-extrabold text-slate-800">Remark to customer</label>
+                            <textarea
+                                id="approval_remark"
+                                name="approval_remark"
+                                rows="3"
+                                maxlength="2000"
+                                class="input-modern mt-2"
+                                placeholder="Write a short remark for the customer. It will appear on their application dashboard when the application is approved."
+                                {{ $application->status === 'completed' ? 'disabled' : '' }}
+                            >{{ old('approval_remark', $application->approval_remark) }}</textarea>
+                            <p class="mt-2 text-xs font-semibold text-slate-500">This remark is saved with the application and shown to the customer.</p>
+                        </div>
+
                         @if($application->status === 'completed')
                             <p class="mt-2 text-xs font-semibold text-slate-500">Completed applications are locked and cannot be reopened.</p>
                         @endif
