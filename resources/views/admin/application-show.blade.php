@@ -45,7 +45,7 @@
                     default => 'bg-slate-100 text-slate-700',
                 };
                 $allowedTransitions = match($application->status) {
-                    'pending' => ['pending', 'processing', 'rejected'],
+                    'pending' => ['pending', 'processing', 'approved', 'rejected'],
                     'processing' => ['processing', 'approved', 'completed', 'rejected'],
                     'approved' => ['approved', 'completed'],
                     'rejected' => ['rejected', 'processing'],
