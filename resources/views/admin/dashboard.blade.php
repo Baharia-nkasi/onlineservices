@@ -5,6 +5,7 @@
         <div class="flex gap-2">
             <a href="{{ route('admin.services.index') }}" class="portal-button hidden sm:inline-flex">{{ __('Manage Services') }}</a>
             <a href="{{ route('services.index') }}" class="portal-button-secondary hidden sm:inline-flex">{{ __('View Services') }}</a>
+            <a href="{{ route('admin.help-desk.index') }}" class="portal-button hidden sm:inline-flex">☎ {{ __('Help Desk') }}</a>
         </div>
     </div>
 </x-slot>
