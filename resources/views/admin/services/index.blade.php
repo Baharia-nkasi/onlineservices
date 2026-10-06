@@ -1,5 +1,5 @@
 <x-app-layout>
-    @php use App\Support\ServiceImage; @endphp
+    @php @endphp
 <x-slot name="header">
     <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
@@ -100,8 +100,8 @@
                     <article data-service-step class="admin-management-step admin-service-card hidden w-full p-4 sm:p-5 lg:p-6">
                         <div class="mb-5 overflow-hidden rounded-[20px] border border-slate-200 bg-slate-100">
                             <img
-                                src="{{ $service->image_url ?: ServiceImage::fallbackDataUri($service) }}"
-                                data-service-fallback="{{ ServiceImage::fallbackDataUri($service) }}"
+                                src="{{ $service->image_url ?: \App\Support\ServiceImage::fallbackDataUri($service) }}"
+                                data-service-fallback="{{ \App\Support\ServiceImage::fallbackDataUri($service) }}"
                                 alt="{{ $service->name }}"
                                 class="h-48 w-full object-cover sm:h-56"
                                 loading="lazy"
