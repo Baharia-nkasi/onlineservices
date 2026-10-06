@@ -105,7 +105,7 @@
 
                 <div class="mt-6 space-y-4">
                     @forelse($service->documents as $document)
-                        <div class="rounded-3xl border border-cyan-100 bg-gradient-to-br from-cyan-50/70 to-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+                        <div id="document-requirement-{{ $document->id }}" class="scroll-mt-24 rounded-3xl border border-cyan-100 bg-gradient-to-br from-cyan-50/70 to-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
                             <form method="POST" action="{{ route('admin.service-documents.update', $document) }}" class="grid gap-3 md:grid-cols-12">
                                 @csrf @method('PATCH')
                                 <input name="name" value="{{ $document->name }}" required maxlength="255" class="input-modern md:col-span-3">
@@ -126,9 +126,9 @@
                             </form>
                             <div class="mt-3 flex justify-between gap-3 border-t border-slate-100 pt-3">
                                 <span class="text-xs font-bold {{ $document->is_active ? 'text-emerald-700' : 'text-slate-400' }}">{{ $document->is_active ? __('Active') : __('Deactivated') }} · {{ $document->is_required ? __('Required') : __('Optional') }}</span>
-                                <form method="POST" action="{{ route('admin.service-documents.destroy', $document) }}" onsubmit="return confirm('{{ __('Delete this document requirement permanently? This cannot be undone.') }}');">
+                                <form method="POST" action="{{ route('admin.service-documents.destroy', $document) }}" onsubmit="return confirm('{{ __('Remove this document requirement from the active catalogue? Existing application history will be preserved.') }}');">
                                     @csrf @method('DELETE')
-                                    <button type="submit" class="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs font-extrabold text-red-700 hover:bg-red-100">{{ __('Delete Requirement') }}</button>
+                                    <button type="submit" class="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs font-extrabold text-red-700 hover:bg-red-100">{{ __('Remove Requirement') }}</button>
                                 </form>
                             </div>
                         </div>
