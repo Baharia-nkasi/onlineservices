@@ -72,9 +72,10 @@
                                 </div>
                             </div>
 
-                            <form method="POST" action="{{ route('applications.store', $service) }}" class="mt-8 border-t border-slate-200 pt-8">
-                                @csrf
-                                <label for="notes" class="block text-sm font-extrabold text-slate-800">{{ __('Additional information') }} <span class="font-normal text-slate-400">{{ __('(optional)') }}</span></label>
+                            @if(Auth::user()->isCustomer())
+                                <form method="POST" action="{{ route('applications.store', $service) }}" class="mt-8 border-t border-slate-200 pt-8">
+                                    @csrf
+                                    <label for="notes" class="block text-sm font-extrabold text-slate-800">{{ __('Additional information') }} <span class="font-normal text-slate-400">{{ __('(optional)') }}</span></label>
                                 <textarea id="notes" name="notes" rows="4" maxlength="2000"
                                     class="mt-2 w-full rounded-2xl border-slate-300 bg-white text-sm shadow-sm focus:border-blue-500 focus:ring-blue-500"
                                     placeholder="{{ __('Add any information that may help with your application...') }}">{{ old('notes') }}</textarea>
@@ -86,13 +87,21 @@
                                     <strong>{{ __('Next step:') }}</strong> {{ __('Click “Start Application”. Your application will be created and you will then upload the required documents.') }}
                                 </div>
 
-                                <div class="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-                                    <a href="{{ route('services.index') }}" class="rounded-xl border border-slate-300 bg-white px-5 py-3 text-center text-sm font-extrabold text-slate-700 hover:bg-slate-50">{{ __('Cancel') }}</a>
-                                    <button type="submit" class="rounded-xl bg-blue-700 px-6 py-3 text-sm font-extrabold text-white shadow-lg shadow-blue-700/20 hover:bg-blue-800">
-                                        {{ __('Start Application →') }}
-                                    </button>
+                                    <div class="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+                                        <a href="{{ route('services.index') }}" class="rounded-xl border border-slate-300 bg-white px-5 py-3 text-center text-sm font-extrabold text-slate-700 hover:bg-slate-50">{{ __('Cancel') }}</a>
+                                        <button type="submit" class="rounded-xl bg-blue-700 px-6 py-3 text-sm font-extrabold text-white shadow-lg shadow-blue-700/20 hover:bg-blue-800">
+                                            {{ __('Start Application →') }}
+                                        </button>
+                                    </div>
+                                </form>
+                            @else
+                                <div class="mt-8 border-t border-slate-200 pt-8">
+                                    <div class="rounded-2xl border border-blue-200 bg-blue-50 p-5 text-sm leading-6 text-blue-800">
+                                        <strong>{{ __('Admin view:') }}</strong>
+                                        {{ __('You can review this service and its current document requirements here. Customer applications are submitted from the customer portal.') }}
+                                    </div>
                                 </div>
-                            </form>
+                            @endif
                         </div>
                     </div>
                 </div>
