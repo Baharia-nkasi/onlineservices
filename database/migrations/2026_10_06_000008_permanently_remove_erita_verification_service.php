@@ -15,39 +15,44 @@ return new class extends Migration
             return;
         }
 
-        // The admin explicitly requested a clean removal of this retired
-        // service, including its old application history.
+        // Remove notifications that belong to applications of this service.
+        // Use a simple text match because notification data is stored as the
+        // Laravel database-notification payload, not a relational FK.
         $applicationIds = DB::table('applications')
             ->where('service_id', $serviceId)
             ->pluck('id');
 
-        if ($applicationIds->isNotEmpty()) {
-            $notifications = DB::table('notifications')->get(['id', 'data']);
-
-            $notificationIds = $notifications
-                ->filter(function ($notification) use ($applicationIds) {
-                    $data = json_decode((string) $notification->data, true);
-
-                    return isset($data['application_id'])
-                        && $applicationIds->contains((int) $data['application_id']);
-                })
-                ->pluck('id');
-
-            if ($notificationIds->isNotEmpty()) {
-                DB::table('notifications')->whereIn('id', $notificationIds)->delete();
-            }
+        foreach ($applicationIds as $applicationId) {
+            DB::table('notifications')
+                ->where('data', 'like', '%"application_id":'.$applicationId.'%')
+                ->delete();
         }
 
-        // application_documents cascade from applications; requirements are
-        // exclusive to the service and can be removed with it.
-        DB::table('applications')->where('service_id', $serviceId)->delete();
-        DB::table('service_documents')->where('service_id', $serviceId)->delete();
-        DB::table('services')->where('id', $serviceId)->delete();
+        // application_documents and service_documents have CASCADE FKs,
+        // but removing the dependent rows explicitly keeps this migration
+        // deterministic and leaves no orphaned records.
+        if ($applicationIds->isNotEmpty()) {
+            DB::table('application_documents')
+                ->whereIn('application_id', $applicationIds)
+                ->delete();
+
+            DB::table('applications')
+                ->whereIn('id', $applicationIds)
+                ->delete();
+        }
+
+        DB::table('service_documents')
+            ->where('service_id', $serviceId)
+            ->delete();
+
+        DB::table('services')
+            ->where('id', $serviceId)
+            ->delete();
     }
 
     public function down(): void
     {
-        // Intentionally irreversible: the removed service and its application
-        // history were explicitly requested to be permanently cleaned.
+        // Intentionally irreversible: the service and its application history
+        // were explicitly requested to be permanently cleaned.
     }
 };
