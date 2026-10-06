@@ -61,6 +61,26 @@
                 </div>
             </section>
 
+            <section class="portal-card flex flex-col gap-4 border border-red-200 bg-red-50 p-5 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <p class="text-xs font-black uppercase tracking-wider text-red-700">Danger Zone</p>
+                    <h2 class="mt-1 text-lg font-black text-red-950">Permanently delete this customer</h2>
+                    <p class="mt-1 text-sm leading-6 text-red-800">
+                        This removes <strong>{{ $application->user->name }}</strong>, all applications, uploaded files, notifications and related history.
+                        The customer can register again as a completely new account.
+                    </p>
+                </div>
+                <form method="POST" action="{{ route('admin.customers.destroy', $application->user) }}"
+                      onsubmit="return confirm({{ Js::from('PERMANENT DELETE: This customer account and ALL of its applications, uploaded documents, notifications, sessions and history will be permanently removed. This cannot be undone. Continue?') }});"
+                      class="shrink-0">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="w-full rounded-xl bg-red-600 px-5 py-3 text-sm font-black text-white shadow-sm transition hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:w-auto">
+                        🗑 Delete Customer Permanently
+                    </button>
+                </form>
+            </section>
+
             <section class="grid gap-4 sm:grid-cols-3">
                 <div class="portal-card p-5"><p class="text-xs font-bold uppercase tracking-wide text-slate-400">Required</p><p class="mt-2 text-2xl font-black text-slate-900">{{ $required->count() }}</p></div>
                 <div class="portal-card p-5"><p class="text-xs font-bold uppercase tracking-wide text-slate-400">Approved progress</p><p class="mt-2 text-2xl font-black text-slate-900">{{ $completedUnits }}/{{ $completionUnits }}</p><div class="mt-3 h-2 overflow-hidden rounded-full bg-slate-200"><div class="h-full rounded-full bg-blue-600" style="width: {{ $completionUnits ? min(100, round(($completedUnits / $completionUnits) * 100)) : 0 }}%"></div></div></div>
