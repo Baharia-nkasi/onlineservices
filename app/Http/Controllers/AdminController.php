@@ -20,6 +20,27 @@ class AdminController extends Controller
         abort_unless(Auth::check() && Auth::user()->isAdmin(), 403);
     }
 
+    /**
+     * Keep active service-document positions continuous after an item is removed.
+     * Soft-deleted/inactive historical versions are intentionally excluded.
+     */
+    private function normalizeServiceDocumentOrder(Service $service): void
+    {
+        $documents = $service->documents()
+            ->where('is_active', true)
+            ->orderBy('sort_order')
+            ->orderBy('id')
+            ->get();
+
+        foreach ($documents as $index => $document) {
+            $expectedOrder = $index + 1;
+
+            if ((int) $document->sort_order !== $expectedOrder) {
+                $document->update(['sort_order' => $expectedOrder]);
+            }
+        }
+    }
+
     public function index()
     {
         $this->guard();
@@ -454,22 +475,24 @@ class AdminController extends Controller
     {
         $this->guard();
 
-        $serviceHasApplications = $document->service->applications()->exists();
+        $service = $document->service;
+        $serviceHasApplications = $service->applications()->exists();
+
+        /*
+         * Soft-delete the requirement so historical applications keep their
+         * original requirement definition. Then compact the active catalogue
+         * numbering so admins never see gaps such as 1, 2, 4, 5 after a delete.
+         */
+        DB::transaction(function () use ($document, $service) {
+            $document->delete();
+            $this->normalizeServiceDocumentOrder($service);
+        });
 
         if ($serviceHasApplications) {
-            /*
-             * Never physically remove a requirement once its service has customer
-             * applications. Soft deletion keeps the old requirement available to
-             * historical application logic while removing it from the live catalogue.
-             */
-            $document->delete();
-
-            return back()->with('success', __('Requirement removed from the active catalogue. Existing application history has been preserved.'));
+            return back()->with('success', __('Requirement removed from the active catalogue. Existing application history has been preserved and the remaining requirements were automatically renumbered.'));
         }
 
-        $document->delete();
-
-        return back()->with('success', __('Document requirement deleted successfully.'));
+        return back()->with('success', __('Document requirement deleted successfully and the remaining requirements were automatically renumbered.'));
     }
 
     public function destroyService(Service $service)
