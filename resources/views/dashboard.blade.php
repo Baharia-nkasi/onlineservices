@@ -171,4 +171,137 @@
             </section>
         </div>
     </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const carousel = document.querySelector('[data-services-carousel]');
+    if (!carousel) return;
+
+    const viewport = carousel.querySelector('.dashboard-services-viewport');
+    const track = carousel.querySelector('[data-services-track]');
+    const slides = Array.from(carousel.querySelectorAll('[data-service-slide]'));
+    const previous = carousel.querySelector('[data-services-prev]');
+    const next = carousel.querySelector('[data-services-next]');
+    const dots = carousel.querySelector('[data-services-dots]');
+    const label = carousel.querySelector('[data-services-label]');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    if (!viewport || !track || !slides.length) return;
+
+    let current = 0;
+    let visible = 1;
+    let timer = null;
+
+    function getVisible() {
+        if (window.innerWidth >= 1024) return 3;
+        if (window.innerWidth >= 640) return 2;
+        return 1;
+    }
+
+    function getGap() {
+        const styles = window.getComputedStyle(track);
+        return parseFloat(styles.gap || styles.columnGap || '0') || 0;
+    }
+
+    function renderDots() {
+        if (!dots) return;
+        const positions = Math.max(1, slides.length - visible + 1);
+        dots.innerHTML = '';
+
+        for (let index = 0; index < positions; index++) {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = index === current
+                ? 'dashboard-carousel-dot is-active'
+                : 'dashboard-carousel-dot';
+            button.setAttribute('aria-label', '{{ __('Show services starting at') }} ' + (index + 1));
+            button.setAttribute('aria-current', index === current ? 'true' : 'false');
+            button.addEventListener('click', function () {
+                stopAutoPlay();
+                render(index, true);
+                startAutoPlay();
+            });
+            dots.appendChild(button);
+        }
+    }
+
+    function render(index, shouldFocus = false) {
+        visible = getVisible();
+        const maxIndex = Math.max(0, slides.length - visible);
+        current = Math.max(0, Math.min(index, maxIndex));
+
+        const slideWidth = slides[0].getBoundingClientRect().width;
+        const offset = current * (slideWidth + getGap());
+
+        track.style.transform = 'translate3d(-' + offset + 'px, 0, 0)';
+        track.style.setProperty('--carousel-index', current);
+
+        if (previous) previous.disabled = current === 0;
+        if (next) next.disabled = current >= maxIndex;
+
+        if (label) {
+            const first = current + 1;
+            const last = Math.min(current + visible, slides.length);
+            label.textContent = first === last
+                ? first + ' / ' + slides.length
+                : first + '–' + last + ' / ' + slides.length;
+        }
+
+        renderDots();
+
+        if (shouldFocus) {
+            carousel.scrollIntoView({ behavior: reduceMotion.matches ? 'auto' : 'smooth', block: 'nearest' });
+        }
+    }
+
+    function stopAutoPlay() {
+        if (timer) {
+            window.clearInterval(timer);
+            timer = null;
+        }
+    }
+
+    function startAutoPlay() {
+        stopAutoPlay();
+        if (reduceMotion.matches || slides.length <= visible) return;
+
+        timer = window.setInterval(function () {
+            const maxIndex = Math.max(0, slides.length - getVisible());
+            render(current >= maxIndex ? 0 : current + 1);
+        }, 4200);
+    }
+
+    previous?.addEventListener('click', function () {
+        stopAutoPlay();
+        render(current - 1, true);
+        startAutoPlay();
+    });
+
+    next?.addEventListener('click', function () {
+        stopAutoPlay();
+        render(current + 1, true);
+        startAutoPlay();
+    });
+
+    carousel.addEventListener('mouseenter', stopAutoPlay);
+    carousel.addEventListener('mouseleave', startAutoPlay);
+    carousel.addEventListener('focusin', stopAutoPlay);
+    carousel.addEventListener('focusout', function (event) {
+        if (!carousel.contains(event.relatedTarget)) startAutoPlay();
+    });
+
+    let resizeTimer = null;
+    window.addEventListener('resize', function () {
+        window.clearTimeout(resizeTimer);
+        resizeTimer = window.setTimeout(function () {
+            render(current);
+            startAutoPlay();
+        }, 120);
+    });
+
+    render(0);
+    startAutoPlay();
+});
+</script>
+
 </x-app-layout>
