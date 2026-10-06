@@ -87,6 +87,20 @@
             </section>
         @endif
 
+        @if($application->status === 'approved')
+            <section class="overflow-hidden rounded-2xl border border-emerald-200 bg-emerald-50 shadow-sm">
+                <div class="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
+                    <div class="flex items-start gap-3">
+                        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-600 text-lg font-black text-white">✓</span>
+                        <div>
+                            <h2 class="font-black text-emerald-950">{{ __('Application approved successfully') }}</h2>
+                            <p class="mt-1 text-sm leading-6 text-emerald-800">{{ __('Uploaded documents have been cleared from this application. If you need another service, start a new application from the beginning.') }}</p>
+                        </div>
+                    </div>
+                    <a href="{{ route('services.index') }}" class="portal-button shrink-0">{{ __('Start New Application') }}</a>
+                </div>
+            </section>
+        @else
         <section class="portal-card overflow-hidden">
             <div class="border-b border-slate-200 p-6">
                 <h2 class="text-xl font-black text-slate-900">{{ __('Document Requirements') }}</h2>
@@ -165,6 +179,7 @@
             @endif
         </section>
 
+        @if($application->status !== 'approved')
         <section class="portal-card overflow-hidden">
             <div class="border-b border-slate-200 p-5"><h2 class="font-black text-lg text-slate-900">{{ __('Uploaded Documents') }}</h2><p class="mt-1 text-sm text-slate-500">{{ __('View or download the files you have submitted.') }}</p></div>
             <div class="divide-y divide-slate-100">
@@ -196,6 +211,8 @@
                 @endforelse
             </div>
         </section>
+        @endif
+        @endif
     </div>
 </div>
 </x-app-layout>
