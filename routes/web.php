@@ -5,6 +5,7 @@ use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\ApplicationDocumentController;
 use App\Http\Controllers\CustomerApplicationController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HelpDeskContactController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\DB;
@@ -43,14 +44,12 @@ Route::middleware('locale')->group(function () {
         ->name('services.index');
 
     Route::middleware('auth')->group(function () {
-        // Customers can submit applications, while admins may open the same page
-        // to inspect service requirements from the catalogue. Submission remains customer-only.
         Route::get('/services/{service}/apply', [ApplicationController::class, 'create'])
             ->name('applications.create');
 
         Route::middleware('customer')->group(function () {
             Route::post('/services/{service}/apply', [ApplicationController::class, 'store'])
-                ->name('applications.store');
+                ->middleware('throttle:20,1')->name('applications.store');
 
             Route::post('/my-applications/{application}/documents', [ApplicationDocumentController::class, 'store'])
                 ->middleware('throttle:20,1')->name('application.documents.store');
@@ -59,8 +58,6 @@ Route::middleware('locale')->group(function () {
                 ->middleware('throttle:20,1')->name('application.documents.destroy');
         });
 
-        // Both admins and customers may open the application centre.
-        // The controller applies the correct ownership/scope for each role.
         Route::get('/my-applications', [CustomerApplicationController::class, 'index'])
             ->name('customer.applications.index');
         Route::get('/my-applications/{application}', [CustomerApplicationController::class, 'show'])
@@ -95,6 +92,14 @@ Route::middleware('locale')->group(function () {
                 ->name('service-documents.update');
             Route::delete('/service-documents/{document}', [AdminController::class, 'destroyServiceDocument'])
                 ->middleware('throttle:20,1')->name('service-documents.destroy');
+
+            Route::get('/help-desk', [HelpDeskContactController::class, 'index'])->name('help-desk.index');
+            Route::post('/help-desk', [HelpDeskContactController::class, 'store'])
+                ->middleware('throttle:20,1')->name('help-desk.store');
+            Route::patch('/help-desk/{helpDeskContact}', [HelpDeskContactController::class, 'update'])
+                ->middleware('throttle:20,1')->name('help-desk.update');
+            Route::delete('/help-desk/{helpDeskContact}', [HelpDeskContactController::class, 'destroy'])
+                ->middleware('throttle:20,1')->name('help-desk.destroy');
         });
     });
 
