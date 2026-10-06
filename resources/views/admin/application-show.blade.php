@@ -92,7 +92,7 @@
                         </div>
                     @endif
 
-                    <form method="POST" action="{{ route('admin.applications.status',$application) }}" class="mt-6 border-t border-slate-200 pt-6">
+                    <form method="POST" action="{{ route('admin.applications.status',$application) }}" class="mt-6 border-t border-slate-200 pt-6" x-data="{ status: @js($application->status) }">
                         @csrf @method('PATCH')
                         <label for="status" class="block text-sm font-extrabold text-slate-800">Application status</label>
                         <div class="mt-2 flex flex-col gap-3 sm:flex-row">
@@ -107,7 +107,7 @@
                             <button class="portal-button" {{ $application->status === 'completed' ? 'disabled' : '' }}>Update Status</button>
                         </div>
 
-                        <div class="mt-4" x-data="{ status: @js($application->status) }">
+                        <div class="mt-4">
                             <label for="approval_remark" class="block text-sm font-extrabold text-slate-800">
                                 <span x-show="status === 'rejected'">Rejection remark to customer</span>
                                 <span x-show="status !== 'rejected'">Remark to customer</span>
