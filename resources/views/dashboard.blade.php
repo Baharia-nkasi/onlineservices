@@ -88,6 +88,45 @@
                 </div>
             </section>
 
+            <section class="mt-2 overflow-hidden rounded-[28px] border border-blue-200 bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-900 p-5 shadow-xl sm:p-7">
+                <div class="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+                    <div>
+                        <span class="inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1.5 text-xs font-black uppercase tracking-wider text-cyan-200">☎ {{ __('Help Desk') }}</span>
+                        <h3 class="mt-3 text-2xl font-black text-white">{{ __('Need help? Contact our admin') }}</h3>
+                        <p class="mt-1 max-w-2xl text-sm leading-6 text-slate-300">{{ __('If you face any problem with your application, documents, payment or service, call one of the support numbers below.') }}</p>
+                    </div>
+                    <div class="text-xs font-bold text-slate-400">{{ $helpDeskContacts->count() }} {{ __('active contact(s)') }}</div>
+                </div>
+
+                <div class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                    @forelse($helpDeskContacts as $contact)
+                        <a href="tel:{{ preg_replace('/[^0-9+]/', '', $contact->phone) }}" class="group rounded-2xl border border-white/10 bg-white/[0.07] p-4 backdrop-blur transition hover:-translate-y-1 hover:border-cyan-300/40 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-cyan-300">
+                            <div class="flex items-center gap-3">
+                                <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white text-xl shadow-lg">📞</span>
+                                <div class="min-w-0">
+                                    <div class="flex items-center gap-2">
+                                        <h4 class="truncate font-black text-white">{{ $contact->network }}</h4>
+                                        <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
+                                    </div>
+                                    <p class="mt-1 truncate text-sm font-bold text-cyan-200">{{ $contact->phone }}</p>
+                                    @if($contact->label)<p class="mt-1 truncate text-xs text-slate-400">{{ $contact->label }}</p>@endif
+                                </div>
+                            </div>
+                            <div class="mt-4 flex items-center justify-between border-t border-white/10 pt-3 text-xs font-black">
+                                <span class="text-slate-400">{{ __('Tap to call') }}</span>
+                                <span class="text-cyan-300 transition group-hover:translate-x-1">Call →</span>
+                            </div>
+                        </a>
+                    @empty
+                        <div class="sm:col-span-2 lg:col-span-3 rounded-2xl border border-white/10 bg-white/[0.05] p-6 text-center">
+                            <div class="text-3xl">☎️</div>
+                            <p class="mt-2 font-black text-white">{{ __('Help desk contacts are being prepared.') }}</p>
+                            <p class="mt-1 text-sm text-slate-400">{{ __('Please check again later or use another available support channel.') }}</p>
+                        </div>
+                    @endforelse
+                </div>
+            </section>
+
             <section class="grid gap-4 sm:grid-cols-3">
                 <div class="dashboard-help-card p-5"><span class="text-2xl">🔎</span><h4 class="mt-3 font-black">{{ __('Clear requirements') }}</h4><p class="mt-1 text-sm leading-6 text-slate-500">{{ __('Know what documents you need before applying.') }}</p></div>
                 <div class="portal-card p-5"><span class="text-2xl">🔐</span><h4 class="mt-3 font-black">{{ __('Secure account') }}</h4><p class="mt-1 text-sm leading-6 text-slate-500">{{ __('Your applications stay connected to your account.') }}</p></div>
