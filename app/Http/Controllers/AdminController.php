@@ -241,16 +241,32 @@ class AdminController extends Controller
         return view('admin.services.show', compact('service'));
     }
 
-    public function services()
+    public function services(Request $request)
     {
         $this->guard();
 
+        $validated = $request->validate([
+            'q' => ['nullable', 'string', 'max:100'],
+        ]);
+
+        $search = trim((string) ($validated['q'] ?? ''));
+
         $services = Service::withCount('applications')
             ->withCount(['documents as active_documents_count' => fn ($query) => $query->where('is_active', true)])
-            ->latest()
-            ->paginate(15);
+            ->when($search !== '', function ($query) use ($search) {
+                $searchLower = mb_strtolower($search);
 
-        return view('admin.services.index', compact('services'));
+                $query->where(function ($query) use ($searchLower) {
+                    $query->whereRaw('LOWER(name) LIKE ?', ["%{$searchLower}%"])
+                        ->orWhereRaw('LOWER(slug) LIKE ?', ["%{$searchLower}%"])
+                        ->orWhereRaw('LOWER(description) LIKE ?', ["%{$searchLower}%"]);
+                });
+            })
+            ->latest()
+            ->paginate(15)
+            ->withQueryString();
+
+        return view('admin.services.index', compact('services', 'search'));
     }
 
     public function storeService(Request $request)
