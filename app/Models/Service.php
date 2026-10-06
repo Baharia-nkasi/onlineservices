@@ -11,6 +11,7 @@ class Service extends Model
         'name',
         'slug',
         'description',
+        'image_url',
         'government_fee',
         'service_fee',
         'is_active',
