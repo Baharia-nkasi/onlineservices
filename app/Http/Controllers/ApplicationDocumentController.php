@@ -55,8 +55,8 @@ class ApplicationDocumentController extends Controller
                 $lockedApplication = Application::query()->lockForUpdate()->findOrFail($application->id);
 
                 abort_unless($lockedApplication->user_id === Auth::id(), 403);
-                abort_if(in_array($lockedApplication->status, ['completed', 'rejected'], true), 422,
-                    __('Documents cannot be changed after this application is completed or rejected.'));
+                abort_if(in_array($lockedApplication->status, ['approved', 'completed', 'rejected'], true), 422,
+                    __('Documents cannot be changed after this application is approved, completed or rejected.'));
 
                 $requirement = $lockedApplication->service->documents()
                     ->where('is_active', true)
