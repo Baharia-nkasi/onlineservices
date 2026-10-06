@@ -64,7 +64,11 @@
             <section class="grid gap-4 sm:grid-cols-3">
                 <div class="portal-card p-5"><p class="text-xs font-bold uppercase tracking-wide text-slate-400">Required</p><p class="mt-2 text-2xl font-black text-slate-900">{{ $required->count() }}</p></div>
                 <div class="portal-card p-5"><p class="text-xs font-bold uppercase tracking-wide text-slate-400">Approved progress</p><p class="mt-2 text-2xl font-black text-slate-900">{{ $completedUnits }}/{{ $completionUnits }}</p><div class="mt-3 h-2 overflow-hidden rounded-full bg-slate-200"><div class="h-full rounded-full bg-blue-600" style="width: {{ $completionUnits ? min(100, round(($completedUnits / $completionUnits) * 100)) : 0 }}%"></div></div></div>
-                <div class="portal-card p-5"><p class="text-xs font-bold uppercase tracking-wide text-slate-400">Uploaded files</p><p class="mt-2 text-2xl font-black text-slate-900">{{ $totalUploaded }}</p></div>
+                @if($application->status === 'approved')
+                    <div class="portal-card border-emerald-200 bg-emerald-50 p-5"><p class="text-xs font-bold uppercase tracking-wide text-emerald-700">Document review</p><p class="mt-2 text-lg font-black text-emerald-800">Cleared after approval</p></div>
+                @else
+                    <div class="portal-card p-5"><p class="text-xs font-bold uppercase tracking-wide text-slate-400">Uploaded files</p><p class="mt-2 text-2xl font-black text-slate-900">{{ $totalUploaded }}</p></div>
+                @endif
             </section>
 
             <div class="grid gap-6 lg:grid-cols-3">
