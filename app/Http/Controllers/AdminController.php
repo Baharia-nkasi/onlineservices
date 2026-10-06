@@ -53,7 +53,7 @@ class AdminController extends Controller
         // The dashboard is an action queue: only applications that still need admin work appear here.
         // Completed and rejected applications remain available through My Applications/customer history and stats.
         $applications = Application::with(['user', 'service', 'documents'])
-            ->whereIn('status', ['pending', 'processing', 'rejected'])
+            ->whereIn('status', ['pending', 'processing'])
             ->when($validated['q'] ?? null, function ($query, $search) {
                 $search = trim($search);
 
@@ -76,7 +76,7 @@ class AdminController extends Controller
             })
             ->when($validated['status'] ?? null, function ($query, $status) {
                 // Keep the admin work queue limited to actionable states.
-                if (in_array($status, ['pending', 'processing', 'rejected'], true)) {
+                if (in_array($status, ['pending', 'processing'], true)) {
                     $query->where('status', $status);
                 }
             })
@@ -112,7 +112,10 @@ class AdminController extends Controller
 
         $validated = $request->validate([
             'status' => ['required', 'in:pending,processing,approved,completed,rejected'],
-            'approval_remark' => ['nullable', 'string', 'max:2000'],
+            'approval_remark' => [
+                'nullable', 'string', 'max:2000',
+                Rule::requiredIf($validated['status'] === 'rejected'),
+            ],
         ]);
 
         $next = $validated['status'];
@@ -186,7 +189,7 @@ class AdminController extends Controller
 
             $previousStatus = $lockedApplication->status;
             $previousRemark = (string) $lockedApplication->approval_remark;
-            $nextRemark = $next === 'approved'
+            $nextRemark = in_array($next, ['approved', 'rejected'], true)
                 ? ($approvalRemark !== '' ? $approvalRemark : $lockedApplication->approval_remark)
                 : $lockedApplication->approval_remark;
 
