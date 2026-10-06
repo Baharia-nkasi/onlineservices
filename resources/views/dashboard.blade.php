@@ -1,4 +1,5 @@
 <x-app-layout>
+    @php use App\Support\ServiceImage; @endphp
     <x-slot name="header">
         <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <div>
@@ -51,19 +52,15 @@
                                     <article class="dashboard-service-slide" data-service-slide>
                                         <a href="{{ route('applications.create', $service) }}" class="dashboard-service-card group">
                                             <div class="dashboard-service-image-wrap">
-                                                @if($service->image_url)
-                                                    <img
-                                                        src="{{ $service->image_url }}"
-                                                        alt="{{ $service->name }}"
-                                                        class="dashboard-service-image"
-                                                        loading="lazy"
-                                                        referrerpolicy="no-referrer"
-                                                        onerror="this.classList.add('is-broken'); this.nextElementSibling.classList.remove('hidden');"
-                                                    >
-                                                @endif
-                                                <div class="dashboard-service-image-fallback {{ $service->image_url ? 'hidden' : '' }}" aria-hidden="true">
-                                                    <span>📋</span>
-                                                </div>
+                                                <img
+                                                    src="{{ $service->image_url ?: ServiceImage::fallbackDataUri($service) }}"
+                                                    data-service-fallback="{{ ServiceImage::fallbackDataUri($service) }}"
+                                                    alt="{{ $service->name }}"
+                                                    class="dashboard-service-image"
+                                                    loading="lazy"
+                                                    referrerpolicy="no-referrer"
+                                                    onerror="this.onerror=null;this.src=this.dataset.serviceFallback;"
+                                                >
                                                 <span class="dashboard-service-image-badge">{{ __('Available') }}</span>
                                             </div>
 
