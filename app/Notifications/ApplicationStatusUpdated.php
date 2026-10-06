@@ -38,7 +38,7 @@ class ApplicationStatusUpdated extends Notification
             'approved' => $this->remarkUpdated
                 ? __('New message about your application')
                 : __('Application approved'),
-            'rejected' => __('Application rejected'),
+            'rejected' => __('Application rejected — action required'),
             'processing' => __('Application is being processed'),
             default => __('Application updated'),
         };
@@ -47,7 +47,9 @@ class ApplicationStatusUpdated extends Notification
             'approved' => $this->remarkUpdated && $remark !== ''
                 ? $remark
                 : __('Your :service application has been approved.', ['service' => $serviceName]),
-            'rejected' => __('Your :service application has been rejected.', ['service' => $serviceName]),
+            'rejected' => $remark !== ''
+                ? $remark
+                : __('Your :service application was rejected. Please start a new application and submit your documents again.', ['service' => $serviceName]),
             'processing' => __('Your :service application is now being processed.', ['service' => $serviceName]),
             default => __('Your :service application has been updated.', ['service' => $serviceName]),
         };
@@ -59,7 +61,9 @@ class ApplicationStatusUpdated extends Notification
             'title' => $title,
             'message' => $message,
             'remark' => $remark !== '' ? $remark : null,
-            'url' => route('customer.applications.show', $this->application),
+            'url' => $status === 'rejected'
+                ? route('services.index')
+                : route('customer.applications.show', $this->application),
         ];
     }
 }
