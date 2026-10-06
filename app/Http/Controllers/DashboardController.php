@@ -24,12 +24,12 @@ class DashboardController extends Controller
         $processingApplications = Application::where('user_id', $userId)->where('status', 'processing')->count();
         $completedApplications = Application::where('user_id', $userId)->where('status', 'completed')->count();
 
-        // Load the complete active catalogue for the home carousel. The old
-        // six-item limit made the remaining services impossible to reach.
-        // Count requirements in SQL to avoid an N+1 query for every card.
+        // Load every active service in a deterministic creation order. The
+        // same sequence is used by the public carousel so the catalogue,
+        // dashboard and home page stay aligned.
         $services = Service::where('is_active', true)
             ->withCount(['documents as active_documents_count' => fn ($query) => $query->where('is_active', true)])
-            ->orderBy('name')
+            ->orderBy('id')
             ->get();
 
         $recentApplications = Application::with('service')
