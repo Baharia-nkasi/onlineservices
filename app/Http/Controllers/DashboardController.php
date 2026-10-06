@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Application;
+use App\Models\HelpDeskContact;
 use App\Models\Service;
 use Illuminate\Support\Facades\Auth;
 
@@ -30,9 +31,14 @@ class DashboardController extends Controller
 
         $recentApplications = Application::with('service')
             ->where('user_id', $userId)
-            ->whereIn('status', ['pending', 'processing', 'completed'])
+            ->whereIn('status', ['pending', 'processing', 'approved', 'completed'])
             ->latest()
             ->take(5)
+            ->get();
+
+        $helpDeskContacts = HelpDeskContact::where('is_active', true)
+            ->orderBy('sort_order')
+            ->orderBy('network')
             ->get();
 
         return view('dashboard', compact(
@@ -42,6 +48,7 @@ class DashboardController extends Controller
             'completedApplications',
             'services',
             'recentApplications',
+            'helpDeskContacts',
         ));
     }
 }
