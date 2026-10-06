@@ -220,7 +220,20 @@ function initServiceCarousel() {
         carousel.addEventListener('mouseenter', () => window.clearInterval(timer));
         carousel.addEventListener('mouseleave', restart);
         carousel.addEventListener('focusin', () => window.clearInterval(timer));
-        carousel.addEventListener('focusout', restart);
+        carousel.addEventListener('focusout', (event) => {
+            if (!carousel.contains(event.relatedTarget)) restart();
+        });
+
+        // Do not keep rotating a hidden browser tab. This also prevents a
+        // user returning to the page and landing on an unexpected slide.
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                window.clearInterval(timer);
+            } else {
+                restart();
+            }
+        });
+
         carousel.dataset.carouselReady = '1';
         show(0);
         restart();
