@@ -100,7 +100,7 @@ class AdminController extends Controller
             $current = $lockedApplication->status;
 
             $allowed = [
-                'pending' => ['pending', 'processing', 'rejected'],
+                'pending' => ['pending', 'processing', 'approved', 'rejected'],
                 'processing' => ['processing', 'approved', 'completed', 'rejected'],
                 'approved' => ['approved', 'completed'],
                 'completed' => ['completed'],
