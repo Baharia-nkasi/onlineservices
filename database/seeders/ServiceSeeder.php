@@ -30,13 +30,10 @@ class ServiceSeeder extends Seeder
             ['name'=>'Maombi ya Kazi','slug'=>'maombi-ya-kazi','description'=>'Usaidizi wa CV, cover letter na maombi ya kazi.','image_url'=>'https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=1400&q=85'],
             ['name'=>'Visa','slug'=>'visa','description'=>'Usaidizi wa maandalizi ya maombi ya visa na nyaraka.','image_url'=>'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1400&q=85'],
             ['name'=>'Kibali cha Makazi / Kazi','slug'=>'kibali-cha-makazi-kazi','description'=>'Usaidizi wa maandalizi ya maombi ya residence/work permit.','image_url'=>'https://images.unsplash.com/photo-1494412651409-8963ce7935a7?auto=format&fit=crop&w=1400&q=85'],
-            ['name'=>'Kitambulisho cha Taifa - NIDA','slug'=>'kitambulisho-cha-taifa-nida','description'=>'Usaidizi wa maandalizi ya huduma za NIDA.','image_url'=>'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=1400&q=85'],
             ['name'=>'Uthibitisho wa Nyaraka','slug'=>'uthibitisho-wa-nyaraka','description'=>'Usaidizi wa maandalizi ya nyaraka kwa ajili ya uthibitisho.','image_url'=>'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1400&q=85'],
         ];
 
         foreach ($services as $service) {
-            // Seed defaults only when the service is new. Existing admin edits
-            // (name, description, fees, active state, etc.) must survive deploys.
             $record = Service::firstOrCreate(
                 ['slug' => $service['slug']],
                 [
