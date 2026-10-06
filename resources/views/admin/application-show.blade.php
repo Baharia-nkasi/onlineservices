@@ -145,6 +145,17 @@
                 </aside>
             </div>
 
+            @if($application->status === 'approved')
+                <section class="overflow-hidden rounded-2xl border border-emerald-200 bg-emerald-50 shadow-sm">
+                    <div class="flex items-start gap-3 p-5">
+                        <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-600 text-lg font-black text-white">✓</span>
+                        <div>
+                            <h2 class="font-black text-emerald-950">Uploaded Documents Cleared</h2>
+                            <p class="mt-1 text-sm leading-6 text-emerald-800">All customer-uploaded documents were permanently removed when this application was approved. The application can now be kept as a clean approval record.</p>
+                        </div>
+                    </div>
+                </section>
+            @else
             <section class="portal-card overflow-hidden">
                 <div class="border-b border-slate-200 p-6">
                     <h2 class="text-xl font-black text-slate-900">Uploaded Documents</h2>
@@ -190,6 +201,7 @@
                     @endforelse
                 </div>
             </section>
+            @endif
         </div>
     </div>
 </x-app-layout>
