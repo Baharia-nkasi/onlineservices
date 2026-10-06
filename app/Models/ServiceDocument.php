@@ -4,14 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ServiceDocument extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'service_id',
         'name',
         'description',
         'is_required',
+        'requirement_type',
+        'requirement_group',
+        'minimum_required',
         'sort_order',
         'is_active',
     ];
@@ -19,6 +25,7 @@ class ServiceDocument extends Model
     protected $casts = [
         'is_required' => 'boolean',
         'is_active' => 'boolean',
+        'minimum_required' => 'integer',
     ];
 
     public function service(): BelongsTo

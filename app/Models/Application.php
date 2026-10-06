@@ -13,6 +13,7 @@ class Application extends Model
         'service_id',
         'status',
         'notes',
+        'approval_remark',
     ];
 
     public function user(): BelongsTo
@@ -28,5 +29,23 @@ class Application extends Model
     public function documents(): HasMany
     {
         return $this->hasMany(ApplicationDocument::class);
+    }
+
+    /**
+     * Requirements that applied when this application was created.
+     *
+     * A requirement created after the application is ignored, while a requirement
+     * deactivated after the application was created remains part of its history.
+     */
+    public function effectiveServiceRequirements()
+    {
+        return $this->service->documents()->withTrashed()->get()->filter(function (ServiceDocument $requirement) {
+            if (! $requirement->created_at || ! $this->created_at) {
+                return $requirement->is_active;
+            }
+
+            return $requirement->created_at <= $this->created_at
+                && ($requirement->is_active || $requirement->updated_at > $this->created_at);
+        });
     }
 }

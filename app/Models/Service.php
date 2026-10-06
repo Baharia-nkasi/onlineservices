@@ -16,9 +16,20 @@ class Service extends Model
         'is_active',
     ];
 
+    protected $casts = [
+        'government_fee' => 'decimal:2',
+        'service_fee' => 'decimal:2',
+        'is_active' => 'boolean',
+    ];
+
     public function documents(): HasMany
     {
         return $this->hasMany(ServiceDocument::class)
             ->orderBy('sort_order');
+    }
+
+    public function applications(): HasMany
+    {
+        return $this->hasMany(Application::class);
     }
 }

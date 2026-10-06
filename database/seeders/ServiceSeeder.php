@@ -2,78 +2,52 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Service;
+use Illuminate\Database\Seeder;
 
 class ServiceSeeder extends Seeder
 {
     public function run(): void
     {
         $services = [
-            [
-                'name' => 'Vyeti vya Kuzaliwa na Kifo',
-                'slug' => 'vyeti-vya-kuzaliwa-na-kifo',
-                'description' => 'Huduma za maombi ya vyeti vya kuzaliwa na kifo.',
-            ],
-            [
-                'name' => 'Sekretarieti ya Ajira katika Utumishi wa Umma',
-                'slug' => 'sekretarieti-ya-ajira',
-                'description' => 'Huduma zinazohusiana na maombi ya ajira katika Utumishi wa Umma.',
-            ],
-            [
-                'name' => 'Leseni za Udereva na Vyombo vya Moto (TRA)',
-                'slug' => 'leseni-za-udereva-na-vyombo-vya-moto',
-                'description' => 'Huduma zinazohusiana na leseni za udereva na vyombo vya moto.',
-            ],
-            [
-                'name' => 'Usajili wa Biashara na Leseni (BRELA)',
-                'slug' => 'usajili-wa-biashara-na-leseni',
-                'description' => 'Huduma za usajili wa biashara na leseni.',
-            ],
-            [
-                'name' => 'Bodi ya Mikopo ya Wanafunzi wa Elimu ya Juu (HESLB)',
-                'slug' => 'heslb',
-                'description' => 'Huduma za maombi na usaidizi wa huduma za HESLB.',
-            ],
-            [
-                'name' => 'Pasipoti ya Kielektroniki',
-                'slug' => 'pasipoti-ya-kielektroniki',
-                'description' => 'Huduma za maombi ya pasipoti ya kielektroniki.',
-            ],
-            [
-                'name' => 'Namba ya Mlipa Kodi (TIN)',
-                'slug' => 'tin-number',
-                'description' => 'Huduma za maombi ya TIN Number.',
-            ],
-            [
-                'name' => 'Huduma za Ardhi na Makazi (ILMIS)',
-                'slug' => 'huduma-za-ardhi-na-makazi',
-                'description' => 'Huduma zinazohusiana na ardhi na makazi.',
-            ],
-            [
-                'name' => 'Maombi ya Bima ya Afya (NHIF)',
-                'slug' => 'bima-ya-afya-nhif',
-                'description' => 'Huduma za maombi na usaidizi wa bima ya afya.',
-            ],
-            [
-                'name' => 'Huduma za PSSSF / NSSF Portals',
-                'slug' => 'psssf-nssf-portals',
-                'description' => 'Huduma zinazohusiana na PSSSF na NSSF portals.',
-            ],
-            [
-                'name' => 'Maombi ya Vyuo',
-                'slug' => 'maombi-ya-vyuo',
-                'description' => 'Huduma za maombi ya vyuo na usaidizi wa application.',
-            ],
+            ['name'=>'Maombi ya Chuo Kikuu','slug'=>'maombi-ya-chuo-kikuu','description'=>'Usaidizi wa maombi ya vyuo vikuu na maandalizi ya nyaraka.'],
+            ['name'=>'Maombi ya Mkopo wa Elimu ya Juu','slug'=>'maombi-ya-mkopo-wa-elimu-ya-juu','description'=>'Usaidizi wa maombi ya mkopo wa elimu ya juu.'],
+            ['name'=>'Huduma za NACTVET','slug'=>'huduma-za-nactvet','description'=>'Usaidizi wa huduma za NACTVET na maombi ya elimu ya ufundi.'],
+            ['name'=>'Pasipoti ya Kielektroniki','slug'=>'pasipoti-ya-kielektroniki','description'=>'Usaidizi wa maandalizi ya maombi ya pasipoti.'],
+            ['name'=>'TIN Number - TRA','slug'=>'tin-number-tra','description'=>'Usaidizi wa maombi na maandalizi ya taarifa za TIN.'],
+            ['name'=>'Usajili wa Jina la Biashara - BRELA','slug'=>'usajili-wa-jina-la-biashara-brela','description'=>'Usaidizi wa usajili wa jina la biashara.'],
+            ['name'=>'Usajili wa Kampuni - BRELA','slug'=>'usajili-wa-kampuni-brela','description'=>'Usaidizi wa maandalizi ya usajili wa kampuni.'],
+            ['name'=>'Umiliki Halisi wa Kampuni','slug'=>'umiliki-halisi-wa-kampuni','description'=>'Usaidizi wa taarifa za beneficial ownership.'],
+            ['name'=>'Leseni ya Udereva','slug'=>'leseni-ya-udereva','description'=>'Usaidizi wa maombi na nyaraka za leseni ya udereva.'],
+            ['name'=>'Hati ya Tabia Njema','slug'=>'hati-ya-tabia-njema','description'=>'Usaidizi wa maombi ya hati ya tabia njema.'],
+            ['name'=>'Huduma za NECTA','slug'=>'huduma-za-necta','description'=>'Usaidizi wa huduma za NECTA na vyeti.'],
+            ['name'=>'Vyeti na Nakala za Matokeo ya Chuo','slug'=>'vyeti-na-nakala-za-matokeo-ya-chuo','description'=>'Usaidizi wa vyeti, transcripts na nakala za matokeo.'],
+            ['name'=>'Maombi ya Ufadhili / Masomo','slug'=>'maombi-ya-ufadhili-masomo','description'=>'Usaidizi wa maombi ya scholarships na sponsorships.'],
+            ['name'=>'eRITA - Cheti cha Kuzaliwa','slug'=>'erita-cheti-cha-kuzaliwa','description'=>'Usaidizi wa maombi ya cheti cha kuzaliwa.'],
+            ['name'=>'eRITA - Cheti cha Kifo','slug'=>'erita-cheti-cha-kifo','description'=>'Usaidizi wa maombi ya cheti cha kifo.'],
+            ['name'=>'eRITA - Uthibitisho wa Cheti','slug'=>'erita-uthibitisho-wa-cheti','description'=>'Usaidizi wa uthibitisho wa vyeti kupitia eRITA.'],
+            ['name'=>'eRITA - Nakala / Cheti Kilichopotea','slug'=>'erita-nakala-cheti-kilichopotea','description'=>'Usaidizi wa nakala ya cheti kilichopotea au kuharibika.'],
+            ['name'=>'eRITA - Marekebisho ya Taarifa','slug'=>'erita-marekebisho-ya-taarifa','description'=>'Usaidizi wa marekebisho ya taarifa za cheti.'],
+            ['name'=>'Maombi ya Kazi','slug'=>'maombi-ya-kazi','description'=>'Usaidizi wa CV, cover letter na maombi ya kazi.'],
+            ['name'=>'Visa','slug'=>'visa','description'=>'Usaidizi wa maandalizi ya maombi ya visa na nyaraka.'],
+            ['name'=>'Kibali cha Makazi / Kazi','slug'=>'kibali-cha-makazi-kazi','description'=>'Usaidizi wa maandalizi ya maombi ya residence/work permit.'],
+            ['name'=>'Kitambulisho cha Taifa - NIDA','slug'=>'kitambulisho-cha-taifa-nida','description'=>'Usaidizi wa maandalizi ya huduma za NIDA.'],
+            ['name'=>'Uthibitisho wa Nyaraka','slug'=>'uthibitisho-wa-nyaraka','description'=>'Usaidizi wa maandalizi ya nyaraka kwa ajili ya uthibitisho.'],
         ];
 
         foreach ($services as $service) {
-            Service::create([
-                ...$service,
-                'government_fee' => 0,
-                'service_fee' => 0,
-                'is_active' => true,
-            ]);
+            // Seed defaults only when the service is new. Existing admin edits
+            // (name, description, fees, active state, etc.) must survive deploys.
+            Service::firstOrCreate(
+                ['slug' => $service['slug']],
+                [
+                    'name' => $service['name'],
+                    'description' => $service['description'],
+                    'government_fee' => 0,
+                    'service_fee' => 0,
+                    'is_active' => true,
+                ]
+            );
         }
     }
 }

@@ -7,6 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
@@ -47,6 +48,13 @@ class ProfileController extends Controller
         ]);
 
         $user = $request->user();
+
+        // Remove private uploaded files before the database cascade deletes applications.
+        $user->applications()->with('documents')->get()->each(function ($application) {
+            $application->documents->each(function ($document) {
+                Storage::disk('local')->delete($document->file_path);
+            });
+        });
 
         Auth::logout();
 

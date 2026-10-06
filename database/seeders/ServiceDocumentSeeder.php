@@ -279,16 +279,17 @@ class ServiceDocumentSeeder extends Seeder
             */
 
             'erita-cheti-cha-kuzaliwa' => [
-                ['name' => 'Kadi ya kliniki ya mama', 'required' => true],
-                ['name' => 'Kadi ya kliniki ya mtoto', 'required' => true],
-                ['name' => 'Tangazo la kuzaliwa', 'required' => true],
-                ['name' => 'Cheti cha ubatizo cha mtoto', 'required' => false],
-                ['name' => 'Cheti cha kumaliza elimu ya msingi au sekondari', 'required' => false],
-                ['name' => 'Pasipoti', 'required' => false],
-                ['name' => 'Kadi ya mpiga kura', 'required' => false],
-                ['name' => 'Kitambulisho cha Taifa cha mzazi au mlezi', 'required' => true],
-                ['name' => 'Hati ya kusafiria ya mzazi', 'required' => false],
-                ['name' => 'Utambulisho kutoka kwa Mtendaji wa Kata', 'required' => false],
+                ['name' => 'Kadi ya Kliniki ya Mama', 'required' => false, 'description' => 'Hati ya chaguo. Mwombaji anatakiwa kuambatanisha angalau hati mbili (2) kutoka kwenye orodha hii.'],
+                ['name' => 'Kadi ya Kliniki ya Mtoto', 'required' => false, 'description' => 'Hati ya chaguo. Mwombaji anatakiwa kuambatanisha angalau hati mbili (2) kutoka kwenye orodha hii.'],
+                ['name' => 'Tangazo la Kuzaliwa', 'required' => false, 'description' => 'Hati ya chaguo. Mwombaji anatakiwa kuambatanisha angalau hati mbili (2) kutoka kwenye orodha hii.'],
+                ['name' => 'Cheti cha Ubatizo cha Mtoto', 'required' => false, 'description' => 'Hati ya chaguo. Mwombaji anatakiwa kuambatanisha angalau hati mbili (2) kutoka kwenye orodha hii.'],
+                ['name' => 'Cheti cha Kumaliza Elimu ya Msingi au Sekondari (O Level)', 'required' => false, 'description' => 'Hati ya chaguo. Mwombaji anatakiwa kuambatanisha angalau hati mbili (2) kutoka kwenye orodha hii.'],
+                ['name' => 'Pasi ya Kusafiria', 'required' => false, 'description' => 'Hati ya chaguo. Mwombaji anatakiwa kuambatanisha angalau hati mbili (2) kutoka kwenye orodha hii.'],
+                ['name' => 'Kadi ya Mpiga Kura', 'required' => false, 'description' => 'Hati ya chaguo. Mwombaji anatakiwa kuambatanisha angalau hati mbili (2) kutoka kwenye orodha hii.'],
+                ['name' => 'Kitambulisho cha Taifa cha Mzazi/Mlezi', 'required' => false, 'description' => 'Hati ya chaguo. Mwombaji anatakiwa kuambatanisha angalau hati mbili (2) kutoka kwenye orodha hii.'],
+                ['name' => 'Hati ya Kusafiria ya Mzazi', 'required' => false, 'description' => 'Hati ya chaguo. Mwombaji anatakiwa kuambatanisha angalau hati mbili (2) kutoka kwenye orodha hii.'],
+                ['name' => 'Utambulisho kutoka kwa Mtendaji wa Kata', 'required' => false, 'description' => 'Hati ya chaguo. Mwombaji anatakiwa kuambatanisha angalau hati mbili (2) kutoka kwenye orodha hii.'],
+                ['name' => 'Cheti cha Ubatizo', 'required' => false, 'description' => 'Hati ya chaguo. Mwombaji anatakiwa kuambatanisha angalau hati mbili (2) kutoka kwenye orodha ya ushahidi wa kuzaliwa.'],
                 ['name' => 'Taarifa sahihi za mtoto', 'required' => true],
                 ['name' => 'Taarifa za wazazi', 'required' => true],
                 ['name' => 'Tarehe ya kuzaliwa', 'required' => true],
@@ -304,18 +305,22 @@ class ServiceDocumentSeeder extends Seeder
             */
 
             'erita-cheti-cha-kifo' => [
-                ['name' => 'Kibali cha mazishi kutoka kituo cha tiba', 'required' => true],
-                ['name' => 'Muhtasari wa kikao cha wanandugu', 'required' => true],
-                ['name' => 'Barua ya utambulisho wa msimamizi wa mirathi', 'required' => true],
-                ['name' => 'Kadi ya mpiga kura au Kitambulisho cha Taifa cha marehemu', 'required' => true],
-                ['name' => 'Kitambulisho cha msimamizi wa mirathi', 'required' => true],
-                ['name' => 'Cheti cha ndoa', 'required' => false],
-                ['name' => 'Vyeti vya kuzaliwa vya watoto', 'required' => false],
+                ['name' => 'Kibali cha Mazishi kutoka Kituo cha Tiba', 'required' => true],
+                ['name' => 'Muhtasari wa Kikao cha Wanandugu wa Marehemu Kumteua Msimamizi wa Mirathi', 'required' => true],
+                ['name' => 'Barua ya Utambulisho wa Msimamizi wa Mirathi kutoka kwa Afisa Mtendaji wa Kata/Kijiji', 'required' => true],
+                ['name' => 'Kadi ya Mpiga Kura ya Marehemu', 'required' => false, 'description' => 'Mojawapo ya kitambulisho cha marehemu: Kadi ya Mpiga Kura AU Kitambulisho cha Taifa.'],
+                ['name' => 'Kitambulisho cha Taifa cha Marehemu', 'required' => false, 'description' => 'Mojawapo ya kitambulisho cha marehemu: Kadi ya Mpiga Kura AU Kitambulisho cha Taifa.'],
+                ['name' => 'Kitambulisho cha Msimamizi wa Mirathi - Kadi ya Mpiga Kura', 'required' => false, 'description' => 'Mojawapo tu: Kadi ya Mpiga Kura, Pasi ya Kusafiria au Kitambulisho cha Taifa.'],
+                ['name' => 'Kitambulisho cha Msimamizi wa Mirathi - Pasi ya Kusafiria', 'required' => false, 'description' => 'Mojawapo tu: Kadi ya Mpiga Kura, Pasi ya Kusafiria au Kitambulisho cha Taifa.'],
+                ['name' => 'Kitambulisho cha Msimamizi wa Mirathi - Kitambulisho cha Taifa', 'required' => false, 'description' => 'Mojawapo tu: Kadi ya Mpiga Kura, Pasi ya Kusafiria au Kitambulisho cha Taifa.'],
+                ['name' => 'Cheti cha Ndoa', 'required' => false, 'description' => 'Mojawapo ya ushahidi wa uhusiano: Cheti cha Ndoa AU Cheti/Vyeti vya Kuzaliwa vya Watoto.'],
+                ['name' => 'Cheti cha Kuzaliwa cha Mtoto', 'required' => false, 'description' => 'Mojawapo ya ushahidi wa uhusiano: Cheti cha Ndoa AU Cheti/Vyeti vya Kuzaliwa vya Watoto.'],
                 ['name' => 'Jina la marehemu', 'required' => true],
                 ['name' => 'Tarehe ya kuzaliwa', 'required' => true],
                 ['name' => 'Tarehe ya kifo', 'required' => true],
                 ['name' => 'Mahali kifo kilipotokea', 'required' => true],
                 ['name' => 'Taarifa za msimamizi wa mirathi', 'required' => true],
+                ['name' => 'Namba ya simu ya msimamizi wa mirathi', 'required' => true],
                 ['name' => 'Namba ya simu', 'required' => true],
             ],
 
@@ -472,6 +477,31 @@ class ServiceDocumentSeeder extends Seeder
             ],
         ];
 
+        $ruleMap = [
+            'erita-cheti-cha-kuzaliwa' => [
+                'Kadi ya Kliniki ya Mama' => ['type' => 'choose_minimum', 'group' => 'birth_evidence', 'minimum' => 2],
+                'Kadi ya Kliniki ya Mtoto' => ['type' => 'choose_minimum', 'group' => 'birth_evidence', 'minimum' => 2],
+                'Tangazo la Kuzaliwa' => ['type' => 'choose_minimum', 'group' => 'birth_evidence', 'minimum' => 2],
+                'Cheti cha Ubatizo cha Mtoto' => ['type' => 'choose_minimum', 'group' => 'birth_evidence', 'minimum' => 2],
+                'Cheti cha Kumaliza Elimu ya Msingi au Sekondari (O Level)' => ['type' => 'choose_minimum', 'group' => 'birth_evidence', 'minimum' => 2],
+                'Pasi ya Kusafiria' => ['type' => 'choose_minimum', 'group' => 'birth_evidence', 'minimum' => 2],
+                'Kadi ya Mpiga Kura' => ['type' => 'choose_minimum', 'group' => 'birth_evidence', 'minimum' => 2],
+                'Kitambulisho cha Taifa cha Mzazi/Mlezi' => ['type' => 'choose_minimum', 'group' => 'birth_evidence', 'minimum' => 2],
+                'Hati ya Kusafiria ya Mzazi' => ['type' => 'choose_minimum', 'group' => 'birth_evidence', 'minimum' => 2],
+                'Utambulisho kutoka kwa Mtendaji wa Kata' => ['type' => 'choose_minimum', 'group' => 'birth_evidence', 'minimum' => 2],
+                'Cheti cha Ubatizo' => ['type' => 'choose_minimum', 'group' => 'birth_evidence', 'minimum' => 2],
+            ],
+            'erita-cheti-cha-kifo' => [
+                'Kadi ya Mpiga Kura ya Marehemu' => ['type' => 'choose_one', 'group' => 'deceased_identity', 'minimum' => 1],
+                'Kitambulisho cha Taifa cha Marehemu' => ['type' => 'choose_one', 'group' => 'deceased_identity', 'minimum' => 1],
+                'Kitambulisho cha Msimamizi wa Mirathi - Kadi ya Mpiga Kura' => ['type' => 'choose_one', 'group' => 'administrator_identity', 'minimum' => 1],
+                'Kitambulisho cha Msimamizi wa Mirathi - Pasi ya Kusafiria' => ['type' => 'choose_one', 'group' => 'administrator_identity', 'minimum' => 1],
+                'Kitambulisho cha Msimamizi wa Mirathi - Kitambulisho cha Taifa' => ['type' => 'choose_one', 'group' => 'administrator_identity', 'minimum' => 1],
+                'Cheti cha Ndoa' => ['type' => 'choose_one', 'group' => 'relationship_proof', 'minimum' => 1],
+                'Cheti cha Kuzaliwa cha Mtoto' => ['type' => 'choose_one', 'group' => 'relationship_proof', 'minimum' => 1],
+            ],
+        ];
+
         foreach ($requirements as $slug => $documents) {
 
             $service = Service::where('slug', $slug)->first();
@@ -481,14 +511,22 @@ class ServiceDocumentSeeder extends Seeder
             }
 
             foreach ($documents as $index => $document) {
-                ServiceDocument::updateOrCreate(
+                $rule = $ruleMap[$slug][$document['name']] ?? null;
+
+                // Requirements are seeded as defaults only. Never overwrite an
+                // existing requirement because admins may intentionally change
+                // its active state, description, ordering or validation rules.
+                ServiceDocument::firstOrCreate(
                     [
                         'service_id' => $service->id,
                         'name' => $document['name'],
                     ],
                     [
-                        'description' => null,
+                        'description' => $document['description'] ?? null,
                         'is_required' => $document['required'],
+                        'requirement_type' => $rule['type'] ?? ($document['required'] ? 'required' : 'optional'),
+                        'requirement_group' => $rule['group'] ?? null,
+                        'minimum_required' => $rule['minimum'] ?? 1,
                         'sort_order' => $index + 1,
                         'is_active' => true,
                     ]

@@ -1,1044 +1,137 @@
 <x-app-layout>
-
-    <style>
-
-        /* =========================================
-           DASHBOARD PAGE
-        ========================================= */
-
-        .dashboard-page {
-            min-height: calc(100vh - 65px);
-            padding: 40px 0 70px;
-
-            background:
-                radial-gradient(
-                    circle at 10% 0%,
-                    rgba(37, 99, 235, 0.10),
-                    transparent 28%
-                ),
-                radial-gradient(
-                    circle at 95% 15%,
-                    rgba(16, 185, 129, 0.08),
-                    transparent 25%
-                ),
-                linear-gradient(
-                    180deg,
-                    #f8fafc 0%,
-                    #eef4f9 100%
-                );
-        }
-
-        .dashboard-wrapper {
-            max-width: 1200px;
-            margin: auto;
-        }
-
-        /* =========================================
-           WELCOME BANNER
-        ========================================= */
-
-        .welcome-banner {
-            position: relative;
-            padding: 30px;
-            margin-bottom: 28px;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #1d4ed8 0%,
-                    #2563eb 55%,
-                    #3b82f6 100%
-                );
-
-            border-radius: 22px;
-            color: white;
-            overflow: hidden;
-
-            box-shadow:
-                0 18px 40px rgba(37, 99, 235, 0.20);
-        }
-
-        .welcome-banner::before {
-            content: "";
-            position: absolute;
-
-            width: 250px;
-            height: 250px;
-
-            right: -80px;
-            top: -120px;
-
-            border-radius: 50%;
-            background: rgba(255,255,255,0.08);
-        }
-
-        .welcome-banner::after {
-            content: "";
-            position: absolute;
-
-            width: 180px;
-            height: 180px;
-
-            left: 45%;
-            bottom: -120px;
-
-            border-radius: 50%;
-            background: rgba(255,255,255,0.06);
-        }
-
-        .welcome-content {
-            position: relative;
-            z-index: 2;
-
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-
-            gap: 25px;
-        }
-
-        .welcome-text h1 {
-            margin: 0 0 8px;
-
-            font-size: 30px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-        }
-
-        .welcome-text p {
-            margin: 0;
-
-            font-size: 14px;
-            color: rgba(255,255,255,0.85);
-        }
-
-        .welcome-icon {
-            width: 70px;
-            height: 70px;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            background: rgba(255,255,255,0.15);
-
-            border: 1px solid rgba(255,255,255,0.25);
-
-            border-radius: 18px;
-
-            font-size: 32px;
-
-            backdrop-filter: blur(8px);
-
-            animation: dashboardFloat 3s ease-in-out infinite;
-        }
-
-        @keyframes dashboardFloat {
-
-            0%, 100% {
-                transform: translateY(0);
-            }
-
-            50% {
-                transform: translateY(-5px);
-            }
-
-        }
-
-        /* =========================================
-           STATISTICS
-        ========================================= */
-
-        .stats-grid {
-            display: grid;
-
-            grid-template-columns:
-                repeat(4, minmax(0, 1fr));
-
-            gap: 18px;
-
-            margin-bottom: 30px;
-        }
-
-        .stat-card {
-            position: relative;
-
-            padding: 22px;
-
-            background: white;
-
-            border: 1px solid #e5e7eb;
-
-            border-radius: 18px;
-
-            box-shadow:
-                0 8px 25px rgba(15,23,42,0.05);
-
-            transition: all 0.25s ease;
-
-            overflow: hidden;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-4px);
-
-            box-shadow:
-                0 15px 30px rgba(15,23,42,0.09);
-        }
-
-        .stat-top {
-            display: flex;
-
-            align-items: center;
-            justify-content: space-between;
-
-            margin-bottom: 18px;
-        }
-
-        .stat-icon {
-            width: 45px;
-            height: 45px;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            border-radius: 12px;
-
-            font-size: 20px;
-        }
-
-        .stat-blue {
-            background: #eff6ff;
-            color: #2563eb;
-        }
-
-        .stat-yellow {
-            background: #fffbeb;
-            color: #d97706;
-        }
-
-        .stat-purple {
-            background: #f5f3ff;
-            color: #7c3aed;
-        }
-
-        .stat-green {
-            background: #ecfdf5;
-            color: #16a34a;
-        }
-
-        .stat-label {
-            color: #64748b;
-
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        .stat-number {
-            color: #0f172a;
-
-            font-size: 28px;
-            font-weight: 850;
-        }
-
-        /* =========================================
-           SECTION
-        ========================================= */
-
-        .dashboard-section {
-            margin-bottom: 30px;
-        }
-
-        .section-header {
-            display: flex;
-
-            align-items: center;
-            justify-content: space-between;
-
-            gap: 15px;
-
-            margin-bottom: 18px;
-        }
-
-        .section-header h2 {
-            margin: 0;
-
-            color: #111827;
-
-            font-size: 20px;
-            font-weight: 800;
-        }
-
-        .section-header p {
-            margin: 4px 0 0;
-
-            color: #94a3b8;
-
-            font-size: 13px;
-        }
-
-        .section-link {
-            color: #2563eb;
-
-            font-size: 13px;
-            font-weight: 700;
-
-            text-decoration: none;
-        }
-
-        .section-link:hover {
-            color: #1d4ed8;
-        }
-
-        /* =========================================
-           SERVICES
-        ========================================= */
-
-        .services-grid {
-            display: grid;
-
-            grid-template-columns:
-                repeat(3, minmax(0, 1fr));
-
-            gap: 18px;
-        }
-
-        .service-card {
-            padding: 22px;
-
-            background: white;
-
-            border: 1px solid #e5e7eb;
-
-            border-radius: 17px;
-
-            box-shadow:
-                0 7px 20px rgba(15,23,42,0.04);
-
-            transition: all 0.25s ease;
-        }
-
-        .service-card:hover {
-            transform: translateY(-3px);
-
-            border-color: #bfdbfe;
-
-            box-shadow:
-                0 12px 25px rgba(37,99,235,0.09);
-        }
-
-        .service-card-icon {
-            width: 45px;
-            height: 45px;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            background: #eff6ff;
-
-            color: #2563eb;
-
-            border-radius: 12px;
-
-            font-size: 20px;
-
-            margin-bottom: 15px;
-        }
-
-        .service-card h3 {
-            margin: 0 0 8px;
-
-            color: #111827;
-
-            font-size: 15px;
-            font-weight: 800;
-        }
-
-        .service-card p {
-            margin: 0 0 17px;
-
-            color: #64748b;
-
-            font-size: 13px;
-
-            line-height: 1.6;
-        }
-
-        .service-button {
-            display: inline-flex;
-
-            align-items: center;
-            justify-content: center;
-
-            padding: 9px 15px;
-
-            background: #2563eb;
-
-            color: white !important;
-
-            border-radius: 8px;
-
-            font-size: 12px;
-            font-weight: 700;
-
-            text-decoration: none;
-
-            transition: all 0.2s ease;
-        }
-
-        .service-button:hover {
-            background: #1d4ed8;
-
-            transform: translateY(-1px);
-        }
-
-        /* =========================================
-           RECENT APPLICATIONS
-        ========================================= */
-
-        .applications-card {
-            background: white;
-
-            border: 1px solid #e5e7eb;
-
-            border-radius: 18px;
-
-            overflow: hidden;
-
-            box-shadow:
-                0 8px 25px rgba(15,23,42,0.05);
-        }
-
-        .application-row {
-            display: flex;
-
-            align-items: center;
-            justify-content: space-between;
-
-            gap: 20px;
-
-            padding: 18px 22px;
-
-            border-bottom: 1px solid #f1f5f9;
-        }
-
-        .application-row:last-child {
-            border-bottom: none;
-        }
-
-        .application-main {
-            display: flex;
-
-            align-items: center;
-
-            gap: 14px;
-
-            min-width: 0;
-        }
-
-        .application-icon {
-            width: 42px;
-            height: 42px;
-
-            min-width: 42px;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            background: #eff6ff;
-
-            color: #2563eb;
-
-            border-radius: 11px;
-
-            font-size: 18px;
-        }
-
-        .application-name {
-            color: #111827;
-
-            font-size: 14px;
-            font-weight: 750;
-        }
-
-        .application-date {
-            margin-top: 3px;
-
-            color: #94a3b8;
-
-            font-size: 11px;
-        }
-
-        .application-right {
-            display: flex;
-
-            align-items: center;
-
-            gap: 12px;
-
-            flex-shrink: 0;
-        }
-
-        .status {
-            padding: 6px 10px;
-
-            border-radius: 999px;
-
-            font-size: 11px;
-
-            font-weight: 800;
-        }
-
-        .status-pending {
-            background: #fffbeb;
-            color: #92400e;
-        }
-
-        .status-processing {
-            background: #eff6ff;
-            color: #1d4ed8;
-        }
-
-        .status-completed {
-            background: #ecfdf5;
-            color: #166534;
-        }
-
-        .status-rejected {
-            background: #fef2f2;
-            color: #991b1b;
-        }
-
-        .details-button {
-            color: #2563eb;
-
-            font-size: 12px;
-
-            font-weight: 700;
-
-            text-decoration: none;
-        }
-
-        .details-button:hover {
-            color: #1d4ed8;
-        }
-
-        /* =========================================
-           EMPTY STATE
-        ========================================= */
-
-        .empty-state {
-            padding: 45px 20px;
-
-            text-align: center;
-
-            color: #94a3b8;
-        }
-
-        .empty-icon {
-            font-size: 35px;
-
-            margin-bottom: 10px;
-        }
-
-        .empty-state h3 {
-            margin: 0 0 5px;
-
-            color: #475569;
-
-            font-size: 15px;
-
-            font-weight: 750;
-        }
-
-        .empty-state p {
-            margin: 0;
-
-            font-size: 13px;
-        }
-
-        /* =========================================
-           MOBILE
-        ========================================= */
-
-        @media (max-width: 900px) {
-
-            .stats-grid {
-                grid-template-columns:
-                    repeat(2, minmax(0, 1fr));
-            }
-
-            .services-grid {
-                grid-template-columns:
-                    repeat(2, minmax(0, 1fr));
-            }
-
-        }
-
-        @media (max-width: 640px) {
-
-            .dashboard-page {
-                padding: 25px 0 50px;
-            }
-
-            .welcome-banner {
-                padding: 23px;
-
-                border-radius: 18px;
-            }
-
-            .welcome-content {
-                align-items: flex-start;
-            }
-
-            .welcome-text h1 {
-                font-size: 23px;
-            }
-
-            .welcome-text p {
-                font-size: 12px;
-            }
-
-            .welcome-icon {
-                width: 55px;
-                height: 55px;
-
-                min-width: 55px;
-
-                font-size: 25px;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-
-                gap: 12px;
-            }
-
-            .services-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .application-row {
-                align-items: flex-start;
-
-                flex-direction: column;
-
-                gap: 12px;
-            }
-
-            .application-right {
-                width: 100%;
-
-                justify-content: space-between;
-            }
-
-            .section-header {
-                align-items: flex-start;
-            }
-
-        }
-
-    </style>
-
-
-    <!-- HEADER -->
-
     <x-slot name="header">
-
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-
-            {{ __('Customer Dashboard') }}
-
-        </h2>
-
+        <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+                <p class="text-xs font-black uppercase tracking-[0.18em] text-blue-700">{{ __('Customer Portal') }}</p>
+                <h2 class="text-2xl font-black tracking-tight text-slate-900">{{ __('Your Dashboard') }}</h2>
+            </div>
+            <a href="{{ route('services.index') }}" class="portal-button">{{ __('+ Start an Application') }}</a>
+        </div>
     </x-slot>
 
+    <div class="dashboard-page page-enter">
+        <div class="dashboard-container">
 
-    <!-- DASHBOARD -->
-
-    <div class="dashboard-page">
-
-        <div class="dashboard-wrapper px-4 sm:px-6 lg:px-8">
-
-
-            <!-- WELCOME -->
-
-            <div class="welcome-banner">
-
-                <div class="welcome-content">
-
-                    <div class="welcome-text">
-
-                        <h1>
-                            Welcome, {{ Auth::user()->name }} 👋
-                        </h1>
-
-                        <p>
-                            Manage your online service applications
-                            and track their progress from one place.
-                        </p>
-
-                    </div>
-
-
-                    <div class="welcome-icon">
-                        🖥️
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- STATISTICS -->
-
-            <div class="stats-grid">
-
-
-                <!-- TOTAL -->
-
-                <div class="stat-card">
-
-                    <div class="stat-top">
-
-                        <div class="stat-icon stat-blue">
-                            📋
+            <section class="dashboard-hero">
+                <div class="absolute -right-20 -top-24 h-72 w-72 rounded-full bg-blue-600/30 blur-3xl"></div>
+                <div class="absolute -bottom-28 left-1/3 h-64 w-64 rounded-full bg-cyan-500/10 blur-3xl"></div>
+                <div class="dashboard-hero-content">
+                    <div class="max-w-2xl">
+                        <span class="inline-flex rounded-full border border-blue-400/30 bg-blue-400/10 px-3 py-1.5 text-xs font-black uppercase tracking-wider text-blue-200">{{ __('Online Services') }}</span>
+                        <h1 class="dashboard-hero-title">{{ __('Welcome,') }} {{ Auth::user()->name }} 👋</h1>
+                        <p class="dashboard-hero-text">{{ __('Manage your applications, upload documents, and follow every step from one simple portal.') }}</p>
+                        <div class="mt-6 flex flex-col gap-3 sm:flex-row">
+                            <a href="{{ route('services.index') }}" class="dashboard-hero-action">{{ __('Explore Services →') }}</a>
+                            <a href="{{ route('customer.applications.index') }}" class="dashboard-hero-action-secondary">{{ __('Track Applications') }}</a>
                         </div>
-
                     </div>
-
-                    <div class="stat-label">
-                        Total Applications
+                    <div class="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-2">
+                        <div class="dashboard-stat"><div class="dashboard-stat-value">{{ $totalApplications }}</div><div class="dashboard-stat-label">{{ __('Applications') }}</div></div>
+                        <div class="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur"><div class="text-2xl font-black">{{ $pendingApplications }}</div><div class="mt-1 text-xs text-slate-400">{{ __('Pending') }}</div></div>
+                        <div class="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur"><div class="text-2xl font-black">{{ $processingApplications }}</div><div class="mt-1 text-xs text-slate-400">{{ __('Processing') }}</div></div>
+                        <div class="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur"><div class="text-2xl font-black">{{ $completedApplications }}</div><div class="mt-1 text-xs text-slate-400">{{ __('Completed') }}</div></div>
                     </div>
-
-                    <div class="stat-number">
-                        {{ $totalApplications }}
-                    </div>
-
                 </div>
+            </section>
 
-
-                <!-- PENDING -->
-
-                <div class="stat-card">
-
-                    <div class="stat-top">
-
-                        <div class="stat-icon stat-yellow">
-                            ⏳
-                        </div>
-
-                    </div>
-
-                    <div class="stat-label">
-                        Pending
-                    </div>
-
-                    <div class="stat-number">
-                        {{ $pendingApplications }}
-                    </div>
-
+            <section>
+                <div class="mb-4 flex items-end justify-between gap-4">
+                    <div><p class="dashboard-kicker">{{ __('Quick Start') }}</p><h3 class="dashboard-section-title">{{ __('Popular services') }}</h3></div>
+                    <a href="{{ route('services.index') }}" class="dashboard-link">{{ __('View all →') }}</a>
                 </div>
-
-
-                <!-- PROCESSING -->
-
-                <div class="stat-card">
-
-                    <div class="stat-top">
-
-                        <div class="stat-icon stat-purple">
-                            ⚙️
-                        </div>
-
-                    </div>
-
-                    <div class="stat-label">
-                        Processing
-                    </div>
-
-                    <div class="stat-number">
-                        {{ $processingApplications }}
-                    </div>
-
-                </div>
-
-
-                <!-- COMPLETED -->
-
-                <div class="stat-card">
-
-                    <div class="stat-top">
-
-                        <div class="stat-icon stat-green">
-                            ✓
-                        </div>
-
-                    </div>
-
-                    <div class="stat-label">
-                        Completed
-                    </div>
-
-                    <div class="stat-number">
-                        {{ $completedApplications }}
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- AVAILABLE SERVICES -->
-
-            <div class="dashboard-section">
-
-
-                <div class="section-header">
-
-                    <div>
-
-                        <h2>
-                            Available Services
-                        </h2>
-
-                        <p>
-                            Choose a service and submit your application.
-                        </p>
-
-                    </div>
-
-
-                    <a
-                        href="{{ route('services.index') }}"
-                        class="section-link"
-                    >
-                        View All →
-                    </a>
-
-                </div>
-
-
-                <div class="services-grid">
-
-
+                <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                     @forelse($services as $service)
-
-
-                        <div class="service-card">
-
-
-                            <div class="service-card-icon">
-                                📄
+                        <article class="dashboard-service-card group">
+                            <div class="flex items-center justify-between">
+                                <span class="dashboard-icon">📄</span>
+                                <span class="text-xs font-bold text-slate-400">{{ $service->documents->where('is_active', true)->count() }} {{ __('requirements') }}</span>
                             </div>
-
-
-                            <h3>
-                                {{ $service->name }}
-                            </h3>
-
-
-                            <p>
-                                {{ \Illuminate\Support\Str::limit($service->description, 90) }}
-                            </p>
-
-
-                            <a
-                                href="{{ route('applications.create', $service) }}"
-                                class="service-button"
-                            >
-                                Apply Now →
-                            </a>
-
-
-                        </div>
-
-
+                            <h4 class="mt-4 font-black text-slate-900">{{ $service->name }}</h4>
+                            <p class="mt-2 line-clamp-2 text-sm leading-6 text-slate-500">{{ $service->description }}</p>
+                            <a href="{{ route('applications.create', $service) }}" class="mt-4 inline-flex text-sm font-black text-blue-700 group-hover:text-blue-900">{{ __('View requirements →') }}</a>
+                        </article>
                     @empty
-
-
-                        <div class="empty-state">
-
-                            <div class="empty-icon">
-                                📭
-                            </div>
-
-                            <h3>
-                                No services available
-                            </h3>
-
-                            <p>
-                                Please check again later.
-                            </p>
-
-                        </div>
-
-
+                        <div class="portal-card col-span-full p-10 text-center text-slate-500">{{ __('No services are currently available.') }}</div>
                     @endforelse
-
-
                 </div>
+            </section>
 
-            </div>
-
-
-            <!-- RECENT APPLICATIONS -->
-
-            <div class="dashboard-section">
-
-
-                <div class="section-header">
-
-                    <div>
-
-                        <h2>
-                            Recent Applications
-                        </h2>
-
-                        <p>
-                            View the latest applications you have submitted.
-                        </p>
-
-                    </div>
-
-
-                    <a
-                        href="{{ route('customer.applications.index') }}"
-                        class="section-link"
-                    >
-                        View All →
-                    </a>
-
+            <section class="dashboard-recent">
+                <div class="dashboard-recent-header">
+                    <div><h3 class="font-black text-slate-900">{{ __('Recent Applications') }}</h3><p class="text-sm text-slate-500">{{ __('Your latest service requests.') }}</p></div>
+                    <a href="{{ route('customer.applications.index') }}" class="text-sm font-black text-blue-700">{{ __('View all →') }}</a>
                 </div>
-
-
-                <div class="applications-card">
-
-
+                <div class="divide-y divide-slate-100">
                     @forelse($recentApplications as $application)
-
-
-                        <div class="application-row">
-
-
-                            <div class="application-main">
-
-
-                                <div class="application-icon">
-                                    📄
-                                </div>
-
-
-                                <div>
-
-                                    <div class="application-name">
-
-                                        {{ $application->service->name }}
-
-                                    </div>
-
-
-                                    <div class="application-date">
-
-                                        Application #{{ $application->id }}
-
-                                        •
-
-                                        {{ $application->created_at->format('d M Y, H:i') }}
-
-                                    </div>
-
-                                </div>
-
+                        @php
+                            $badge = match($application->status) {
+                                'pending' => 'bg-amber-50 text-amber-700',
+                                'processing' => 'bg-blue-50 text-blue-700',
+                                'completed' => 'bg-emerald-50 text-emerald-700',
+                                'rejected' => 'bg-red-50 text-red-700',
+                                default => 'bg-slate-100 text-slate-700',
+                            };
+                        @endphp
+                        <div class="dashboard-recent-row">
+                            <div class="flex min-w-0 items-center gap-3">
+                                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100">📋</span>
+                                <div class="min-w-0"><p class="truncate font-bold">{{ $application->service->name }}</p><p class="text-xs text-slate-400">{{ __('Application') }} #{{ $application->id }} · {{ $application->created_at->format('d M Y, H:i') }}</p></div>
                             </div>
-
-
-                            <div class="application-right">
-
-
-                                @if($application->status === 'pending')
-
-                                    <span class="status status-pending">
-                                        Pending
-                                    </span>
-
-
-                                @elseif($application->status === 'processing')
-
-                                    <span class="status status-processing">
-                                        Processing
-                                    </span>
-
-
-                                @elseif($application->status === 'completed')
-
-                                    <span class="status status-completed">
-                                        Completed
-                                    </span>
-
-
-                                @elseif($application->status === 'rejected')
-
-                                    <span class="status status-rejected">
-                                        Rejected
-                                    </span>
-
-
-                                @else
-
-                                    <span class="status">
-                                        {{ ucfirst($application->status) }}
-                                    </span>
-
-                                @endif
-
-
-                                <a
-                                    href="{{ route('customer.applications.show', $application) }}"
-                                    class="details-button"
-                                >
-                                    Details →
-                                </a>
-
-
+                            <div class="flex items-center justify-between gap-4 sm:justify-end">
+                                <span class="status-pill {{ $badge }}">{{ __($application->status) }}</span>
+                                <a href="{{ route('customer.applications.show', $application) }}" class="text-sm font-black text-blue-700">{{ __('Details →') }}</a>
                             </div>
-
                         </div>
-
-
                     @empty
-
-
-                        <div class="empty-state">
-
-                            <div class="empty-icon">
-                                📋
-                            </div>
-
-                            <h3>
-                                No applications yet
-                            </h3>
-
-                            <p>
-                                Start by selecting one of our available services.
-                            </p>
-
-                        </div>
-
-
+                        <div class="p-12 text-center"><div class="text-4xl">📋</div><h4 class="mt-3 font-black">{{ __('No active applications') }}</h4><p class="mt-1 text-sm text-slate-500">{{ __('Rejected applications are removed from this list. Choose a service above to start a new application from the beginning.') }}</p></div>
                     @endforelse
+                </div>
+            </section>
 
-
+            <section class="mt-2 overflow-hidden rounded-[28px] border border-blue-200 bg-gradient-to-br from-slate-950 via-blue-950 to-indigo-900 p-5 shadow-xl sm:p-7">
+                <div class="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+                    <div>
+                        <span class="inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1.5 text-xs font-black uppercase tracking-wider text-cyan-200">☎ {{ __('Help Desk') }}</span>
+                        <h3 class="mt-3 text-2xl font-black text-white">{{ __('Need help? Contact our admin') }}</h3>
+                        <p class="mt-1 max-w-2xl text-sm leading-6 text-slate-300">{{ __('If you face any problem with your application, documents, payment or service, call one of the support numbers below.') }}</p>
+                    </div>
+                    <div class="text-xs font-bold text-slate-400">{{ $helpDeskContacts->count() }} {{ __('active contact(s)') }}</div>
                 </div>
 
-            </div>
+                <div class="mt-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                    @forelse($helpDeskContacts as $contact)
+                        <a href="tel:{{ preg_replace('/[^0-9+]/', '', $contact->phone) }}" class="group rounded-2xl border border-white/10 bg-white/[0.07] p-4 backdrop-blur transition hover:-translate-y-1 hover:border-cyan-300/40 hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-cyan-300">
+                            <div class="flex items-center gap-3">
+                                <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white text-xl shadow-lg">📞</span>
+                                <div class="min-w-0">
+                                    <div class="flex items-center gap-2">
+                                        <h4 class="truncate font-black text-white">{{ $contact->network }}</h4>
+                                        <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
+                                    </div>
+                                    <p class="mt-1 truncate text-sm font-bold text-cyan-200">{{ $contact->phone }}</p>
+                                    @if($contact->label)<p class="mt-1 truncate text-xs text-slate-400">{{ $contact->label }}</p>@endif
+                                </div>
+                            </div>
+                            <div class="mt-4 flex items-center justify-between border-t border-white/10 pt-3 text-xs font-black">
+                                <span class="text-slate-400">{{ __('Tap to call') }}</span>
+                                <span class="text-cyan-300 transition group-hover:translate-x-1">Call →</span>
+                            </div>
+                        </a>
+                    @empty
+                        <div class="sm:col-span-2 lg:col-span-3 rounded-2xl border border-white/10 bg-white/[0.05] p-6 text-center">
+                            <div class="text-3xl">☎️</div>
+                            <p class="mt-2 font-black text-white">{{ __('Help desk contacts are being prepared.') }}</p>
+                            <p class="mt-1 text-sm text-slate-400">{{ __('Please check again later or use another available support channel.') }}</p>
+                        </div>
+                    @endforelse
+                </div>
+            </section>
 
-
+            <section class="grid gap-4 sm:grid-cols-3">
+                <div class="dashboard-help-card p-5"><span class="text-2xl">🔎</span><h4 class="mt-3 font-black">{{ __('Clear requirements') }}</h4><p class="mt-1 text-sm leading-6 text-slate-500">{{ __('Know what documents you need before applying.') }}</p></div>
+                <div class="portal-card p-5"><span class="text-2xl">🔐</span><h4 class="mt-3 font-black">{{ __('Secure account') }}</h4><p class="mt-1 text-sm leading-6 text-slate-500">{{ __('Your applications stay connected to your account.') }}</p></div>
+                <div class="portal-card p-5"><span class="text-2xl">📈</span><h4 class="mt-3 font-black">{{ __('Track progress') }}</h4><p class="mt-1 text-sm leading-6 text-slate-500">{{ __('Follow pending, processing, completed, or rejected requests.') }}</p></div>
+            </section>
         </div>
-
     </div>
-
 </x-app-layout>

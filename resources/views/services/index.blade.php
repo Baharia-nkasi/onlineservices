@@ -1,158 +1,66 @@
 <x-app-layout>
-
-    <style>
-        .btn-apply {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: #2563eb;
-            color: #ffffff !important;
-            font-size: 15px;
-            font-weight: 700;
-            text-decoration: none;
-            padding: 11px 22px;
-            border-radius: 8px;
-            border: 2px solid #2563eb;
-            box-shadow: 0 3px 8px rgba(37, 99, 235, 0.25);
-            transition: all 0.2s ease;
-        }
-
-        .btn-apply:hover {
-            background: #1d4ed8;
-            border-color: #1d4ed8;
-            color: #ffffff !important;
-            transform: translateY(-1px);
-            box-shadow: 0 5px 12px rgba(37, 99, 235, 0.35);
-        }
-
-        .btn-apply:focus {
-            outline: 3px solid rgba(37, 99, 235, 0.30);
-            outline-offset: 2px;
-        }
-    </style>
-
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Available Services') }}
-        </h2>
-    </x-slot>
-
-    <div class="py-12">
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-
-@if(session('success'))
-    <style>
-        .success-alert {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            background: #ecfdf5;
-            border: 1px solid #86efac;
-            border-left: 5px solid #16a34a;
-            color: #166534;
-            padding: 16px 20px;
-            margin-bottom: 24px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(22, 163, 74, 0.12);
-        }
-
-        .success-icon {
-            width: 34px;
-            height: 34px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #16a34a;
-            color: #ffffff;
-            border-radius: 50%;
-            font-size: 20px;
-            font-weight: bold;
-            flex-shrink: 0;
-        }
-
-        .success-content {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .success-title {
-            font-size: 15px;
-            font-weight: 700;
-            color: #15803d;
-        }
-
-        .success-message {
-            font-size: 14px;
-            color: #166534;
-        }
-    </style>
-
-    <div class="success-alert">
-        <div class="success-icon">
-            ✓
+<x-slot name="header">
+    <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+            <p class="text-xs font-extrabold uppercase tracking-wider text-blue-700">{{ __('Service catalogue') }}</p>
+            <h2 class="text-2xl font-black tracking-tight text-slate-900">{{ __('Find a service') }}</h2>
         </div>
+        <span class="text-sm text-slate-500">{{ $services->count() }} {{ __('available services') }}</span>
+    </div>
+</x-slot>
 
-        <div class="success-content">
-            <div class="success-title">
-                Application Submitted Successfully
-            </div>
-
-            <div class="success-message">
+<div class="min-h-screen bg-slate-50 page-enter" x-data="serviceSearch()">
+    <div class="mx-auto w-full max-w-7xl px-3 py-6 sm:px-6 sm:py-8 lg:px-8">
+        @if(session('success'))
+            <div class="mb-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm font-semibold text-emerald-800 fade-up">
                 {{ session('success') }}
             </div>
-        </div>
-    </div>
-@endif
-
-        @if($services->count() > 0)
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-                @foreach($services as $service)
-
-                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-
-                        <h3 class="text-lg font-bold text-gray-900">
-                            {{ $service->name }}
-                        </h3>
-
-                        <p class="mt-3 text-sm text-gray-600">
-                            {{ $service->description }}
-                        </p>
-
-                        <div class="mt-4">
-                            <span class="font-semibold">
-                                Service Fee:
-                            </span>
-
-                            TSh {{ number_format($service->service_fee, 2) }}
-                        </div>
-
-                        <div class="mt-4">
-                            <a href="{{ route('applications.create', $service) }}"
-                               class="btn-apply">
-                                Apply Now
-                            </a>
-                        </div>
-
-                    </div>
-
-                @endforeach
-
-            </div>
-
-        @else
-
-            <div class="bg-white p-6 shadow-sm sm:rounded-lg">
-                <p class="text-gray-600">
-                    No services are currently available.
-                </p>
-            </div>
-
         @endif
 
+        <div class="relative overflow-hidden rounded-[12px] bg-slate-950 p-5 text-white shadow-[0_12px_35px_rgba(15,23,42,0.12)] sm:p-8 lg:p-10">
+            <div class="pointer-events-none absolute -right-16 -top-20 h-64 w-64 rounded-full bg-blue-600/20 blur-3xl"></div>
+            <div class="relative">
+                <p class="text-sm font-extrabold uppercase tracking-wider text-blue-300">Online Services</p>
+                <h1 class="mt-2 text-2xl font-black tracking-tight sm:text-4xl">{{ __('What service do you need?') }}</h1>
+                <p class="mt-3 max-w-2xl leading-7 text-slate-300">{{ __('Choose a service below. Review its requirements and fees before starting your application.') }}</p>
+
+                <div class="mt-6 flex max-w-xl items-center gap-3 rounded-[12px] bg-white px-4 py-3 text-slate-400 shadow-[0_8px_24px_rgba(15,23,42,0.12)]">
+                    <span class="text-lg">⌕</span>
+                    <input x-model="query" @input="filter()" type="search" autocomplete="off"
+                        placeholder="{{ __('Search services...') }}"
+                        class="w-full border-0 p-0 text-sm text-slate-900 outline-none focus:ring-0">
+                    <button type="button" x-show="query" x-cloak @click="query=''; filter()"
+                        class="rounded-lg px-2 py-1 text-xs font-bold text-slate-500 hover:bg-slate-100">{{ __('Clear') }}</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="service-grid" class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            @forelse($services as $service)
+                <article class="service-card portal-card flex flex-col p-5"
+                    data-name="{{ strtolower($service->name) }}">
+                    <div class="flex items-center justify-between">
+                        <span class="service-icon flex h-11 w-11 items-center justify-center rounded-[12px] bg-blue-50 text-xl transition-transform duration-200">📋</span>
+                        <span class="status-pill bg-emerald-50 text-emerald-700">{{ __('Available') }}</span>
+                    </div>
+                    <h3 class="mt-5 text-lg font-extrabold text-slate-900">{{ $service->name }}</h3>
+                    <p class="mt-2 flex-1 text-sm leading-6 text-slate-500">{{ $service->description }}</p>
+                    <div class="mt-5 grid grid-cols-2 gap-3 border-t border-slate-100 pt-4 text-sm">
+                        <div><span class="block text-xs text-slate-400">{{ __('Requirements') }}</span><strong>{{ $service->documents->where('is_active',true)->count() }}</strong></div>
+                        <div><span class="block text-xs text-slate-400">{{ __('Service fee') }}</span><strong>TSh {{ number_format($service->service_fee,0) }}</strong></div>
+                    </div>
+                    <a href="{{ route('applications.create',$service) }}" class="portal-button mt-5 w-full">{{ __('View requirements & Apply →') }}</a>
+                </article>
+            @empty
+                <div class="col-span-full rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center text-slate-500">No services are currently available.</div>
+            @endforelse
+
+            <div data-search-empty class="hidden col-span-full rounded-2xl border border-dashed border-slate-300 bg-white p-12 text-center">
+                <div class="text-3xl">🔎</div>
+                <h3 class="mt-3 font-black text-slate-900">{{ __('No service found') }}</h3>
+                <p class="mt-1 text-sm text-slate-500">{{ __('Try another search term.') }}</p>
+            </div>
+        </div>
     </div>
 </div>
-
 </x-app-layout>
