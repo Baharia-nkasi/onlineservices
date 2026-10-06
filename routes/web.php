@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminCustomerController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\ApplicationDocumentController;
 use App\Http\Controllers\CustomerApplicationController;
@@ -81,6 +82,8 @@ Route::middleware('locale')->group(function () {
 
         Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
             Route::get('/', [AdminController::class, 'index'])->name('dashboard');
+            Route::get('/customers', [AdminCustomerController::class, 'index'])->name('customers.index');
+            Route::delete('/customers/{user}', [AdminCustomerController::class, 'destroy'])->middleware('throttle:10,1')->name('customers.destroy');
             Route::get('/applications/{application}', [AdminController::class, 'showApplication'])->name('applications.show');
             Route::patch('/applications/{application}/status', [AdminController::class, 'updateApplicationStatus'])
                 ->middleware('throttle:30,1')->name('applications.status');
