@@ -144,7 +144,10 @@ class AdminController extends Controller
             // Document review must finish before the first approval because
             // approval immediately purges uploaded documents. A later remark-only
             // approval update does not need the documents to still exist.
-            if (($next === 'approved' && $current !== 'approved') || $next === 'completed') {
+            if (
+                ($next === 'approved' && $current !== 'approved')
+                || ($next === 'completed' && $current !== 'approved')
+            ) {
                 $lockedApplication->load(['service.documents', 'documents']);
 
                 $requirements = $lockedApplication->effectiveServiceRequirements();
