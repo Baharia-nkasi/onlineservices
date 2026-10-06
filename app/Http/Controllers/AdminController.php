@@ -118,8 +118,9 @@ class AdminController extends Controller
         $next = $validated['status'];
         $approvalRemark = trim((string) ($validated['approval_remark'] ?? ''));
         $notificationData = null;
+        $purgedDocumentPaths = [];
 
-        $error = DB::transaction(function () use ($application, $next, $approvalRemark, &$notificationData) {
+        $error = DB::transaction(function () use ($application, $next, $approvalRemark, &$notificationData, &$purgedDocumentPaths) {
             // Serialize admin status changes so two admins cannot complete/reject
             // the same application against stale document/status data.
             $lockedApplication = Application::query()->lockForUpdate()->findOrFail($application->id);
@@ -188,6 +189,21 @@ class AdminController extends Controller
                 'approval_remark' => $nextRemark,
             ]);
 
+            // Approval is the end of the document-review phase. Once the admin
+            // approves the application, remove every uploaded file immediately
+            // from the application so neither side can keep accessing old uploads.
+            if ($next === 'approved' && $current !== 'approved') {
+                $documents = $lockedApplication->documents()->lockForUpdate()->get();
+
+                foreach ($documents as $uploadedDocument) {
+                    if ($uploadedDocument->file_path && ! str_starts_with($uploadedDocument->file_path, 'database://')) {
+                        $purgedDocumentPaths[] = $uploadedDocument->file_path;
+                    }
+
+                    $uploadedDocument->delete();
+                }
+            }
+
             $notificationData = [
                 'previous_status' => $previousStatus,
                 'status' => $next,
@@ -200,6 +216,12 @@ class AdminController extends Controller
 
         if ($error) {
             return back()->withErrors(['status' => $error]);
+        }
+
+        // Database deletion is already committed. Remove any legacy local files
+        // outside the database as the final cleanup step.
+        foreach (array_unique($purgedDocumentPaths) as $path) {
+            Storage::disk('local')->delete($path);
         }
 
         if (
@@ -239,8 +261,8 @@ class AdminController extends Controller
             $application = Application::query()->lockForUpdate()->findOrFail($document->application_id);
             $lockedDocument = $application->documents()->lockForUpdate()->findOrFail($document->id);
 
-            if (in_array($application->status, ['completed', 'rejected'], true)) {
-                return __('Documents for a completed or rejected application are locked and cannot be deleted.');
+            if (in_array($application->status, ['approved', 'completed', 'rejected'], true)) {
+                return __('Documents for an approved, completed or rejected application are locked and cannot be deleted.');
             }
 
             $oldPath = $lockedDocument->file_path;
@@ -273,8 +295,8 @@ class AdminController extends Controller
             $application = Application::query()->lockForUpdate()->findOrFail($document->application_id);
             $lockedDocument = $application->documents()->lockForUpdate()->findOrFail($document->id);
 
-            if (in_array($application->status, ['completed', 'rejected'], true)) {
-                return __('Documents for a completed or rejected application are locked and cannot be changed.');
+            if (in_array($application->status, ['approved', 'completed', 'rejected'], true)) {
+                return __('Documents for an approved, completed or rejected application are locked and cannot be changed.');
             }
 
             if ($validated['status'] === 'approved' && ! $lockedDocument->hasAvailableFile()) {
