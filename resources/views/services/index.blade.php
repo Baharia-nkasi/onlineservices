@@ -1,4 +1,5 @@
 <x-app-layout>
+    @php use App\Support\ServiceImage; @endphp
 <x-slot name="header">
     <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
@@ -41,17 +42,15 @@
                     data-name="{{ strtolower($service->name) }}">
                     <a href="{{ route('applications.create',$service) }}" class="group block">
                         <div class="service-card-image-wrap">
-                            @if($service->image_url)
-                                <img
-                                    src="{{ $service->image_url }}"
-                                    alt="{{ $service->name }}"
-                                    class="service-card-image"
-                                    loading="lazy"
-                                    referrerpolicy="no-referrer"
-                                    onerror="this.classList.add('is-broken'); this.nextElementSibling.classList.remove('hidden');"
-                                >
-                            @endif
-                            <div class="service-card-image-fallback {{ $service->image_url ? 'hidden' : '' }}" aria-hidden="true">📋</div>
+                            <img
+                                src="{{ $service->image_url ?: ServiceImage::fallbackDataUri($service) }}"
+                                data-service-fallback="{{ ServiceImage::fallbackDataUri($service) }}"
+                                alt="{{ $service->name }}"
+                                class="service-card-image"
+                                loading="lazy"
+                                referrerpolicy="no-referrer"
+                                onerror="this.onerror=null;this.src=this.dataset.serviceFallback;"
+                            >
                             <span class="service-card-availability">{{ __('Available') }}</span>
                         </div>
                         <div class="flex flex-col p-5">
