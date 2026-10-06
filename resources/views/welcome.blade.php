@@ -118,7 +118,7 @@
         @forelse($services as $service)
             <article class="group overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
                 <div class="relative h-40 overflow-hidden">
-                    <img src="{{ $serviceImage($service->slug, 900) }}" alt="{{ $service->name }}" class="h-full w-full object-cover transition duration-500 group-hover:scale-105" loading="lazy">
+                    <img src="{{ $service->image_url ?: \App\Support\ServiceImage::fallbackDataUri($service) }}" data-service-fallback="{{ \App\Support\ServiceImage::fallbackDataUri($service) }}" alt="{{ $service->name }}" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src=this.dataset.serviceFallback;" class="h-full w-full object-cover transition duration-500 group-hover:scale-105" loading="lazy">
                     <div class="absolute inset-0 bg-gradient-to-t from-slate-950/60 to-transparent"></div>
                 </div>
                 <div class="p-5">
