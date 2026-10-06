@@ -37,8 +37,10 @@
                             'rejected' => 'bg-red-100 text-red-800',
                             default => 'bg-slate-100 text-slate-700',
                         };
-                        $uploadedCount = $application->documents->count();
-                        $approvedCount = $application->documents->where('status', 'approved')->count();
+                        // Approved applications no longer retain uploaded documents.
+                        $showUploadedCounts = $application->status !== 'approved';
+                        $uploadedCount = $showUploadedCounts ? $application->documents->count() : 0;
+                        $approvedCount = $showUploadedCounts ? $application->documents->where('status', 'approved')->count() : 0;
                     @endphp
 
                     <article class="portal-card overflow-hidden transition hover:-translate-y-0.5 hover:shadow-md">
@@ -54,13 +56,19 @@
                                 </div>
 
                                 <div class="flex flex-wrap items-center gap-3">
-                                    <div class="rounded-xl bg-slate-50 px-4 py-3 text-sm">
-                                        <span class="font-black text-slate-900">{{ $uploadedCount }}</span>
-                                        <span class="text-slate-500"> {{ __('uploaded') }}</span>
-                                        @if($approvedCount)
-                                            <span class="ml-2 font-black text-emerald-700">{{ $approvedCount }} {{ __('approved') }}</span>
-                                        @endif
-                                    </div>
+                                    @if($showUploadedCounts)
+                                        <div class="rounded-xl bg-slate-50 px-4 py-3 text-sm">
+                                            <span class="font-black text-slate-900">{{ $uploadedCount }}</span>
+                                            <span class="text-slate-500"> {{ __('uploaded') }}</span>
+                                            @if($approvedCount)
+                                                <span class="ml-2 font-black text-emerald-700">{{ $approvedCount }} {{ __('approved') }}</span>
+                                            @endif
+                                        </div>
+                                    @else
+                                        <div class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-extrabold text-emerald-700">
+                                            {{ __('Documents cleared after approval') }}
+                                        </div>
+                                    @endif
                                     <a href="{{ Auth::user()->isAdmin() ? route('admin.applications.show', $application) : route('customer.applications.show', $application) }}" class="portal-button-secondary">{{ Auth::user()->isAdmin() ? __('Manage Application →') : __('View Details →') }}</a>
                                 </div>
                             </div>
