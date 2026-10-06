@@ -63,6 +63,23 @@
             <div class="portal-card p-5"><p class="text-xs font-bold uppercase tracking-wide text-slate-400">{{ __('Total uploaded') }}</p><p class="mt-2 text-2xl font-black text-slate-900">{{ $application->documents->count() }}</p></div>
         </section>
 
+        @if($application->status === 'approved' && $application->approval_remark)
+            <section class="overflow-hidden rounded-2xl border border-emerald-200 bg-emerald-50 shadow-sm">
+                <div class="border-b border-emerald-200 bg-emerald-100/70 px-5 py-4">
+                    <div class="flex items-center gap-3">
+                        <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-600 text-lg font-black text-white">✓</span>
+                        <div>
+                            <h2 class="font-black text-emerald-950">{{ __('Application Approved') }}</h2>
+                            <p class="text-xs font-semibold text-emerald-700">{{ __('Message from the service administrator') }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-5 py-4">
+                    <p class="text-sm leading-6 text-emerald-900">{{ $application->approval_remark }}</p>
+                </div>
+            </section>
+        @endif
+
         @if($application->notes)
             <section class="portal-card p-6">
                 <h2 class="font-black text-slate-900">{{ __('Additional information') }}</h2>
