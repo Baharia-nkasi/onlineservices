@@ -973,11 +973,11 @@ html.dark .admin-document-summary small {
     }
 
     .admin-document-summary strong {
-        @apply block text-sm font-black tracking-tight text-amber-950 sm:text-base;
+        @apply block text-sm font-black tracking-tight text-slate-900 sm:text-base;
     }
 
     .admin-document-count {
-        @apply mt-1 inline-flex items-center gap-1.5 rounded-full border border-amber-300 bg-white/80 px-2.5 py-1 text-[11px] font-extrabold text-amber-900 shadow-sm;
+        @apply mt-1 inline-flex items-center gap-1.5 rounded-full border border-amber-300 bg-white px-2.5 py-1 text-[11px] font-extrabold text-slate-800 shadow-sm;
     }
 
     .admin-document-count-dot {
@@ -985,7 +985,7 @@ html.dark .admin-document-summary small {
     }
 
     .admin-document-chevron {
-        @apply ml-auto inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-amber-300 bg-white/70 text-lg font-black text-amber-800 transition-transform duration-200;
+        @apply ml-auto inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-amber-300 bg-white text-lg font-black text-slate-700 transition-transform duration-200;
     }
 
     .admin-document-panel[open] {
@@ -1013,7 +1013,7 @@ html.dark .admin-document-summary:hover {
 }
 
 html.dark .admin-document-summary strong {
-    color: #fef3c7 !important;
+    color: #ffffff !important;
 }
 
 html.dark .admin-document-summary-icon {
@@ -1025,7 +1025,7 @@ html.dark .admin-document-summary-icon {
 html.dark .admin-document-count {
     border-color: #92400e;
     background: rgb(15 23 42 / 0.74);
-    color: #fde68a;
+    color: #f8fafc;
 }
 
 html.dark .admin-document-count-dot {
