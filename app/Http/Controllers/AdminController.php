@@ -89,7 +89,7 @@ class AdminController extends Controller
         $this->guard();
 
         $validated = $request->validate([
-            'status' => ['required', 'in:pending,processing,completed,rejected'],
+            'status' => ['required', 'in:pending,processing,approved,completed,rejected'],
         ]);
 
         $next = $validated['status'];
@@ -101,7 +101,8 @@ class AdminController extends Controller
 
             $allowed = [
                 'pending' => ['pending', 'processing', 'rejected'],
-                'processing' => ['processing', 'completed', 'rejected'],
+                'processing' => ['processing', 'approved', 'completed', 'rejected'],
+                'approved' => ['approved', 'completed'],
                 'completed' => ['completed'],
                 'rejected' => ['rejected', 'processing'],
             ];
