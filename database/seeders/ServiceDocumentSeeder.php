@@ -159,20 +159,6 @@ class ServiceDocumentSeeder extends Seeder
                 ['name' => 'Nyaraka za kampuni zinazohitajika kwa usajili', 'required' => true],
             ],
 
-            /*
-            |--------------------------------------------------------------------------
-            | 8. UMILIKI HALISI WA KAMPUNI
-            |--------------------------------------------------------------------------
-            */
-
-            'umiliki-halisi-wa-kampuni' => [
-                ['name' => 'Kitambulisho cha Taifa au pasipoti ya mmiliki halisi', 'required' => true],
-                ['name' => 'Cheti cha usajili wa kampuni', 'required' => true],
-                ['name' => 'Nyaraka zinazoonyesha umiliki', 'required' => true],
-                ['name' => 'Taarifa za wanahisa', 'required' => true],
-                ['name' => 'Asilimia ya umiliki wa kila mwanahisa', 'required' => true],
-                ['name' => 'Taarifa za wakurugenzi', 'required' => true],
-            ],
 
             /*
             |--------------------------------------------------------------------------
@@ -227,50 +213,7 @@ class ServiceDocumentSeeder extends Seeder
                 ['name' => 'Taarifa nyingine za mtihani', 'required' => false],
             ],
 
-            /*
-            |--------------------------------------------------------------------------
-            | 12. VYETI NA NAKALA ZA MATOKEO YA CHUO
-            |--------------------------------------------------------------------------
-            */
 
-            'vyeti-na-nakala-za-matokeo-ya-chuo' => [
-                ['name' => 'Kitambulisho cha Taifa', 'required' => true],
-                ['name' => 'Kitambulisho cha mwanafunzi', 'required' => false],
-                ['name' => 'Namba ya usajili wa mwanafunzi', 'required' => true],
-                ['name' => 'Namba ya udahili', 'required' => true],
-                ['name' => 'Cheti cha chuo', 'required' => false],
-                ['name' => 'Nakala ya matokeo', 'required' => true],
-                ['name' => 'Taarifa ya matokeo', 'required' => false],
-                ['name' => 'Jina la programu aliyosomea', 'required' => true],
-                ['name' => 'Mwaka wa kuhitimu', 'required' => true],
-                ['name' => 'Taarifa za malipo', 'required' => false],
-                ['name' => 'Ripoti ya polisi kwa cheti kilichopotea', 'required' => false],
-                ['name' => 'Taarifa za chuo', 'required' => true],
-            ],
-
-            /*
-            |--------------------------------------------------------------------------
-            | 13. MAOMBI YA UFADHILI / MASOMO
-            |--------------------------------------------------------------------------
-            */
-
-            'maombi-ya-ufadhili-masomo' => [
-                ['name' => 'Kitambulisho cha Taifa au pasipoti', 'required' => true],
-                ['name' => 'Cheti cha kuzaliwa', 'required' => true],
-                ['name' => 'Picha ya pasipoti', 'required' => true],
-                ['name' => 'Vyeti vya kitaaluma', 'required' => true],
-                ['name' => 'Nakala za matokeo', 'required' => true],
-                ['name' => 'Barua ya udahili', 'required' => true],
-                ['name' => 'Wasifu binafsi', 'required' => true],
-                ['name' => 'Barua ya maombi', 'required' => true],
-                ['name' => 'Barua ya mapendekezo', 'required' => false],
-                ['name' => 'Maelezo ya sababu za kuomba ufadhili', 'required' => true],
-                ['name' => 'Hati ya kipato cha mzazi au mlezi', 'required' => false],
-                ['name' => 'Nyaraka za ulemavu', 'required' => false],
-                ['name' => 'Pendekezo la utafiti', 'required' => false],
-                ['name' => 'Vyeti vya mafunzo', 'required' => false],
-                ['name' => 'Nyaraka za udhamini', 'required' => false],
-            ],
 
             /*
             |--------------------------------------------------------------------------
@@ -324,19 +267,6 @@ class ServiceDocumentSeeder extends Seeder
                 ['name' => 'Namba ya simu', 'required' => true],
             ],
 
-            /*
-            |--------------------------------------------------------------------------
-            | 16. eRITA - UTHIBITISHO WA CHETI
-            |--------------------------------------------------------------------------
-            */
-
-            'erita-uthibitisho-wa-cheti' => [
-                ['name' => 'Cheti cha kuzaliwa au cheti cha kifo', 'required' => true],
-                ['name' => 'Namba ya cheti', 'required' => true],
-                ['name' => 'Namba ya kumbukumbu ya maombi', 'required' => false],
-                ['name' => 'Kitambulisho cha Taifa', 'required' => false],
-                ['name' => 'Taarifa sahihi za mwenye cheti', 'required' => true],
-            ],
 
             /*
             |--------------------------------------------------------------------------
@@ -421,60 +351,8 @@ class ServiceDocumentSeeder extends Seeder
                 ['name' => 'Uthibitisho wa sababu ya safari', 'required' => false],
             ],
 
-            /*
-            |--------------------------------------------------------------------------
-            | 21. KIBALI CHA MAKAZI / KAZI
-            |--------------------------------------------------------------------------
-            */
 
-            'kibali-cha-makazi-kazi' => [
-                ['name' => 'Pasipoti', 'required' => true],
-                ['name' => 'Picha ya pasipoti', 'required' => true],
-                ['name' => 'Mkataba wa kazi au barua ya ajira', 'required' => true],
-                ['name' => 'Wasifu wa kazi', 'required' => true],
-                ['name' => 'Vyeti vya elimu', 'required' => true],
-                ['name' => 'Vyeti vya taaluma', 'required' => true],
-                ['name' => 'Cheti cha tabia njema', 'required' => false],
-                ['name' => 'Cheti cha afya', 'required' => false],
-                ['name' => 'Nyaraka za mwajiri', 'required' => false],
-                ['name' => 'Cheti cha usajili wa kampuni', 'required' => false],
-                ['name' => 'Namba ya mlipa kodi', 'required' => false],
-                ['name' => 'Nyaraka za kampuni', 'required' => false],
-            ],
 
-            /*
-            |--------------------------------------------------------------------------
-            | 22. KITAMBULISHO CHA TAIFA - NIDA
-            |--------------------------------------------------------------------------
-            */
-
-            'kitambulisho-cha-taifa-nida' => [
-                ['name' => 'Cheti cha kuzaliwa', 'required' => true],
-                ['name' => 'Nyaraka za utambulisho zinazohitajika', 'required' => true],
-                ['name' => 'Kitambulisho cha mzazi au mlezi', 'required' => false],
-                ['name' => 'Pasipoti', 'required' => false],
-                ['name' => 'Kibali cha makazi au kazi', 'required' => false],
-                ['name' => 'Taarifa za makazi', 'required' => true],
-                ['name' => 'Namba ya simu', 'required' => true],
-                ['name' => 'Barua pepe', 'required' => false],
-            ],
-
-            /*
-            |--------------------------------------------------------------------------
-            | 23. UTHIBITISHO WA NYARAKA
-            |--------------------------------------------------------------------------
-            */
-
-            'uthibitisho-wa-nyaraka' => [
-                ['name' => 'Cheti cha masomo', 'required' => false],
-                ['name' => 'Nakala ya matokeo', 'required' => false],
-                ['name' => 'Cheti cha kuzaliwa', 'required' => false],
-                ['name' => 'Cheti cha kifo', 'required' => false],
-                ['name' => 'NIDA', 'required' => false],
-                ['name' => 'Cheti cha TIN', 'required' => false],
-                ['name' => 'Leseni ya udereva', 'required' => false],
-                ['name' => 'Cheti cha usajili wa biashara au kampuni', 'required' => false],
-            ],
         ];
 
         $ruleMap = [
