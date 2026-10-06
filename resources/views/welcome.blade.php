@@ -55,8 +55,6 @@
             </div>
         </div>
         @php
-            use App\Support\ServiceImage;
-
             // Use the database image for the exact service. Each service has
             // its own image URL and an embedded SVG fallback, so a broken
             // remote image can never leave an empty hero slide.
@@ -65,8 +63,8 @@
                     'name' => $service->name,
                     'description' => $service->description,
                     'url' => route('applications.create', $service),
-                    'image' => $service->image_url ?: ServiceImage::fallbackDataUri($service),
-                    'fallback' => ServiceImage::fallbackDataUri($service),
+                    'image' => $service->image_url ?: \App\Support\ServiceImage::fallbackDataUri($service),
+                    'fallback' => \App\Support\ServiceImage::fallbackDataUri($service),
                 ];
             });
         @endphp
