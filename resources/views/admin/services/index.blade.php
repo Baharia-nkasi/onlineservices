@@ -167,11 +167,21 @@
 
                         <div class="admin-service-footer mt-4">
                             <p class="text-xs text-slate-500">@if($service->is_active){{ __('Active services are visible to customers and can receive new requests.') }}@else{{ __('Deactivated services are hidden from new customer requests. Existing applications are preserved.') }}@endif</p>
-                            @if(!$service->is_active)
-                                <form method="POST" action="{{ route('admin.services.destroy', $service) }}" onsubmit="return confirm('{{ __('Delete this deactivated service permanently? This action cannot be undone.') }}');">@csrf @method('DELETE')<button type="submit" class="rounded-xl border border-red-200 bg-red-50 px-4 py-2.5 text-sm font-extrabold text-red-700 hover:bg-red-100">{{ __('Delete Deactivated Service') }}</button></form>
-                            @else
-                                <span class="text-xs font-bold text-slate-400">{{ __('Deactivate the service before deletion.') }}</span>
-                            @endif
+                            <div class="flex flex-wrap items-center justify-end gap-2">
+                                @if($service->applications_count === 0)
+                                    <form method="POST" action="{{ route('admin.services.destroy', $service) }}" onsubmit="return confirm('{{ __('PERMANENTLY DELETE this service and all of its document requirements? This cannot be undone.') }}');">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="inline-flex items-center gap-2 rounded-xl border border-red-300 bg-red-50 px-4 py-2.5 text-sm font-extrabold text-red-700 shadow-sm transition hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                                            <span aria-hidden="true">🗑</span>
+                                            {{ __('Delete Service Permanently') }}
+                                        </button>
+                                    </form>
+                                @else
+                                    <span class="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-bold text-slate-500">
+                                        🔒 {{ __('Deletion locked: application history exists') }}
+                                    </span>
+                                @endif
+                            </div>
                         </div>
                     </article>
                 @empty
