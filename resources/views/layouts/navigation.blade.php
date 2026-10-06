@@ -36,7 +36,93 @@
 </div>
 
     @auth
+        @if(Auth::user()->isCustomer())
+            @php
+                $navUnreadNotifications = Auth::user()->unreadNotifications()->count();
+                $navNotifications = Auth::user()->notifications()->latest()->limit(6)->get();
+            @endphp
+        @endif
         <div class="hidden items-center gap-3 md:flex">
+            @if(Auth::user()->isCustomer())
+                <div x-data="{ notificationsOpen: false }" class="relative">
+                    <button
+                        type="button"
+                        @click="notificationsOpen = !notificationsOpen"
+                        @click.outside="notificationsOpen = false"
+                        class="relative flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                        aria-label="{{ __('Notifications') }}"
+                        :aria-expanded="notificationsOpen.toString()"
+                    >
+                        <span class="text-lg leading-none">🔔</span>
+                        @if($navUnreadNotifications > 0)
+                            <span class="absolute -right-1 -top-1 flex min-h-5 min-w-5 items-center justify-center rounded-full border-2 border-white bg-red-600 px-1 text-[10px] font-black leading-none text-white">
+                                {{ $navUnreadNotifications > 99 ? '99+' : $navUnreadNotifications }}
+                            </span>
+                        @endif
+                    </button>
+
+                    <div
+                        x-cloak
+                        x-show="notificationsOpen"
+                        x-transition.origin.top.right
+                        class="absolute right-0 z-50 mt-3 w-[min(92vw,380px)] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl"
+                    >
+                        <div class="flex items-center justify-between border-b border-slate-200 px-4 py-3">
+                            <div>
+                                <p class="text-sm font-black text-slate-900">{{ __('Notifications') }}</p>
+                                <p class="text-xs font-semibold text-slate-500">{{ $navUnreadNotifications }} {{ __('unread') }}</p>
+                            </div>
+                            @if($navUnreadNotifications > 0)
+                                <form method="POST" action="{{ route('notifications.read-all') }}">
+                                    @csrf
+                                    <button type="submit" class="text-xs font-black text-blue-700 hover:text-blue-900">{{ __('Mark all read') }}</button>
+                                </form>
+                            @endif
+                        </div>
+
+                        <div class="max-h-[min(65vh,420px)] overflow-y-auto">
+                            @forelse($navNotifications as $notification)
+                                @php
+                                    $status = data_get($notification->data, 'status');
+                                    $icon = match($status) {
+                                        'approved' => '✓',
+                                        'rejected' => '!',
+                                        'processing' => '↻',
+                                        default => '•',
+                                    };
+                                    $iconClass = match($status) {
+                                        'approved' => 'bg-emerald-100 text-emerald-700',
+                                        'rejected' => 'bg-red-100 text-red-700',
+                                        'processing' => 'bg-blue-100 text-blue-700',
+                                        default => 'bg-slate-100 text-slate-700',
+                                    };
+                                @endphp
+                                <a href="{{ route('notifications.open', $notification->id) }}" class="block border-b border-slate-100 px-4 py-3 transition hover:bg-slate-50 {{ is_null($notification->read_at) ? 'bg-blue-50/60' : '' }}">
+                                    <div class="flex gap-3">
+                                        <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl {{ $iconClass }} font-black">{{ $icon }}</span>
+                                        <div class="min-w-0 flex-1">
+                                            <div class="flex items-start justify-between gap-2">
+                                                <p class="text-sm font-black text-slate-900">{{ data_get($notification->data, 'title', __('Notification')) }}</p>
+                                                @if(is_null($notification->read_at))
+                                                    <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-blue-600"></span>
+                                                @endif
+                                            </div>
+                                            <p class="mt-1 line-clamp-2 text-xs leading-5 text-slate-600">{{ data_get($notification->data, 'message', '') }}</p>
+                                            <p class="mt-1 text-[10px] font-bold text-slate-400">{{ $notification->created_at->diffForHumans() }} · {{ __('Open application') }} →</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            @empty
+                                <div class="px-5 py-10 text-center">
+                                    <div class="text-3xl">🔔</div>
+                                    <p class="mt-2 text-sm font-black text-slate-900">{{ __('No notifications yet') }}</p>
+                                    <p class="mt-1 text-xs leading-5 text-slate-500">{{ __('Application updates and admin remarks will appear here.') }}</p>
+                                </div>
+                            @endforelse
+                        </div>
+                    </div>
+                </div>
+            @endif
             <span class="max-w-48 truncate text-sm font-semibold text-slate-500">{{ Auth::user()->name }}</span>
             <x-dropdown align="right" width="48">
                 <x-slot name="trigger">
