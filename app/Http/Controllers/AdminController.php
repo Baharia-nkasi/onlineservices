@@ -393,12 +393,13 @@ class AdminController extends Controller
         } elseif (blank($validated['requirement_group'])) {
             return back()->withErrors([
                 'requirement_group' => __('A requirement group is required for choose-one or choose-many rules.'),
-            ])->withInput();
+            ])->withInput()->withFragment('document-requirements');
         }
 
         $service->documents()->create($validated);
 
-        return back()->with('success', __('Document requirement added successfully.'));
+        return back()->with('success', __('Document requirement added successfully.'))
+            ->withFragment('document-requirements');
     }
 
     public function updateServiceDocument(Request $request, ServiceDocument $document)
@@ -463,12 +464,14 @@ class AdminController extends Controller
                 ServiceDocument::create($newRequirement);
             });
 
-            return back()->with('success', __('Requirement updated for future applications. The previous version remains preserved for existing application history.'));
+            return back()->with('success', __('Requirement updated for future applications. The previous version remains preserved for existing application history.'))
+                ->withFragment('document-requirements');
         }
 
         $document->update($validated);
 
-        return back()->with('success', __('Document requirement updated successfully.'));
+        return back()->with('success', __('Document requirement updated successfully.'))
+            ->withFragment('document-requirements');
     }
 
     public function destroyServiceDocument(ServiceDocument $document)
@@ -489,10 +492,12 @@ class AdminController extends Controller
         });
 
         if ($serviceHasApplications) {
-            return back()->with('success', __('Requirement removed from the active catalogue. Existing application history has been preserved and the remaining requirements were automatically renumbered.'));
+            return back()->with('success', __('Requirement removed from the active catalogue. Existing application history has been preserved and the remaining requirements were automatically renumbered.'))
+                ->withFragment('document-requirements');
         }
 
-        return back()->with('success', __('Document requirement deleted successfully and the remaining requirements were automatically renumbered.'));
+        return back()->with('success', __('Document requirement deleted successfully and the remaining requirements were automatically renumbered.'))
+            ->withFragment('document-requirements');
     }
 
     public function destroyService(Service $service)
