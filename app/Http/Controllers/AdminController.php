@@ -388,7 +388,9 @@ class AdminController extends Controller
             'name' => [
                 'required', 'string', 'max:255',
                 Rule::unique('service_documents', 'name')
-                    ->where(fn ($query) => $query->where('service_id', $document->service_id))
+                    ->where(fn ($query) => $query
+                        ->where('service_id', $document->service_id)
+                        ->whereNull('deleted_at'))
                     ->ignore($document->id),
             ],
             'description' => ['nullable', 'string', 'max:2000'],
@@ -399,6 +401,10 @@ class AdminController extends Controller
             'sort_order' => ['required', 'integer', 'min:0', 'max:10000'],
             'is_active' => ['required', 'boolean'],
         ]);
+
+        $validated['requirement_group'] = filled($validated['requirement_group'] ?? null)
+            ? $validated['requirement_group']
+            : null;
 
         if ($validated['requirement_type'] === 'single') {
             $validated['requirement_group'] = null;
@@ -411,19 +417,32 @@ class AdminController extends Controller
 
         $serviceHasApplications = $document->service->applications()->exists();
 
-        if ($serviceHasApplications) {
-            $protectedFieldsChanged =
-                $document->name !== $validated['name']
-                || (bool) $document->is_required !== (bool) $validated['is_required']
-                || $document->requirement_type !== $validated['requirement_type']
-                || $document->requirement_group !== ($validated['requirement_group'] ?? null)
-                || (int) $document->minimum_required !== (int) $validated['minimum_required'];
+        $protectedFieldsChanged =
+            $document->name !== $validated['name']
+            || (bool) $document->is_required !== (bool) $validated['is_required']
+            || $document->requirement_type !== $validated['requirement_type']
+            || $document->requirement_group !== $validated['requirement_group']
+            || (int) $document->minimum_required !== (int) $validated['minimum_required'];
 
-            if ($protectedFieldsChanged) {
-                return back()->withErrors([
-                    'document' => __('This requirement cannot change its name or completion rules because the service already has customer applications. Deactivate it instead and create a new requirement for future applications.'),
+        if ($serviceHasApplications && $protectedFieldsChanged) {
+            /*
+             * The old requirement must remain available to historical applications.
+             * Create a new version for future applications, then soft-delete the old
+             * catalog entry. This removes the previous blocking error while preserving
+             * the requirement that applied to existing applications.
+             */
+            DB::transaction(function () use ($document, $validated) {
+                $document->update([
+                    'is_active' => false,
                 ]);
-            }
+
+                $newRequirement = $validated;
+                $newRequirement['service_id'] = $document->service_id;
+
+                ServiceDocument::create($newRequirement);
+            });
+
+            return back()->with('success', __('Requirement updated for future applications. The previous version remains preserved for existing application history.'));
         }
 
         $document->update($validated);
@@ -435,10 +454,17 @@ class AdminController extends Controller
     {
         $this->guard();
 
-        if ($document->service->applications()->exists()) {
-            return back()->withErrors([
-                'document' => __('This requirement cannot be deleted because the service has customer applications. Deactivate it instead to preserve application history.'),
-            ]);
+        $serviceHasApplications = $document->service->applications()->exists();
+
+        if ($serviceHasApplications) {
+            /*
+             * Never physically remove a requirement once its service has customer
+             * applications. Soft deletion keeps the old requirement available to
+             * historical application logic while removing it from the live catalogue.
+             */
+            $document->delete();
+
+            return back()->with('success', __('Requirement removed from the active catalogue. Existing application history has been preserved.'));
         }
 
         $document->delete();
