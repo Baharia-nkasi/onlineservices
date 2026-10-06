@@ -13,6 +13,7 @@ class Application extends Model
         'service_id',
         'status',
         'notes',
+        'approval_remark',
     ];
 
     public function user(): BelongsTo
