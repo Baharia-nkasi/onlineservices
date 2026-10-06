@@ -35,7 +35,7 @@ class ApplicationStatusUpdated extends Notification
         $remark = trim((string) $this->remark);
 
         $title = match ($status) {
-            'approved' => $remarkUpdated = $this->remarkUpdated
+            'approved' => $this->remarkUpdated
                 ? __('New message about your application')
                 : __('Application approved'),
             'rejected' => __('Application rejected'),
