@@ -1,5 +1,5 @@
 <x-app-layout>
-    @php use App\Support\ServiceImage; @endphp
+    @php @endphp
 <x-slot name="header">
     <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
@@ -43,8 +43,8 @@
                     <a href="{{ route('applications.create',$service) }}" class="group block">
                         <div class="service-card-image-wrap">
                             <img
-                                src="{{ $service->image_url ?: ServiceImage::fallbackDataUri($service) }}"
-                                data-service-fallback="{{ ServiceImage::fallbackDataUri($service) }}"
+                                src="{{ $service->image_url ?: \App\Support\ServiceImage::fallbackDataUri($service) }}"
+                                data-service-fallback="{{ \App\Support\ServiceImage::fallbackDataUri($service) }}"
                                 alt="{{ $service->name }}"
                                 class="service-card-image"
                                 loading="lazy"
