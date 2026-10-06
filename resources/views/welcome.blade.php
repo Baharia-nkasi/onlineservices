@@ -55,32 +55,18 @@
             </div>
         </div>
         @php
-            $serviceImage = static function (string $slug, int $width = 1400): string {
-                if (str_contains($slug, 'chuo') || str_contains($slug, 'elimu') || str_contains($slug, 'nactvet') || str_contains($slug, 'necta') || str_contains($slug, 'ufadhili')) {
-                    return "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w={$width}&q=85";
-                }
+            use App\Support\ServiceImage;
 
-                if (str_contains($slug, 'pasipoti') || str_contains($slug, 'visa') || str_contains($slug, 'makazi') || str_contains($slug, 'udereva')) {
-                    return "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w={$width}&q=85";
-                }
-
-                if (str_contains($slug, 'brela') || str_contains($slug, 'tin') || str_contains($slug, 'kampuni') || str_contains($slug, 'biashara')) {
-                    return "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w={$width}&q=85";
-                }
-
-                if (str_contains($slug, 'erita') || str_contains($slug, 'cheti') || str_contains($slug, 'nyaraka') || str_contains($slug, 'nida')) {
-                    return "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w={$width}&q=85";
-                }
-
-                return "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w={$width}&q=85";
-            };
-
-            $serviceSlides = $services->values()->map(function ($service) use ($serviceImage) {
+            // Use the database image for the exact service. Each service has
+            // its own image URL and an embedded SVG fallback, so a broken
+            // remote image can never leave an empty hero slide.
+            $serviceSlides = $services->values()->map(function ($service) {
                 return [
                     'name' => $service->name,
                     'description' => $service->description,
                     'url' => route('applications.create', $service),
-                    'image' => $serviceImage($service->slug),
+                    'image' => $service->image_url ?: ServiceImage::fallbackDataUri($service),
+                    'fallback' => ServiceImage::fallbackDataUri($service),
                 ];
             });
         @endphp
@@ -89,7 +75,15 @@
             <div class="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 shadow-2xl backdrop-blur">
                 @forelse($serviceSlides as $index => $slide)
                     <article class="service-hero-slide {{ $index === 0 ? '' : 'hidden' }}" data-service-slide data-slide-index="{{ $index }}">
-                        <img src="{{ $slide['image'] }}" alt="{{ $slide['name'] }}" class="h-[430px] w-full object-cover" loading="{{ $index === 0 ? 'eager' : 'lazy' }}">
+                        <img
+                            src="{{ $slide['image'] }}"
+                            data-service-fallback="{{ $slide['fallback'] }}"
+                            alt="{{ $slide['name'] }}"
+                            class="h-[430px] w-full object-cover"
+                            loading="{{ $index === 0 ? 'eager' : 'lazy' }}"
+                            referrerpolicy="no-referrer"
+                            onerror="this.onerror=null;this.src=this.dataset.serviceFallback;"
+                        >
                         <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/15 to-transparent"></div>
                         <div class="absolute inset-x-0 bottom-0 p-7">
                             <p class="text-xs font-black uppercase tracking-[0.2em] text-blue-200">{{ __('Featured service') }}</p>
