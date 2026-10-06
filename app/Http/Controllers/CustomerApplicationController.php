@@ -19,7 +19,7 @@ class CustomerApplicationController extends Controller
         $applications = Application::with(['service', 'documents'])
             ->when($user->isCustomer(), function ($query) use ($user) {
                 $query->where('user_id', $user->id)
-                    ->whereIn('status', ['pending', 'processing', 'approved', 'completed', 'rejected']);
+                    ->whereIn('status', ['pending', 'processing', 'approved', 'completed']);
             })
             ->latest()
             ->paginate(10);
