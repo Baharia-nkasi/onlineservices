@@ -32,7 +32,7 @@
             </div>
         </section>
 
-        <section class="grid gap-4 md:grid-cols-3">
+        <section id="metrics" class="grid gap-4 md:grid-cols-3">
             <div class="neon-card p-5">
                 <p class="text-xs font-black uppercase tracking-[.16em] text-[#7f9589]">{{ __('Total Applications') }}</p>
                 <p class="neon-value mt-3 text-4xl font-black">{{ $stats['applications'] }}</p>
@@ -51,7 +51,7 @@
         </section>
 
         <div class="grid gap-6 xl:grid-cols-[minmax(0,1fr)_340px]">
-            <section class="neon-card overflow-hidden">
+            <section id="client-matrix" class="neon-card overflow-hidden">
                 <div class="flex flex-col gap-3 border-b border-[#163124] p-5 sm:flex-row sm:items-center sm:justify-between">
                     <div>
                         <p class="text-xs font-black uppercase tracking-[.18em] text-[#39ff14]">Client Matrix</p>
@@ -116,7 +116,7 @@
                 <div class="border-t border-[#163124] p-4">{{ $applications->links() }}</div>
             </section>
 
-            <aside class="neon-card h-fit overflow-hidden">
+            <aside id="activity-stream" class="neon-card h-fit overflow-hidden">
                 <div class="border-b border-[#163124] p-5">
                     <p class="text-xs font-black uppercase tracking-[.18em] text-[#39ff14]">Activity Stream</p>
                     <h3 class="mt-1 text-lg font-black text-white">Application Signals</h3>
