@@ -58,11 +58,19 @@ class ApplicationDocumentController extends Controller
                 abort_if(in_array($lockedApplication->status, ['approved', 'completed', 'rejected'], true), 422,
                     __('Documents cannot be changed after this application is approved, completed or rejected.'));
 
-                $requirement = $lockedApplication->service->documents()
-                    ->where('is_active', true)
-                    ->whereRaw('LOWER(TRIM(name)) = ?', [mb_strtolower($documentName)])
-                    ->lockForUpdate()
+                $requirement = $lockedApplication->effectiveServiceRequirements()
+                    ->filter(fn ($requirement) => mb_strtolower(trim($requirement->name)) === mb_strtolower($documentName))
                     ->first();
+
+                if ($requirement) {
+                    // Lock the concrete requirement row after resolving the
+                    // historical version that applied to this application.
+                    $requirement = $lockedApplication->service->documents()
+                        ->withTrashed()
+                        ->whereKey($requirement->id)
+                        ->lockForUpdate()
+                        ->first();
+                }
 
                 if (! $requirement) {
                     abort(422, __('Please select a valid document requirement for this service.'));
