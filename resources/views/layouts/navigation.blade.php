@@ -18,7 +18,7 @@
         ['label' => __('My Packages'), 'route' => 'dashboard', 'active' => request()->routeIs('dashboard'), 'icon' => 'package'],
         ['label' => __('My Usage'), 'route' => 'customer.applications.index', 'active' => request()->routeIs('customer.applications.*'), 'icon' => 'activity'],
         ['label' => __('Buy Bundle'), 'route' => 'services.index', 'active' => request()->routeIs('services.*') || request()->routeIs('applications.*'), 'icon' => 'bolt'],
-        ['label' => __('Support'), 'route' => 'dashboard', 'active' => false, 'icon' => 'headset', 'anchor' => 'support'],
+        ['label' => __('Support'), 'route' => 'dashboard', 'active' => false, 'icon' => 'headset'],
         ['label' => __('Profile'), 'route' => 'profile.edit', 'active' => request()->routeIs('profile.*'), 'icon' => 'user'],
     ];
 @endphp
