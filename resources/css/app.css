@@ -1613,3 +1613,64 @@ html.dark .service-card-image-wrap {
         width: 100%;
     }
 }
+
+
+/* Admin chrome: keep the complete dashboard shell visually consistent. */
+.neon-admin-shell {
+    background: #050807 !important;
+    color: #ecfff4 !important;
+}
+
+.neon-admin-shell .site-navigation {
+    border-color: rgba(0,255,102,.16) !important;
+    background: rgba(5,10,8,.94) !important;
+    box-shadow: 0 8px 30px rgba(0,0,0,.30), 0 0 18px rgba(0,255,102,.035);
+}
+
+.neon-admin-shell .site-navigation .text-slate-900,
+.neon-admin-shell .site-navigation .text-slate-700,
+.neon-admin-shell .site-navigation .text-slate-500 {
+    color: #c9d9d0 !important;
+}
+
+.neon-admin-shell .site-navigation a:hover {
+    color: #39ff14 !important;
+}
+
+.neon-admin-shell .site-navigation [aria-current="page"] {
+    color: #39ff14 !important;
+}
+
+.neon-admin-shell .site-navigation .bg-blue-700,
+.neon-admin-shell .site-navigation .bg-blue-800 {
+    background: rgba(0,255,102,.12) !important;
+    color: #39ff14 !important;
+    border: 1px solid rgba(0,255,102,.40);
+    box-shadow: 0 0 14px rgba(0,255,102,.10);
+}
+
+.neon-admin-shell .site-navigation .border-slate-200,
+.neon-admin-shell .site-navigation .border-slate-100 {
+    border-color: rgba(0,255,102,.14) !important;
+}
+
+.neon-admin-shell .site-navigation .bg-white,
+.neon-admin-shell .site-navigation .bg-slate-50,
+.neon-admin-shell .site-navigation .bg-slate-100 {
+    background-color: #07100b !important;
+}
+
+.neon-admin-shell header {
+    border-color: rgba(0,255,102,.16) !important;
+    background: #050807 !important;
+}
+
+.neon-admin-shell .theme-toggle-dock .theme-toggle-switch {
+    border-color: rgba(0,255,102,.25);
+    background: rgba(7,16,11,.94);
+    color: #b9c9c0;
+}
+
+.neon-admin-shell .theme-toggle-dock {
+    filter: drop-shadow(0 0 10px rgba(0,255,102,.08));
+}
