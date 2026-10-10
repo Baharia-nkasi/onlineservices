@@ -121,9 +121,8 @@ class AdminController extends Controller
         $next = $validated['status'];
         $approvalRemark = trim((string) ($validated['approval_remark'] ?? ''));
         $notificationData = null;
-        $purgedDocumentPaths = [];
 
-        $error = DB::transaction(function () use ($application, $next, $approvalRemark, &$notificationData, &$purgedDocumentPaths) {
+        $error = DB::transaction(function () use ($application, $next, $approvalRemark, &$notificationData) {
             // Serialize admin status changes so two admins cannot complete/reject
             // the same application against stale document/status data.
             $lockedApplication = Application::query()->lockForUpdate()->findOrFail($application->id);
@@ -144,9 +143,10 @@ class AdminController extends Controller
                 ]);
             }
 
-            // Document review must finish before the first approval because
-            // approval immediately purges uploaded documents. A later remark-only
-            // approval update does not need the documents to still exist.
+            // Required-document review must finish before approval or completion.
+            // Once approved, the application may move to completed without
+            // repeating the same document checks. Uploaded files are retained
+            // for the customer's records and the admin audit trail.
             if (
                 ($next === 'approved' && $current !== 'approved')
                 || ($next === 'completed' && $current !== 'approved')
@@ -198,20 +198,10 @@ class AdminController extends Controller
                 'approval_remark' => $nextRemark,
             ]);
 
-            // Approval is the end of the document-review phase. Once the admin
-            // approves the application, remove every uploaded file immediately
-            // from the application so neither side can keep accessing old uploads.
-            if ($next === 'approved' && $current !== 'approved') {
-                $documents = $lockedApplication->documents()->lockForUpdate()->get();
-
-                foreach ($documents as $uploadedDocument) {
-                    if ($uploadedDocument->file_path && ! str_starts_with($uploadedDocument->file_path, 'database://')) {
-                        $purgedDocumentPaths[] = $uploadedDocument->file_path;
-                    }
-
-                    $uploadedDocument->delete();
-                }
-            }
+            // Keep uploaded documents attached to the application after approval
+            // and completion. They are private and served only through the
+            // authorization-checked document endpoints; retaining them preserves
+            // the customer's record and the admin's audit trail.
 
             $notificationData = [
                 'previous_status' => $previousStatus,
@@ -227,17 +217,11 @@ class AdminController extends Controller
             return back()->withErrors(['status' => $error]);
         }
 
-        // Database deletion is already committed. Remove any legacy local files
-        // outside the database as the final cleanup step.
-        foreach (array_unique($purgedDocumentPaths) as $path) {
-            Storage::disk('local')->delete($path);
-        }
-
         if (
             $notificationData
             && $application->user
             && $application->user->isCustomer()
-            && in_array($notificationData['status'], ['processing', 'approved', 'rejected'], true)
+            && in_array($notificationData['status'], ['processing', 'approved', 'completed', 'rejected'], true)
             && (
                 $notificationData['previous_status'] !== $notificationData['status']
                 || ($notificationData['status'] === 'approved' && $notificationData['remark_changed'])
@@ -547,44 +531,27 @@ class AdminController extends Controller
     {
         $this->guard();
 
-        /*
-         * This is an intentional hard-delete action for catalogue cleanup.
-         * A service and everything that belongs exclusively to it is removed
-         * together: applications, uploaded document rows, notifications tied
-         * to those applications, and document-requirement versions.
-         *
-         * The confirmation in the admin UI makes the destructive nature clear.
-         */
-        $applicationIds = $service->applications()->pluck('id');
+        if ($service->is_active) {
+            return back()->withErrors([
+                'service' => __('Deactivate this service before deleting it.'),
+            ]);
+        }
 
-        DB::transaction(function () use ($service, $applicationIds) {
-            // Remove notification records that point to applications of this service.
-            // Notification data is polymorphic JSON/text, so match application IDs
-            // safely in PHP instead of depending on database-specific JSON syntax.
-            if ($applicationIds->isNotEmpty()) {
-                $notifications = DB::table('notifications')->get(['id', 'data']);
+        if ($service->applications()->exists()) {
+            return back()->withErrors([
+                'service' => __('This service has application history and cannot be deleted. Keep it deactivated to preserve customer records.'),
+            ]);
+        }
 
-                $notificationIds = $notifications
-                    ->filter(function ($notification) use ($applicationIds) {
-                        $data = json_decode((string) $notification->data, true);
-
-                        return isset($data['application_id'])
-                            && $applicationIds->contains((int) $data['application_id']);
-                    })
-                    ->pluck('id');
-
-                if ($notificationIds->isNotEmpty()) {
-                    DB::table('notifications')->whereIn('id', $notificationIds)->delete();
-                }
-            }
-
-            // application_documents and applications use cascadeOnDelete,
-            // so deleting the service removes all dependent application history.
+        DB::transaction(function () use ($service) {
+            // Only remove a deactivated catalogue entry that has never received
+            // applications. Historical application and notification records are
+            // never cascaded away by a service-management action.
             $service->documents()->withTrashed()->forceDelete();
             $service->forceDelete();
         });
 
         return redirect()->route('admin.services.index')
-            ->with('success', __('Service and its related application history were permanently deleted. The catalogue is now clean for new services.'));
+            ->with('success', __('Service deleted successfully.'));
     }
 }

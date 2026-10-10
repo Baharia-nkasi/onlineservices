@@ -282,6 +282,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     render(0);
 });
-</script>>
+</script>
 
 </x-app-layout>

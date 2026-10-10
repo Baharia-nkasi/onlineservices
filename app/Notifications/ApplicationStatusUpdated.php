@@ -40,6 +40,7 @@ class ApplicationStatusUpdated extends Notification
                 : __('Application approved'),
             'rejected' => __('Application rejected — action required'),
             'processing' => __('Application is being processed'),
+            'completed' => __('Application completed'),
             default => __('Application updated'),
         };
 
@@ -51,6 +52,7 @@ class ApplicationStatusUpdated extends Notification
                 ? $remark
                 : __('Your :service application was rejected. Please start a new application and submit your documents again.', ['service' => $serviceName]),
             'processing' => __('Your :service application is now being processed.', ['service' => $serviceName]),
+            'completed' => __('Your :service application has been completed. Please review your application details for the final update.' , ['service' => $serviceName]),
             default => __('Your :service application has been updated.', ['service' => $serviceName]),
         };
 
