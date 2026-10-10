@@ -329,7 +329,8 @@ class AdminController extends Controller
 
         $search = trim((string) ($validated['q'] ?? ''));
 
-        $services = Service::withCount('applications')
+        $services = Service::where('is_active', true)
+            ->withCount('applications')
             ->withCount(['documents as active_documents_count' => fn ($query) => $query->where('is_active', true)])
             ->when($search !== '', function ($query) use ($search) {
                 $searchLower = mb_strtolower($search);
@@ -523,6 +524,35 @@ class AdminController extends Controller
 
         return back()->with('success', __('Document requirement deleted successfully and the remaining requirements were automatically renumbered.'))
             ->withFragment('document-requirements');
+    }
+
+    /**
+     * Permanently remove deactivated catalogue entries that have never received applications.
+     * Services with application history are deliberately retained for audit/customer records.
+     */
+    public function purgeDeactivatedServices()
+    {
+        $this->guard();
+
+        $removed = 0;
+
+        DB::transaction(function () use (&$removed) {
+            $services = Service::where('is_active', false)
+                ->whereDoesntHave('applications')
+                ->lockForUpdate()
+                ->get();
+
+            foreach ($services as $service) {
+                $service->documents()->withTrashed()->forceDelete();
+                $service->forceDelete();
+                $removed++;
+            }
+        });
+
+        return redirect()->route('admin.services.index')->with(
+            'success',
+            __('Permanently deleted :count unused deactivated service(s). Services with application history were preserved.', ['count' => $removed])
+        );
     }
 
     public function destroyService(Service $service)

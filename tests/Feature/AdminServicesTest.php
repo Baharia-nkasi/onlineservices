@@ -327,4 +327,59 @@ class AdminServicesTest extends TestCase
             ->assertSessionHasErrors('name');
     }
 
+
+    public function test_admin_service_management_hides_deactivated_services_and_can_purge_unused_ones(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $customer = User::factory()->create(['role' => 'customer']);
+
+        $active = Service::create([
+            'name' => 'Active eRITA Replacement',
+            'slug' => 'active-erita-replacement',
+            'description' => 'Active service',
+            'government_fee' => 0,
+            'service_fee' => 0,
+            'is_active' => true,
+        ]);
+
+        $unusedInactive = Service::create([
+            'name' => 'Deactivated eRITA Death Certificate',
+            'slug' => 'deactivated-erita-death-certificate',
+            'description' => 'Unused inactive service',
+            'government_fee' => 0,
+            'service_fee' => 0,
+            'is_active' => false,
+        ]);
+
+        $historicalInactive = Service::create([
+            'name' => 'Historical Deactivated Service',
+            'slug' => 'historical-deactivated-service',
+            'description' => 'Must preserve application history',
+            'government_fee' => 0,
+            'service_fee' => 0,
+            'is_active' => false,
+        ]);
+
+        Application::create([
+            'user_id' => $customer->id,
+            'service_id' => $historicalInactive->id,
+            'status' => 'completed',
+        ]);
+
+        $this->actingAs($admin)
+            ->get(route('admin.services.index'))
+            ->assertOk()
+            ->assertSee('Active eRITA Replacement')
+            ->assertDontSee('Deactivated eRITA Death Certificate')
+            ->assertDontSee('Historical Deactivated Service');
+
+        $this->actingAs($admin)
+            ->post(route('admin.services.purge-deactivated'))
+            ->assertRedirect(route('admin.services.index'));
+
+        $this->assertDatabaseHas('services', ['id' => $active->id]);
+        $this->assertDatabaseMissing('services', ['id' => $unusedInactive->id]);
+        $this->assertDatabaseHas('services', ['id' => $historicalInactive->id]);
+    }
+
 }

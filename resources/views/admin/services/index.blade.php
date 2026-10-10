@@ -52,8 +52,15 @@
             <div class="admin-services-toolbar border-b border-slate-200 p-5 sm:p-6">
                 <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
                     <div>
-                        <h3 class="text-xl font-black text-slate-900">{{ __('All Services') }}</h3>
-                        <p class="mt-1 text-sm text-slate-500">{{ __('Activate, deactivate, edit or safely delete services.') }}</p>
+                        <h3 class="text-xl font-black text-slate-900">{{ __('Active Services') }}</h3>
+                        <p class="mt-1 text-sm text-slate-500">{{ __('Only active services appear here and in document requirements management. Deactivated services with customer history are kept safely in the database.') }}</p>
+                        <form method="POST" action="{{ route('admin.services.purge-deactivated') }}" class="mt-3" onsubmit="return confirm('{{ __('Permanently delete all deactivated services that have no customer applications? Services with application history will be kept. This cannot be undone.') }}');">
+                            @csrf
+                            <button type="submit" class="inline-flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-sm font-extrabold text-red-700 transition hover:bg-red-100">
+                                <span aria-hidden="true">🗑</span>
+                                {{ __('Delete unused deactivated services') }}
+                            </button>
+                        </form>
                     </div>
 
                     <form method="GET" action="{{ route('admin.services.index') }}" class="w-full lg:max-w-xl" role="search">
@@ -200,7 +207,7 @@
                         </div>
                     </article>
                 @empty
-                    <div class="p-12 text-center text-slate-500">{{ __('No services have been created yet.') }}</div>
+                    <div class="p-12 text-center text-slate-500">{{ __('No active services found. Deactivated services are hidden from this list.') }}</div>
                 @endforelse
             </div>
             @if($services->count() > 0)
