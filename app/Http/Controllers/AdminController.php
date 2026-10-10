@@ -508,20 +508,18 @@ class AdminController extends Controller
         $service = $document->service;
         $serviceHasApplications = $service->applications()->exists();
 
-        /*
-         * Soft-delete the requirement so historical applications keep their
-         * original requirement definition. Then compact the active catalogue
-         * numbering so admins never see gaps such as 1, 2, 4, 5 after a delete.
-         */
+        // Never remove a requirement that is part of existing application history.
+        // Admins can deactivate it instead; the historical definition remains intact.
+        if ($serviceHasApplications) {
+            return back()->withErrors([
+                'document' => __('This requirement is used by existing applications. Deactivate it instead to preserve application history.'),
+            ])->withFragment('document-requirements');
+        }
+
         DB::transaction(function () use ($document, $service) {
-            $document->delete();
+            $document->forceDelete();
             $this->normalizeServiceDocumentOrder($service);
         });
-
-        if ($serviceHasApplications) {
-            return back()->with('success', __('Requirement removed from the active catalogue. Existing application history has been preserved and the remaining requirements were automatically renumbered.'))
-                ->withFragment('document-requirements');
-        }
 
         return back()->with('success', __('Document requirement deleted successfully and the remaining requirements were automatically renumbered.'))
             ->withFragment('document-requirements');
