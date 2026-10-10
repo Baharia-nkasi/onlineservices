@@ -39,7 +39,7 @@ class Application extends Model
      */
     public function effectiveServiceRequirements()
     {
-        return $this->service->documents()->withTrashed()->get()->filter(function (ServiceDocument $requirement) {
+        return ServiceDocument::withTrashed()->where('service_id', $this->service_id)->orderBy('sort_order')->get()->filter(function (ServiceDocument $requirement) {
             if (! $requirement->created_at || ! $this->created_at) {
                 return $requirement->is_active;
             }
