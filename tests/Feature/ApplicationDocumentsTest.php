@@ -108,8 +108,8 @@ class ApplicationDocumentsTest extends TestCase
 
         $response->assertOk()
             ->assertSee('Test Service')
-            ->assertSee((string) $ownApplication->id)
-            ->assertDontSee((string) $otherApplication->id);
+            ->assertSee('data-application-id="'.$ownApplication->id.'"', false)
+            ->assertDontSee('data-application-id="'.$otherApplication->id.'"', false);
     }
 
     public function test_customer_cannot_open_another_customers_application(): void
