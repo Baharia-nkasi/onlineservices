@@ -12,6 +12,12 @@ permissions:
 jobs:
   tests:
     runs-on: ubuntu-latest
+    env:
+      # Test-only key. Never use this key in the deployed application.
+      APP_KEY: base64:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+      APP_ENV: testing
+      DB_CONNECTION: sqlite
+      DB_DATABASE: ":memory:"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
