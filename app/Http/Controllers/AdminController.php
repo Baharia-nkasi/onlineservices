@@ -143,9 +143,10 @@ class AdminController extends Controller
                 ]);
             }
 
-            // Document review must finish before the first approval because
-            // approval immediately purges uploaded documents. A later remark-only
-            // approval update does not need the documents to still exist.
+            // Required-document review must finish before approval or completion.
+            // Once approved, the application may move to completed without
+            // repeating the same document checks. Uploaded files are retained
+            // for the customer's records and the admin audit trail.
             if (
                 ($next === 'approved' && $current !== 'approved')
                 || ($next === 'completed' && $current !== 'approved')
