@@ -1769,3 +1769,50 @@ html.dark .dashboard-icon { background-color: #052e16 !important; color: #86efac
     body:not(.app-shell) > header a[class~="bg-blue-700"],
     body:not(.app-shell) > main > section:first-child a[class~="bg-white"] { animation: none !important; }
 }
+
+
+/* Consistent neon-green treatment for dashboard navigation and menu actions. */
+.neon-admin-shell .site-navigation a,
+.neon-admin-shell .site-navigation button,
+.neon-admin-shell .neon-button-outline,
+.neon-admin-shell .neon-button,
+.neon-admin-shell a[href*="applications"],
+.neon-admin-shell a[href*="services"],
+.neon-admin-shell a[href*="help-desk"],
+.neon-admin-shell a[href*="profile"],
+.site-navigation a[href*="applications"],
+.site-navigation a[href*="profile"],
+.site-navigation a[href*="dashboard"] {
+    --menu-neon: #39ff14;
+    border-color: rgba(57, 255, 20, .42);
+    text-decoration-color: rgba(57, 255, 20, .65);
+}
+.neon-admin-shell .neon-button-outline,
+.neon-admin-shell .site-navigation a:hover,
+.neon-admin-shell .site-navigation button:hover,
+.site-navigation a[href*="applications"]:hover,
+.site-navigation a[href*="profile"]:hover,
+.site-navigation a[href*="dashboard"]:hover {
+    color: #39ff14 !important;
+    border-color: rgba(57, 255, 20, .72) !important;
+    box-shadow: 0 0 0 1px rgba(57, 255, 20, .12), 0 0 16px rgba(57, 255, 20, .16);
+}
+.neon-admin-shell .site-navigation [aria-current="page"],
+.site-navigation a[aria-current="page"] {
+    color: #052e16 !important;
+    background: #39ff14 !important;
+    border-color: #39ff14 !important;
+    box-shadow: 0 0 18px rgba(57, 255, 20, .24);
+}
+html.dark .neon-admin-shell .site-navigation a,
+html.dark .neon-admin-shell .site-navigation button,
+html.dark .neon-admin-shell .neon-button-outline {
+    color: #b7ffc2;
+}
+@media (prefers-reduced-motion: reduce) {
+    .neon-admin-shell .site-navigation a,
+    .neon-admin-shell .site-navigation button,
+    .neon-admin-shell .neon-button-outline {
+        transition: none !important;
+    }
+}
