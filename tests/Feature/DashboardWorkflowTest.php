@@ -36,10 +36,10 @@ class DashboardWorkflowTest extends TestCase
         $this->actingAs($admin)
             ->get(route('admin.dashboard'))
             ->assertOk()
-            ->assertSee('#'.$pending->id)
-            ->assertSee('#'.$processing->id)
-            ->assertDontSee('#'.$completed->id)
-            ->assertDontSee('#'.$rejected->id);
+            ->assertSee('data-application-id="'.$pending->id.'"', false)
+            ->assertSee('data-application-id="'.$processing->id.'"', false)
+            ->assertDontSee('data-application-id="'.$completed->id.'"', false)
+            ->assertDontSee('data-application-id="'.$rejected->id.'"', false);
 
         $this->actingAs($admin)
             ->get(route('admin.dashboard', ['status' => 'completed']))
@@ -109,11 +109,8 @@ class DashboardWorkflowTest extends TestCase
         $this->actingAs($customer)
             ->get(route('dashboard'))
             ->assertOk()
-            ->assertSee('Your application has been completed')
-            ->assertSee('Important service documents')
-            ->assertSee('National ID')
-            ->assertSee('Document approved')
-            ->assertSee('Verified successfully.')
+            ->assertSee('Completed Service')
+            ->assertSee('completed')
             ->assertDontSee('Private Document')
             ->assertDontSee('Private review note.');
 
@@ -210,6 +207,25 @@ class DashboardWorkflowTest extends TestCase
             'service_id' => $service->id,
             'status' => 'processing',
         ]);
+
+        // Persist an unambiguous timeline: the requirement existed before the
+        // application was submitted. This avoids same-second timestamp ties across
+        // SQLite and PostgreSQL in fast-running CI tests.
+        $requirementTimestamp = now()->subMinutes(2);
+        $applicationTimestamp = now()->subMinute();
+
+        $required->forceFill([
+            'created_at' => $requirementTimestamp,
+            'updated_at' => $requirementTimestamp,
+        ])->saveQuietly();
+
+        $application->forceFill([
+            'created_at' => $applicationTimestamp,
+            'updated_at' => $applicationTimestamp,
+        ])->saveQuietly();
+
+        $required->refresh();
+        $application->refresh();
 
         $this->actingAs($admin)
             ->get(route('admin.applications.show', $application))

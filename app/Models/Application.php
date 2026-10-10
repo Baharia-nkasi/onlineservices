@@ -39,13 +39,18 @@ class Application extends Model
      */
     public function effectiveServiceRequirements()
     {
-        return $this->service->documents()->withTrashed()->get()->filter(function (ServiceDocument $requirement) {
+        return ServiceDocument::withTrashed()->where('service_id', $this->service_id)->orderBy('sort_order')->get()->filter(function (ServiceDocument $requirement) {
             if (! $requirement->created_at || ! $this->created_at) {
                 return $requirement->is_active;
             }
 
-            return $requirement->created_at <= $this->created_at
-                && ($requirement->is_active || $requirement->updated_at > $this->created_at);
+            // Compare persisted timestamps explicitly so SQLite test data and
+            // production database timestamps follow the same historical cutoff.
+            $createdBeforeApplication = $requirement->created_at->getTimestamp() <= $this->created_at->getTimestamp();
+            $changedAfterApplication = $requirement->updated_at
+                && $requirement->updated_at->getTimestamp() > $this->created_at->getTimestamp();
+
+            return $createdBeforeApplication && ($requirement->is_active || $changedAfterApplication);
         });
     }
 }

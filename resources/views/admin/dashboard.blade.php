@@ -98,7 +98,7 @@
                                     default=>'bg-[#00ff66]/10 text-[#9dffbb] border-[#00ff66]/30'
                                 };
                             @endphp
-                            <tr data-search-row data-search-text="{{ strtolower($application->id . ' ' . $application->user->name . ' ' . $application->user->email . ' ' . $application->service->name . ' ' . $application->status) }}" class="neon-row">
+                            <tr data-search-row data-application-id="{{ $application->id }}" data-search-text="{{ strtolower($application->id . ' ' . $application->user->name . ' ' . $application->user->email . ' ' . $application->service->name . ' ' . $application->status) }}" class="neon-row">
                                 <td class="px-4 py-4 font-black text-[#39ff14]">#{{ $application->id }}</td>
                                 <td class="px-4 py-4"><div class="font-bold text-white">{{ $application->user->name }}</div><div class="text-xs text-[#71867b]">{{ $application->user->email }}</div></td>
                                 <td class="px-4 py-4 font-semibold text-[#c4d5cc]">{{ $application->service->name }}</td>
