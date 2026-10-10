@@ -158,6 +158,21 @@
                     <h2 class="text-lg font-black text-slate-900">Completion checklist</h2>
                     <p class="mt-1 text-sm text-slate-500">An application can only be completed when required documents and special groups are approved.</p>
                     <div class="mt-5 space-y-3">
+                        <div class="rounded-xl border border-slate-200 bg-white p-3">
+                            <p class="text-xs font-black uppercase tracking-wide text-slate-500">Required service documents</p>
+                            @if($requirements->isNotEmpty())
+                                <ul class="mt-2 space-y-2">
+                                    @foreach($requirements as $requirement)
+                                        <li class="flex items-start gap-2 text-sm text-slate-700">
+                                            <span class="mt-0.5 text-emerald-600">✓</span>
+                                            <span>{{ $requirement->name }} @if($requirement->is_required)<span class="text-xs font-bold text-slate-400">(required)</span>@endif</span>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            @else
+                                <p class="mt-2 text-sm text-slate-500">No service requirements were recorded for this application.</p>
+                            @endif
+                        </div>
                         <div class="flex items-center justify-between rounded-xl bg-slate-50 p-3">
                             <span class="text-sm font-bold text-slate-700">Required documents</span>
                             <span class="text-sm font-black {{ $approvedRequired === $required->count() ? 'text-emerald-700' : 'text-amber-700' }}">{{ $approvedRequired }}/{{ $required->count() }}</span>
