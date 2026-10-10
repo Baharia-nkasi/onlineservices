@@ -208,13 +208,24 @@ class DashboardWorkflowTest extends TestCase
             'status' => 'processing',
         ]);
 
-        // Make the historical ordering deterministic across SQLite and PostgreSQL,
-        // whose timestamp precision/defaults can differ in fast-running tests.
-        $historicalTimestamp = now()->subMinute();
+        // Persist an unambiguous timeline: the requirement existed before the
+        // application was submitted. This avoids same-second timestamp ties across
+        // SQLite and PostgreSQL in fast-running CI tests.
+        $requirementTimestamp = now()->subMinutes(2);
+        $applicationTimestamp = now()->subMinute();
+
         $required->forceFill([
-            'created_at' => $historicalTimestamp,
-            'updated_at' => $historicalTimestamp,
-        ])->save();
+            'created_at' => $requirementTimestamp,
+            'updated_at' => $requirementTimestamp,
+        ])->saveQuietly();
+
+        $application->forceFill([
+            'created_at' => $applicationTimestamp,
+            'updated_at' => $applicationTimestamp,
+        ])->saveQuietly();
+
+        $required->refresh();
+        $application->refresh();
 
         $this->actingAs($admin)
             ->get(route('admin.applications.show', $application))
