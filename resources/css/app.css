@@ -1674,3 +1674,98 @@ html.dark .service-card-image-wrap {
 .neon-admin-shell .theme-toggle-dock {
     filter: drop-shadow(0 0 10px rgba(0,255,102,.08));
 }
+
+
+/* Global emerald neon theme: shared across public pages and both dashboards. */
+:root {
+    --accent-color: #16a34a;
+    --accent-soft: #dcfce7;
+    --neon-green-bright: #39ff14;
+    --neon-green: #00e676;
+}
+html.dark {
+    --accent-color: #4ade80;
+    --accent-soft: #052e16;
+}
+::selection { background: rgba(57,255,20,.28); color: #052e16; }
+a[class~="text-blue-700"], a[class~="text-blue-800"],
+.portal-accent, .portal-button-ghost, .dashboard-kicker, .dashboard-link {
+    color: #15803d !important;
+}
+a[class~="text-blue-700"]:hover, a[class~="text-blue-800"]:hover,
+.portal-button-ghost:hover, .dashboard-link:hover {
+    color: #166534 !important;
+}
+[class~="bg-blue-700"], [class~="bg-blue-800"], .portal-button {
+    background-color: #15803d !important;
+    box-shadow: 0 4px 16px rgba(0,230,118,.18), 0 0 0 rgba(57,255,20,0);
+}
+[class~="bg-blue-700"]:hover, [class~="bg-blue-800"]:hover, .portal-button:hover {
+    background-color: #166534 !important;
+    box-shadow: 0 0 18px rgba(57,255,20,.28), 0 8px 24px rgba(0,230,118,.20);
+}
+[class~="text-blue-200"], [class~="text-blue-300"] { color: #86efac !important; }
+[class~="bg-blue-50"] { background-color: #f0fdf4 !important; }
+[class~="border-blue-200"], [class~="border-blue-400"] { border-color: rgba(34,197,94,.42) !important; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+    --tw-ring-color: rgba(34,197,94,.8) !important;
+}
+.portal-card:hover, .admin-management-card:hover {
+    border-color: rgba(34,197,94,.35);
+    box-shadow: 0 12px 30px rgba(22,163,74,.10), 0 0 18px rgba(57,255,20,.06);
+}
+.portal-stat::after { background-color: rgba(134,239,172,.65); }
+.portal-gradient {
+    background-image: linear-gradient(135deg, #03140a 0%, #064e3b 52%, #15803d 100%) !important;
+}
+.dashboard-hero {
+    background-image: radial-gradient(circle at 80% 10%, rgba(57,255,20,.18), transparent 35%), linear-gradient(135deg,#03140a,#052e16 58%,#064e3b) !important;
+    box-shadow: 0 12px 35px rgba(0,0,0,.16), 0 0 24px rgba(57,255,20,.06);
+}
+.dashboard-icon { background-color: #f0fdf4 !important; color: #15803d !important; }
+.theme-toggle-switch:hover, .theme-toggle-switch:focus-visible {
+    border-color: #22c55e;
+    box-shadow: 0 0 0 3px rgba(34,197,94,.12), 0 12px 30px var(--shadow-color);
+}
+/* Public homepage: emerald lighting without reducing text contrast. */
+body:not(.app-shell) > header {
+    border-color: rgba(34,197,94,.22) !important;
+    box-shadow: 0 4px 22px rgba(22,163,74,.06);
+}
+body:not(.app-shell) > main > section:first-child {
+    background-color: #03140a !important;
+}
+body:not(.app-shell) > main > section:first-child > div.absolute.inset-0 {
+    background-image: radial-gradient(circle at 78% 18%, rgba(57,255,20,.20), transparent 34%), radial-gradient(circle at 12% 88%, rgba(0,230,118,.14), transparent 32%) !important;
+}
+body:not(.app-shell) > main > section:first-child .rounded-\[2rem\] {
+    border-color: rgba(57,255,20,.18);
+    box-shadow: 0 0 32px rgba(57,255,20,.07);
+}
+body:not(.app-shell) > main > section:nth-of-type(2) a,
+body:not(.app-shell) > main > section:nth-of-type(2) p[class~="text-blue-700"],
+body:not(.app-shell) > main > section:nth-of-type(3) p[class~="text-blue-700"],
+body:not(.app-shell) > main > section:nth-of-type(4) p[class~="text-blue-700"] {
+    color: #15803d !important;
+}
+body:not(.app-shell) > main > section:nth-of-type(3) {
+    border-color: rgba(34,197,94,.18) !important;
+}
+body:not(.app-shell) > footer {
+    border-color: rgba(34,197,94,.22) !important;
+    background-image: linear-gradient(135deg,#020b05,#03140a 70%,#052e16) !important;
+}
+@keyframes emerald-soft-glow {
+    0%, 100% { box-shadow: 0 0 10px rgba(57,255,20,.16), 0 4px 14px rgba(22,163,74,.12); }
+    50% { box-shadow: 0 0 22px rgba(57,255,20,.28), 0 6px 20px rgba(22,163,74,.20); }
+}
+body:not(.app-shell) > header a[class~="bg-blue-700"],
+body:not(.app-shell) > main > section:first-child a[class~="bg-white"] {
+    animation: emerald-soft-glow 3.8s ease-in-out infinite;
+}
+html.dark [class~="bg-blue-50"] { background-color: #052e16 !important; }
+html.dark .dashboard-icon { background-color: #052e16 !important; color: #86efac !important; }
+@media (prefers-reduced-motion: reduce) {
+    body:not(.app-shell) > header a[class~="bg-blue-700"],
+    body:not(.app-shell) > main > section:first-child a[class~="bg-white"] { animation: none !important; }
+}
