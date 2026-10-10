@@ -43,7 +43,7 @@
                         $approvedCount = $showUploadedCounts ? $application->documents->where('status', 'approved')->count() : 0;
                     @endphp
 
-                    <article class="portal-card overflow-hidden transition hover:-translate-y-0.5 hover:shadow-md">
+                    <article data-application-id="{{ $application->id }}" class="portal-card overflow-hidden transition hover:-translate-y-0.5 hover:shadow-md">
                         <div class="p-5 sm:p-6">
                             <div class="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
                                 <div class="min-w-0">
