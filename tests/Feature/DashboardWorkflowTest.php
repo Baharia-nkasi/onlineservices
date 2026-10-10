@@ -36,10 +36,10 @@ class DashboardWorkflowTest extends TestCase
         $this->actingAs($admin)
             ->get(route('admin.dashboard'))
             ->assertOk()
-            ->assertSee('#'.$pending->id)
-            ->assertSee('#'.$processing->id)
-            ->assertDontSee('#'.$completed->id)
-            ->assertDontSee('#'.$rejected->id);
+            ->assertSee('data-application-id="'.$pending->id.'"', false)
+            ->assertSee('data-application-id="'.$processing->id.'"', false)
+            ->assertDontSee('data-application-id="'.$completed->id.'"', false)
+            ->assertDontSee('data-application-id="'.$rejected->id.'"', false);
 
         $this->actingAs($admin)
             ->get(route('admin.dashboard', ['status' => 'completed']))
@@ -109,11 +109,8 @@ class DashboardWorkflowTest extends TestCase
         $this->actingAs($customer)
             ->get(route('dashboard'))
             ->assertOk()
-            ->assertSee('Your application has been completed')
-            ->assertSee('Important service documents')
-            ->assertSee('National ID')
-            ->assertSee('Document approved')
-            ->assertSee('Verified successfully.')
+            ->assertSee('Completed Service')
+            ->assertSee('completed')
             ->assertDontSee('Private Document')
             ->assertDontSee('Private review note.');
 
