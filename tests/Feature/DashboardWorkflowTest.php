@@ -7,6 +7,7 @@ use App\Models\ApplicationDocument;
 use App\Models\Service;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class DashboardWorkflowTest extends TestCase
@@ -118,6 +119,66 @@ class DashboardWorkflowTest extends TestCase
 
         $this->assertNotSame($completed->user_id, $rejected->user_id);
         $this->assertNotNull($approvedDocument->id);
+    }
+
+
+    public function test_approval_preserves_uploaded_documents_and_completion_notifies_customer(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $customer = User::factory()->create(['role' => 'customer']);
+
+        $service = Service::create([
+            'name' => 'Document Retention Service',
+            'slug' => 'document-retention-service',
+            'description' => 'Regression test',
+            'government_fee' => 0,
+            'service_fee' => 0,
+            'is_active' => true,
+        ]);
+
+        $application = Application::create([
+            'user_id' => $customer->id,
+            'service_id' => $service->id,
+            'status' => 'pending',
+        ]);
+
+        $document = ApplicationDocument::create([
+            'application_id' => $application->id,
+            'document_name' => 'Supporting Document',
+            'file_name' => 'support.pdf',
+            'file_path' => 'database://application-documents/regression-test',
+            'file_content' => '%PDF-retained-content%',
+            'file_type' => 'application/pdf',
+            'file_size' => 23,
+            'status' => 'pending',
+        ]);
+
+        $this->actingAs($admin)
+            ->patch(route('admin.applications.status', $application), [
+                'status' => 'approved',
+                'approval_remark' => 'Approved.',
+            ])
+            ->assertRedirect();
+
+        $this->assertDatabaseHas('application_documents', ['id' => $document->id]);
+
+        $this->actingAs($admin)
+            ->patch(route('admin.applications.status', $application), [
+                'status' => 'completed',
+            ])
+            ->assertRedirect();
+
+        $this->assertDatabaseHas('application_documents', ['id' => $document->id]);
+        $completionNotificationExists = DB::table('notifications')
+            ->where('notifiable_id', $customer->id)
+            ->get(['data'])
+            ->contains(function ($notification) {
+                $data = json_decode((string) $notification->data, true);
+
+                return ($data['status'] ?? null) === 'completed';
+            });
+
+        $this->assertTrue($completionNotificationExists, 'The customer should receive a completion notification.');
     }
 
     public function test_admin_application_detail_uses_historical_requirements_and_rejects_unavailable_completion_files(): void
