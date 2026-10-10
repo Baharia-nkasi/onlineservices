@@ -44,8 +44,13 @@ class Application extends Model
                 return $requirement->is_active;
             }
 
-            return $requirement->created_at <= $this->created_at
-                && ($requirement->is_active || $requirement->updated_at > $this->created_at);
+            // Compare persisted timestamps explicitly so SQLite test data and
+            // production database timestamps follow the same historical cutoff.
+            $createdBeforeApplication = $requirement->created_at->getTimestamp() <= $this->created_at->getTimestamp();
+            $changedAfterApplication = $requirement->updated_at
+                && $requirement->updated_at->getTimestamp() > $this->created_at->getTimestamp();
+
+            return $createdBeforeApplication && ($requirement->is_active || $changedAfterApplication);
         });
     }
 }
