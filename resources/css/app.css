@@ -2427,11 +2427,16 @@ html:not(.dark) .app-main :is(.dashboard-hero, .portal-gradient, .admin-service-
     color: #f8fafc !important;
 }
 /* Table and dropdown content retain readable contrast regardless of theme. */
-html.dark .app-main :is(.portal-card, .admin-management-card, .neon-card, .neon-glow-border, .portal-stat, .bg-white, .bg-slate-50, .bg-slate-100, .bg-gray-50, .bg-gray-100, .mobile-menu, .site-navigation) {
+html.dark .app-main :is(.portal-card, .admin-management-card, .neon-card, .neon-glow-border, .portal-stat) {
+    background-color: #1e293b;
+    border-color: #334155;
     color: #f1f5f9;
 }
-html.dark .app-main :is(.portal-card, .admin-management-card, .neon-card, .neon-glow-border, .portal-stat, .bg-white, .bg-slate-50, .bg-slate-100, .bg-gray-50, .bg-gray-100, .mobile-menu, .site-navigation) :is(h1, h2, h3, h4, h5, h6, p, label, li, dt, dd, th, td, legend, summary, strong, small, [class~="text-slate-500"], [class~="text-slate-600"], [class~="text-slate-700"], [class~="text-slate-800"], [class~="text-slate-900"]) {
+html.dark .app-main :is(.portal-card, .admin-management-card, .neon-card, .neon-glow-border, .portal-stat) :is(h1, h2, h3, h4, h5, h6, p, label, li, dt, dd, th, td, legend, summary, strong, small, [class~="text-slate-500"], [class~="text-slate-600"], [class~="text-slate-700"], [class~="text-slate-800"], [class~="text-slate-900"]) {
     color: #e2e8f0 !important;
+}
+html:not(.dark) .app-main :is(.portal-button, .neon-button, .admin-pagination-button, button[class*="bg-green-"], button[class*="bg-emerald-"], a[class*="bg-green-"], a[class*="bg-emerald-"]) * {
+    color: #fff !important;
 }
 /* Navigation theme follows the selected mode instead of fixed white surfaces. */
 html.dark .site-navigation,
