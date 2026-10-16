@@ -1860,10 +1860,6 @@ html.dark .neon-admin-shell .neon-button-outline {
     color: #f8fafc;
     box-sizing: border-box;
 }
-.neon-admin-shell .admin-service-card.hidden {
-    /* Show all services together; the Laravel paginator below handles pages. */
-    display: flex !important;
-}
 .neon-admin-shell .admin-service-card > .mb-5 {
     width: 100%;
     min-width: 0;
@@ -2112,23 +2108,23 @@ html.dark .neon-admin-shell .neon-button-outline {
     white-space: normal;
     overflow-wrap: anywhere;
 }
-.neon-admin-shell .admin-service-card .border-slate-200,
-.neon-admin-shell .admin-service-card .border-slate-100 {
+.neon-admin-shell .admin-service-card [class~="border-slate-200"],
+.neon-admin-shell .admin-service-card [class~="border-slate-100"] {
     border-color: #334155 !important;
 }
-.neon-admin-shell .admin-service-card .bg-white,
-.neon-admin-shell .admin-service-card .bg-slate-50,
-.neon-admin-shell .admin-service-card .bg-slate-100 {
+.neon-admin-shell .admin-service-card [class~="bg-white"],
+.neon-admin-shell .admin-service-card [class~="bg-slate-50"],
+.neon-admin-shell .admin-service-card [class~="bg-slate-100"] {
     background-color: #1e293b !important;
 }
-.neon-admin-shell .admin-service-card .text-slate-900,
-.neon-admin-shell .admin-service-card .text-slate-800,
-.neon-admin-shell .admin-service-card .text-slate-700,
-.neon-admin-shell .admin-service-card .text-slate-600 {
+.neon-admin-shell .admin-service-card [class~="text-slate-900"],
+.neon-admin-shell .admin-service-card [class~="text-slate-800"],
+.neon-admin-shell .admin-service-card [class~="text-slate-700"],
+.neon-admin-shell .admin-service-card [class~="text-slate-600"] {
     color: #e2e8f0 !important;
 }
-.neon-admin-shell .admin-service-card .text-slate-500,
-.neon-admin-shell .admin-service-card .text-slate-400 {
+.neon-admin-shell .admin-service-card [class~="text-slate-500"],
+.neon-admin-shell .admin-service-card [class~="text-slate-400"] {
     color: #94a3b8 !important;
 }
 @media (max-width: 900px) {
