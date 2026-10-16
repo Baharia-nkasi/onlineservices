@@ -544,7 +544,7 @@ class AdminController extends Controller
 
             foreach ($services as $service) {
                 $service->documents()->withTrashed()->forceDelete();
-                $service->forceDelete();
+                $service->delete();
                 $removed++;
             }
         });
@@ -576,7 +576,7 @@ class AdminController extends Controller
             // applications. Historical application and notification records are
             // never cascaded away by a service-management action.
             $service->documents()->withTrashed()->forceDelete();
-            $service->forceDelete();
+            $service->delete();
         });
 
         return redirect()->route('admin.services.index')
