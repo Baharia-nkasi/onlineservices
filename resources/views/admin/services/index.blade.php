@@ -104,7 +104,7 @@
             </div>
             <div id="service-management-carousel" class="admin-services-stage p-3 sm:p-5 lg:p-6">
                 @forelse($services as $service)
-                    <article data-service-step class="admin-management-step admin-service-card hidden w-full p-4 sm:p-5 lg:p-6">
+                    <article data-service-step class="admin-management-step admin-service-card w-full p-4 sm:p-5 lg:p-6">
                         <div class="mb-5 overflow-hidden rounded-[20px] border border-slate-200 bg-slate-100">
                             <img
                                 src="{{ $service->image_url ?: \App\Support\ServiceImage::fallbackDataUri($service) }}"
@@ -221,14 +221,6 @@
                 @endforelse
             </div>
             @if($services->count() > 0)
-                <div class="admin-services-pagination flex flex-col gap-4 border-t border-slate-200 bg-white p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
-                    <div class="flex items-center gap-2">
-                        <button type="button" id="service-prev" class="portal-button-secondary !w-auto" aria-label="{{ __('Previous service') }}">← {{ __('Previous') }}</button>
-                        <div id="service-dots" class="flex flex-wrap items-center justify-center gap-1.5" aria-label="{{ __('Service navigation') }}"></div>
-                        <button type="button" id="service-next" class="portal-button !w-auto" aria-label="{{ __('Next service') }}">{{ __('Next') }} →</button>
-                    </div>
-                    <p id="service-step-label" class="text-center text-sm font-bold text-slate-500" aria-live="polite"></p>
-                </div>
                 <nav class="border-t border-slate-200 bg-slate-50 px-4 py-4 sm:px-6" aria-label="{{ __('Service result pages') }}">
                     {{ $services->links() }}
                 </nav>
@@ -240,60 +232,13 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    const steps = Array.from(document.querySelectorAll('[data-service-step]'));
-    const previous = document.getElementById('service-prev');
-    const next = document.getElementById('service-next');
-    const dots = document.getElementById('service-dots');
-    const label = document.getElementById('service-step-label');
     const search = document.getElementById('service-search');
-
-    if (!steps.length || !previous || !next || !dots || !label) return;
-
-    let current = 0;
-
-    function render(index, shouldScroll = false) {
-        current = (index + steps.length) % steps.length;
-
-        steps.forEach((step, stepIndex) => {
-            const active = stepIndex === current;
-            step.classList.toggle('hidden', !active);
-            step.setAttribute('aria-hidden', active ? 'false' : 'true');
-        });
-
-        dots.innerHTML = '';
-        steps.forEach((step, stepIndex) => {
-            const button = document.createElement('button');
-            button.type = 'button';
-            button.textContent = String(stepIndex + 1);
-            button.setAttribute('aria-label', 'Service ' + (stepIndex + 1));
-            button.setAttribute('aria-current', stepIndex === current ? 'true' : 'false');
-            button.className = stepIndex === current
-                ? 'admin-service-dot is-active'
-                : 'admin-service-dot';
-            button.addEventListener('click', () => render(stepIndex, true));
-            dots.appendChild(button);
-        });
-
-        label.textContent = (current + 1) + ' / ' + steps.length;
-        previous.disabled = steps.length <= 1;
-        next.disabled = steps.length <= 1;
-
-        if (shouldScroll && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            document.getElementById('service-management-carousel')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-        }
-    }
-
-    previous.addEventListener('click', () => render(current - 1, true));
-    next.addEventListener('click', () => render(current + 1, true));
-
     search?.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape') {
+        if (event.key === 'Escape' && search.value) {
             search.value = '';
             search.form?.submit();
         }
     });
-
-    render(0);
 });
 </script>
 
