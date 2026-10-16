@@ -1816,3 +1816,61 @@ html.dark .neon-admin-shell .neon-button-outline {
         transition: none !important;
     }
 }
+
+
+/* Accessibility fix: readable text in every editable control for Admin and Customer.
+   Keep the green portal theme, but never use green as the entered-text color. */
+.app-shell input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]),
+.app-shell textarea,
+.app-shell select,
+.app-shell [contenteditable="true"],
+body:not(.app-shell) input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]),
+body:not(.app-shell) textarea,
+body:not(.app-shell) select,
+body:not(.app-shell) [contenteditable="true"] {
+    color: #111827 !important;
+    -webkit-text-fill-color: #111827;
+    caret-color: #111827;
+    background-color: #ffffff;
+}
+.app-shell input::placeholder,
+.app-shell textarea::placeholder,
+body:not(.app-shell) input::placeholder,
+body:not(.app-shell) textarea::placeholder {
+    color: #6b7280 !important;
+    -webkit-text-fill-color: #6b7280;
+    opacity: 1;
+}
+.app-shell input:disabled,
+.app-shell textarea:disabled,
+.app-shell select:disabled,
+body:not(.app-shell) input:disabled,
+body:not(.app-shell) textarea:disabled,
+body:not(.app-shell) select:disabled {
+    color: #4b5563 !important;
+    -webkit-text-fill-color: #4b5563;
+    opacity: 1;
+}
+html.dark .app-shell input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="color"]),
+html.dark .app-shell textarea,
+html.dark .app-shell select,
+html.dark .app-shell [contenteditable="true"] {
+    color: #111827 !important;
+    -webkit-text-fill-color: #111827;
+    caret-color: #111827;
+    background-color: #ffffff;
+}
+html.dark .app-shell input::placeholder,
+html.dark .app-shell textarea::placeholder {
+    color: #6b7280 !important;
+    -webkit-text-fill-color: #6b7280;
+}
+.app-shell input:focus,
+.app-shell textarea:focus,
+.app-shell select:focus,
+body:not(.app-shell) input:focus,
+body:not(.app-shell) textarea:focus,
+body:not(.app-shell) select:focus {
+    border-color: #16a34a;
+    outline-color: #16a34a;
+}
