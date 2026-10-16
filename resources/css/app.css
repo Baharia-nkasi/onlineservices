@@ -2348,3 +2348,107 @@ html.dark .neon-admin-shell .neon-button-outline {
         width: 100%;
     }
 }
+
+
+/* Theme contrast fix: keep text and editable values readable in both themes. */
+html:not(.dark) {
+    color-scheme: light;
+    --portal-page-text: #111827;
+    --portal-muted-text: #475569;
+    --portal-input-bg: #ffffff;
+    --portal-input-text: #111827;
+    --portal-input-border: #cbd5e1;
+}
+html.dark {
+    color-scheme: dark;
+    --portal-page-text: #f1f5f9;
+    --portal-muted-text: #cbd5e1;
+    --portal-input-bg: #0f172a;
+    --portal-input-text: #f8fafc;
+    --portal-input-border: #475569;
+}
+html:not(.dark) body,
+html:not(.dark) .app-main {
+    color: var(--portal-page-text);
+}
+html.dark body,
+html.dark .app-main {
+    color: var(--portal-page-text);
+}
+
+/* Inputs must never inherit a low-contrast accent/green text color. */
+.app-shell input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):not([type="submit"]),
+.app-shell select,
+.app-shell textarea,
+.app-shell [contenteditable="true"] {
+    color: var(--portal-input-text) !important;
+    caret-color: var(--portal-input-text);
+}
+html:not(.dark) .app-shell input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+html:not(.dark) .app-shell select,
+html:not(.dark) .app-shell textarea,
+html:not(.dark) .app-shell [contenteditable="true"] {
+    background-color: #fff;
+    border-color: var(--portal-input-border);
+}
+html.dark .app-shell input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+html.dark .app-shell select,
+html.dark .app-shell textarea,
+html.dark .app-shell [contenteditable="true"] {
+    background-color: var(--portal-input-bg);
+    border-color: var(--portal-input-border);
+}
+.app-shell input::placeholder,
+.app-shell textarea::placeholder {
+    color: var(--portal-muted-text) !important;
+    opacity: 1;
+}
+.app-shell input:disabled,
+.app-shell select:disabled,
+.app-shell textarea:disabled {
+    opacity: .75;
+}
+
+/* Restore readable text on light cards, panels, tables and dropdowns in light mode. */
+html:not(.dark) .app-main :is(.portal-card, .admin-management-card, .neon-card, .neon-glow-border, .portal-stat, .bg-white, .bg-slate-50, .bg-slate-100, .bg-gray-50, .bg-gray-100, .mobile-menu, .site-navigation) {
+    color: #111827;
+}
+html:not(.dark) .app-main :is(.portal-card, .admin-management-card, .neon-card, .neon-glow-border, .portal-stat, .bg-white, .bg-slate-50, .bg-slate-100, .bg-gray-50, .bg-gray-100, .mobile-menu, .site-navigation) :is(h1, h2, h3, h4, h5, h6, p, label, li, dt, dd, th, td, legend, summary, strong, small, [class~="text-slate-100"], [class~="text-slate-200"], [class~="text-slate-300"], [class~="text-slate-400"], [class~="text-slate-500"], [class~="text-white"]) {
+    color: #1f2937 !important;
+}
+/* Preserve deliberate contrast on colored actions and dark feature panels. */
+html:not(.dark) .app-main :is(.portal-button, .portal-button-secondary, .portal-button-ghost, .neon-button, .neon-button-outline, .dashboard-hero, .portal-gradient, .admin-service-card, .admin-add-service-card, .admin-document-panel, .admin-services-pagination) {
+    color: inherit;
+}
+html:not(.dark) .app-main :is(.portal-button, .neon-button, .admin-pagination-button, button[class*="bg-green-"], button[class*="bg-emerald-"], a[class*="bg-green-"], a[class*="bg-emerald-"]) {
+    color: #fff !important;
+}
+html:not(.dark) .app-main :is(.dashboard-hero, .portal-gradient, .admin-service-card, .admin-add-service-card, .admin-document-panel, .admin-services-pagination) :is(h1, h2, h3, h4, h5, h6, p, label, li, strong, small, [class~="text-white"], [class~="text-slate-100"], [class~="text-slate-200"], [class~="text-slate-300"], [class~="text-slate-400"]) {
+    color: #f8fafc !important;
+}
+/* Table and dropdown content retain readable contrast regardless of theme. */
+html.dark .app-main :is(.portal-card, .admin-management-card, .neon-card, .neon-glow-border, .portal-stat) {
+    background-color: #1e293b;
+    border-color: #334155;
+    color: #f1f5f9;
+}
+html.dark .app-main :is(.portal-card, .admin-management-card, .neon-card, .neon-glow-border, .portal-stat) :is(h1, h2, h3, h4, h5, h6, p, label, li, dt, dd, th, td, legend, summary, strong, small, [class~="text-slate-500"], [class~="text-slate-600"], [class~="text-slate-700"], [class~="text-slate-800"], [class~="text-slate-900"]) {
+    color: #e2e8f0 !important;
+}
+html:not(.dark) .app-main :is(.portal-button, .neon-button, .admin-pagination-button, button[class*="bg-green-"], button[class*="bg-emerald-"], a[class*="bg-green-"], a[class*="bg-emerald-"]) * {
+    color: #fff !important;
+}
+/* Navigation theme follows the selected mode instead of fixed white surfaces. */
+html.dark .site-navigation,
+html.dark .site-navigation .mobile-menu {
+    background-color: #0f172a !important;
+    border-color: #334155 !important;
+    color: #f8fafc;
+}
+html.dark .site-navigation :is(a, button):not([class*="bg-blue-"]):not([class*="bg-green-"]):not([class*="bg-emerald-"]) {
+    color: #e2e8f0;
+}
+html:not(.dark) .site-navigation {
+    background-color: rgba(255, 255, 255, .97);
+    color: #111827;
+}
