@@ -330,6 +330,7 @@ class AdminController extends Controller
         $search = trim((string) ($validated['q'] ?? ''));
 
         $services = Service::where('is_active', true)
+            ->with('documents')
             ->withCount('applications')
             ->withCount(['documents as active_documents_count' => fn ($query) => $query->where('is_active', true)])
             ->when($search !== '', function ($query) use ($search) {
@@ -342,8 +343,7 @@ class AdminController extends Controller
                 });
             })
             ->latest()
-            ->paginate(15)
-            ->withQueryString();
+            ->get();
 
         return view('admin.services.index', compact('services', 'search'));
     }
