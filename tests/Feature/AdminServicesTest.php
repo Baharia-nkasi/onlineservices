@@ -382,4 +382,82 @@ class AdminServicesTest extends TestCase
         $this->assertDatabaseHas('services', ['id' => $historicalInactive->id]);
     }
 
+
+    public function test_admin_can_search_active_services_by_name_slug_or_description(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+
+        Service::create([
+            'name' => 'Passport Assistance',
+            'slug' => 'passport-help',
+            'description' => 'Support for travel documents',
+            'government_fee' => 0,
+            'service_fee' => 0,
+            'is_active' => true,
+        ]);
+
+        Service::create([
+            'name' => 'Birth Certificate',
+            'slug' => 'birth-certificate',
+            'description' => 'Registration support',
+            'government_fee' => 0,
+            'service_fee' => 0,
+            'is_active' => true,
+        ]);
+
+        Service::create([
+            'name' => 'Inactive Passport Service',
+            'slug' => 'inactive-passport',
+            'description' => 'Hidden from active catalogue',
+            'government_fee' => 0,
+            'service_fee' => 0,
+            'is_active' => false,
+        ]);
+
+        $this->actingAs($admin)
+            ->get(route('admin.services.index', ['q' => 'PASSPORT']))
+            ->assertOk()
+            ->assertSee('Passport Assistance')
+            ->assertDontSee('Birth Certificate')
+            ->assertDontSee('Inactive Passport Service')
+            ->assertSee('Search results for');
+
+        $this->actingAs($admin)
+            ->get(route('admin.services.index', ['q' => 'travel documents']))
+            ->assertOk()
+            ->assertSee('Passport Assistance')
+            ->assertDontSee('Birth Certificate');
+
+        $this->actingAs($admin)
+            ->get(route('admin.services.index', ['q' => 'birth-certificate']))
+            ->assertOk()
+            ->assertSee('Birth Certificate')
+            ->assertDontSee('Passport Assistance');
+    }
+
+    public function test_manage_services_page_shows_add_plus_icon_and_search_controls(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+
+        $this->actingAs($admin)
+            ->get(route('admin.services.index'))
+            ->assertOk()
+            ->assertSee('Add New Service')
+            ->assertSee('admin-management-icon', false)
+            ->assertSee('name="q"', false)
+            ->assertSee('Search service name, slug or description...', false)
+            ->assertSee('id="service-search"', false);
+    }
+
+    public function test_service_search_empty_state_offers_clear_search(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+
+        $this->actingAs($admin)
+            ->get(route('admin.services.index', ['q' => 'does-not-exist']))
+            ->assertOk()
+            ->assertSee('No matching services found')
+            ->assertSee('Clear search');
+    }
+
 }
