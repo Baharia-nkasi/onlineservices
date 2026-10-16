@@ -94,11 +94,11 @@
 
 /* Tablet: provide room for the long admin/customer navigation. */
 @media (max-width: 1023px) {
-    .site-navigation .md\\:flex {
+    .site-navigation .md\:flex {
         display: none !important;
     }
 
-    .site-navigation .md\\:hidden {
+    .site-navigation .md\:hidden {
         display: inline-flex !important;
     }
 
