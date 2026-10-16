@@ -1816,3 +1816,397 @@ html.dark .neon-admin-shell .neon-button-outline {
         transition: none !important;
     }
 }
+
+
+/* ==========================================================================
+   Admin Manage Services — responsive card, form, and action layout
+   Scoped to the services management page; preserves routes and form behavior.
+   ========================================================================== */
+.neon-admin-shell .admin-services-panel,
+.neon-admin-shell .admin-services-toolbar,
+.neon-admin-shell .admin-services-stage {
+    min-width: 0;
+    width: 100%;
+    max-width: 100%;
+    background: #1e293b;
+    color: #f8fafc;
+}
+.neon-admin-shell .admin-services-panel {
+    border: 1px solid #334155;
+    border-radius: 1.25rem;
+}
+.neon-admin-shell .admin-services-toolbar {
+    border-color: #334155 !important;
+}
+.neon-admin-shell .admin-services-toolbar .text-slate-900,
+.neon-admin-shell .admin-services-toolbar .text-slate-800,
+.neon-admin-shell .admin-services-toolbar .text-slate-700 {
+    color: #f8fafc !important;
+}
+.neon-admin-shell .admin-services-toolbar .text-slate-500,
+.neon-admin-shell .admin-services-toolbar .text-slate-400 {
+    color: #cbd5e1 !important;
+}
+.neon-admin-shell .admin-service-card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+    border: 1px solid #334155;
+    border-radius: 1rem;
+    background: #0f172a;
+    color: #f8fafc;
+    box-sizing: border-box;
+}
+.neon-admin-shell .admin-service-card.hidden {
+    /* Show all services together; the Laravel paginator below handles pages. */
+    display: flex !important;
+}
+.neon-admin-shell .admin-service-card > .mb-5 {
+    width: 100%;
+    min-width: 0;
+    flex: 0 0 auto;
+}
+.neon-admin-shell .admin-service-card > .mb-5 > img {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    object-fit: cover;
+}
+.neon-admin-shell .admin-service-edit-form {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: start;
+    gap: 1rem;
+    width: 100%;
+    min-width: 0;
+}
+.neon-admin-shell .admin-service-edit-form > .admin-field,
+.neon-admin-shell .admin-service-edit-form > .admin-service-status,
+.neon-admin-shell .admin-service-edit-form > .admin-service-actions {
+    min-width: 0;
+    max-width: 100%;
+}
+.neon-admin-shell .admin-service-edit-form .admin-field-service,
+.neon-admin-shell .admin-service-edit-form .admin-field-slug,
+.neon-admin-shell .admin-service-edit-form .admin-field-description {
+    grid-column: span 1;
+}
+.neon-admin-shell .admin-service-edit-form .admin-field-description,
+.neon-admin-shell .admin-service-edit-form > .admin-field.md\\:col-span-2,
+.neon-admin-shell .admin-service-edit-form > .admin-service-actions {
+    grid-column: 1 / -1;
+}
+.neon-admin-shell .admin-service-edit-form .admin-field-fee,
+.neon-admin-shell .admin-service-edit-form .admin-service-status {
+    grid-column: span 1;
+}
+.neon-admin-shell .admin-service-edit-form label {
+    display: block;
+    min-width: 0;
+    max-width: 100%;
+    line-height: 1.45;
+    overflow-wrap: anywhere;
+}
+.neon-admin-shell .admin-service-edit-form input:not([type="checkbox"]):not([type="hidden"]),
+.neon-admin-shell .admin-service-edit-form textarea,
+.neon-admin-shell .admin-service-edit-form select,
+.neon-admin-shell .admin-document-form input,
+.neon-admin-shell .admin-document-form select,
+.neon-admin-shell .admin-document-row input,
+.neon-admin-shell .admin-document-row select {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    min-height: 2.75rem;
+    border: 1px solid #475569 !important;
+    border-radius: .7rem !important;
+    background: #f8fafc !important;
+    color: #111827 !important;
+    padding: .65rem .8rem;
+    font-size: 1rem;
+    line-height: 1.4;
+}
+.neon-admin-shell .admin-service-edit-form input::placeholder,
+.neon-admin-shell .admin-document-form input::placeholder,
+.neon-admin-shell .admin-document-row input::placeholder {
+    color: #64748b !important;
+    opacity: 1;
+}
+.neon-admin-shell .admin-service-edit-form input[type="checkbox"],
+.neon-admin-shell .admin-document-form input[type="checkbox"],
+.neon-admin-shell .admin-document-row input[type="checkbox"] {
+    flex: 0 0 auto;
+    width: 1rem;
+    height: 1rem;
+}
+.neon-admin-shell .admin-service-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+    grid-column: 1 / -1;
+    width: 100%;
+    min-width: 0;
+    padding-top: .25rem;
+}
+.neon-admin-shell .admin-service-actions > span {
+    display: inline-flex;
+    flex: 0 1 auto;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: normal;
+    word-break: normal;
+    writing-mode: horizontal-tb;
+    line-height: 1.35;
+}
+.neon-admin-shell .admin-service-actions > button,
+.neon-admin-shell .admin-service-actions > a {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    min-width: max-content;
+    max-width: 100%;
+    min-height: 2.75rem;
+    white-space: nowrap;
+    word-break: normal;
+    overflow-wrap: normal;
+    writing-mode: horizontal-tb;
+    text-align: center;
+}
+.neon-admin-shell .admin-service-actions .portal-button {
+    background: #16a34a !important;
+    color: #fff !important;
+}
+.neon-admin-shell .admin-service-actions .portal-button:hover {
+    background: #15803d !important;
+}
+.neon-admin-shell .admin-service-status {
+    align-self: center;
+    padding: .5rem 0;
+}
+.neon-admin-shell .admin-document-panel {
+    min-width: 0;
+    width: 100%;
+    border: 1px solid #854d0e;
+    border-radius: .9rem;
+    background: #292113;
+    color: #fef3c7;
+    padding: 1rem;
+}
+.neon-admin-shell .admin-document-summary {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: .8rem;
+    width: 100%;
+    min-width: 0;
+    cursor: pointer;
+    list-style: none;
+}
+.neon-admin-shell .admin-document-summary::-webkit-details-marker {
+    display: none;
+}
+.neon-admin-shell .admin-document-summary-copy {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: .3rem;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+.neon-admin-shell .admin-document-summary-copy strong {
+    color: #fde68a;
+    line-height: 1.4;
+}
+.neon-admin-shell .admin-document-count {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .4rem;
+    color: #fcd34d;
+    font-size: .8rem;
+}
+.neon-admin-shell .admin-document-chevron {
+    flex: 0 0 auto;
+    margin-left: auto;
+    color: #facc15;
+    font-size: 1.35rem;
+    line-height: 1;
+    transition: transform .2s ease;
+}
+.neon-admin-shell .admin-document-panel[open] .admin-document-chevron {
+    transform: rotate(180deg);
+}
+.neon-admin-shell .admin-document-form {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: center;
+    gap: .75rem;
+    min-width: 0;
+}
+.neon-admin-shell .admin-document-form label {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    min-width: 0;
+    color: #fef3c7;
+}
+.neon-admin-shell .admin-document-row {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: .75rem;
+    min-width: 0;
+    padding: .9rem;
+    border: 1px solid #475569;
+    border-radius: .8rem;
+    background: #0f172a;
+}
+.neon-admin-shell .admin-service-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+    min-width: 0;
+}
+.neon-admin-shell .admin-service-footer > p {
+    flex: 1 1 16rem;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+.neon-admin-shell .admin-service-footer form {
+    min-width: 0;
+    max-width: 100%;
+}
+.neon-admin-shell .admin-service-footer button,
+.neon-admin-shell .admin-services-toolbar button,
+.neon-admin-shell .admin-services-toolbar a {
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+.neon-admin-shell .admin-services-panel nav[aria-label="Service result pages"] {
+    border-color: #334155 !important;
+    background: #0f172a !important;
+    color: #f8fafc;
+}
+/* The JS carousel controls are replaced by the single Laravel paginator. */
+.neon-admin-shell .admin-services-pagination {
+    display: none !important;
+}
+.neon-admin-shell .admin-services-panel nav[aria-label="Service result pages"] a,
+.neon-admin-shell .admin-services-panel nav[aria-label="Service result pages"] span {
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+.neon-admin-shell .admin-service-card .border-slate-200,
+.neon-admin-shell .admin-service-card .border-slate-100 {
+    border-color: #334155 !important;
+}
+.neon-admin-shell .admin-service-card .bg-white,
+.neon-admin-shell .admin-service-card .bg-slate-50,
+.neon-admin-shell .admin-service-card .bg-slate-100 {
+    background-color: #1e293b !important;
+}
+.neon-admin-shell .admin-service-card .text-slate-900,
+.neon-admin-shell .admin-service-card .text-slate-800,
+.neon-admin-shell .admin-service-card .text-slate-700,
+.neon-admin-shell .admin-service-card .text-slate-600 {
+    color: #e2e8f0 !important;
+}
+.neon-admin-shell .admin-service-card .text-slate-500,
+.neon-admin-shell .admin-service-card .text-slate-400 {
+    color: #94a3b8 !important;
+}
+@media (max-width: 900px) {
+    .neon-admin-shell .admin-service-edit-form {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .neon-admin-shell .admin-service-edit-form .admin-field-service,
+    .neon-admin-shell .admin-service-edit-form .admin-field-slug,
+    .neon-admin-shell .admin-service-edit-form .admin-field-fee,
+    .neon-admin-shell .admin-service-edit-form .admin-service-status {
+        grid-column: span 1;
+    }
+    .neon-admin-shell .admin-document-form {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .neon-admin-shell .admin-document-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+@media (max-width: 600px) {
+    .neon-admin-shell .admin-services-stage {
+        padding: .65rem !important;
+    }
+    .neon-admin-shell .admin-service-card {
+        padding: .85rem !important;
+        border-radius: .85rem;
+    }
+    .neon-admin-shell .admin-service-edit-form,
+    .neon-admin-shell .admin-document-form,
+    .neon-admin-shell .admin-document-row {
+        grid-template-columns: minmax(0, 1fr);
+        gap: .85rem;
+    }
+    .neon-admin-shell .admin-service-edit-form > .admin-field,
+    .neon-admin-shell .admin-service-edit-form > .admin-service-status,
+    .neon-admin-shell .admin-service-edit-form > .admin-service-actions {
+        grid-column: 1 / -1;
+    }
+    .neon-admin-shell .admin-service-actions {
+        justify-content: flex-start;
+        gap: .6rem;
+    }
+    .neon-admin-shell .admin-service-actions > span {
+        flex: 0 1 auto;
+    }
+    .neon-admin-shell .admin-service-actions > button,
+    .neon-admin-shell .admin-service-actions > a {
+        flex: 1 1 auto;
+        min-width: 0;
+        white-space: normal;
+        overflow-wrap: normal;
+        word-break: normal;
+        writing-mode: horizontal-tb;
+    }
+    .neon-admin-shell .admin-document-panel {
+        padding: .8rem;
+    }
+    .neon-admin-shell .admin-document-summary {
+        gap: .55rem;
+    }
+    .neon-admin-shell .admin-document-summary-copy strong {
+        font-size: .92rem;
+    }
+    .neon-admin-shell .admin-service-footer {
+        align-items: stretch;
+    }
+    .neon-admin-shell .admin-service-footer form,
+    .neon-admin-shell .admin-service-footer button {
+        width: 100%;
+    }
+    .neon-admin-shell .admin-services-panel nav[aria-label="Service result pages"] {
+        overflow-x: auto;
+    }
+}
+@media (max-width: 360px) {
+    .neon-admin-shell .admin-service-actions > button,
+    .neon-admin-shell .admin-service-actions > a {
+        flex-basis: 100%;
+        width: 100%;
+    }
+}
