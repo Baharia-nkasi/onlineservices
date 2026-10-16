@@ -277,7 +277,7 @@ document.addEventListener('DOMContentLoaded', function () {
             serviceFee: value('service_fee'),
             applicationsCount: badges[0]?.textContent.trim() ?? '0 applications',
             activeRequirements: badges[1]?.textContent.trim() ?? '0 active requirements',
-            isActive: Boolean(field('is_active')?.checked),
+            isActive: Boolean(form?.querySelector('input[type="checkbox"][name="is_active"]')?.checked),
             element
         };
     });
