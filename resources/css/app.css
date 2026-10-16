@@ -2210,3 +2210,8 @@ html.dark .neon-admin-shell .neon-button-outline {
         width: 100%;
     }
 }
+
+/* Ensure the image URL field spans the complete edit-form row in every browser. */
+.neon-admin-shell .admin-service-edit-form > .admin-field:has(input[name="image_url"]) {
+    grid-column: 1 / -1;
+}
