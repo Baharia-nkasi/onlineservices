@@ -2230,3 +2230,121 @@ html.dark .neon-admin-shell .neon-button-outline {
 .neon-admin-shell .admin-add-service-card .text-slate-400 {
     color: #cbd5e1 !important;
 }
+
+
+/* Active Services: responsive pricing fields and real client-side card pagination. */
+.neon-admin-shell .admin-service-pricing-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+    gap: 1rem;
+    grid-column: 1 / -1;
+    width: 100%;
+    min-width: 0;
+}
+.neon-admin-shell .admin-service-pricing-grid > .admin-field {
+    min-width: 0;
+    max-width: 100%;
+}
+.neon-admin-shell .admin-service-pricing-grid label {
+    display: block;
+    min-width: 0;
+    overflow-wrap: normal;
+}
+.neon-admin-shell .admin-service-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px;
+    align-items: center;
+}
+.neon-admin-shell .admin-service-actions > span {
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    flex: 0 0 auto;
+}
+.neon-admin-shell .admin-service-actions > button,
+.neon-admin-shell .admin-service-actions > a {
+    flex-shrink: 0;
+    writing-mode: horizontal-tb;
+    white-space: nowrap;
+}
+.neon-admin-shell .admin-document-summary {
+    justify-content: space-between;
+}
+.neon-admin-shell .admin-document-summary-copy {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: .5rem 1rem;
+}
+.neon-admin-shell .admin-document-count {
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+}
+.neon-admin-shell .admin-service-card[hidden] {
+    display: none !important;
+}
+.neon-admin-shell .admin-services-pagination {
+    display: flex !important;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: .75rem;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    padding: 1rem;
+    border-top: 1px solid #334155;
+    background: #0f172a;
+    color: #f8fafc;
+}
+.neon-admin-shell .admin-pagination-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.75rem;
+    min-width: 7rem;
+    max-width: 100%;
+    padding: .65rem 1rem;
+    border: 1px solid #16a34a;
+    border-radius: .75rem;
+    background: #15803d;
+    color: #fff;
+    font-weight: 800;
+    white-space: nowrap;
+    transition: background-color .15s ease, opacity .15s ease;
+}
+.neon-admin-shell .admin-pagination-button:hover:not(:disabled) {
+    background: #166534;
+}
+.neon-admin-shell .admin-pagination-button:disabled {
+    cursor: not-allowed;
+    opacity: .4;
+}
+.neon-admin-shell .admin-service-page-indicator {
+    color: #cbd5e1;
+    font-size: .875rem;
+    font-weight: 700;
+    text-align: center;
+    white-space: nowrap;
+}
+@media (max-width: 768px) {
+    .neon-admin-shell .admin-service-pricing-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    .neon-admin-shell .admin-document-summary-copy {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .neon-admin-shell .admin-services-pagination {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .neon-admin-shell .admin-pagination-button {
+        width: 100%;
+    }
+}
