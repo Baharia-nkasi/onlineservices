@@ -2452,3 +2452,110 @@ html:not(.dark) .site-navigation {
     background-color: rgba(255, 255, 255, .97);
     color: #111827;
 }
+
+
+/* Global theme contrast hardening (v2): handle utility classes across every page.
+   Light mode must not inherit white/pale text on light surfaces; dark mode must
+   not inherit dark slate text on dark surfaces. Preserve intentional action colors. */
+html:not(.dark) .app-shell {
+    --theme-text: #111827;
+    --theme-muted: #475569;
+    --theme-surface: #ffffff;
+    --theme-border: #cbd5e1;
+    color: var(--theme-text);
+}
+html.dark .app-shell {
+    --theme-text: #f8fafc;
+    --theme-muted: #cbd5e1;
+    --theme-surface: #0f172a;
+    --theme-border: #475569;
+    color: var(--theme-text);
+}
+html:not(.dark) .app-shell :is(
+    [class~="text-white"], [class~="text-slate-50"],
+    [class~="text-slate-100"], [class~="text-slate-200"],
+    [class~="text-slate-300"], [class~="text-slate-400"],
+    [class~="text-gray-50"], [class~="text-gray-100"],
+    [class~="text-gray-200"], [class~="text-gray-300"],
+    [class~="text-gray-400"]
+) {
+    color: #1f2937 !important;
+}
+html:not(.dark) .app-shell :is(
+    [class~="text-slate-500"], [class~="text-gray-500"],
+    [class~="text-zinc-500"], [class~="text-neutral-500"]
+) {
+    color: #475569 !important;
+}
+/* Keep high-contrast white labels on solid colored actions and intentional dark/gradient panels. */
+html:not(.dark) .app-shell :is(
+    button[class*="bg-blue-"], a[class*="bg-blue-"],
+    button[class*="bg-indigo-"], a[class*="bg-indigo-"],
+    button[class*="bg-green-"], a[class*="bg-green-"],
+    button[class*="bg-emerald-"], a[class*="bg-emerald-"],
+    button[class*="bg-red-"], a[class*="bg-red-"],
+    button[class*="bg-rose-"], a[class*="bg-rose-"],
+    button[class*="bg-purple-"], a[class*="bg-purple-"],
+    button[class*="bg-violet-"], a[class*="bg-violet-"],
+    button[class*="bg-sky-"], a[class*="bg-sky-"],
+    button[class*="bg-teal-"], a[class*="bg-teal-"],
+    .portal-button, .neon-button, .admin-pagination-button
+), html:not(.dark) .app-shell :is(
+    button[class*="bg-blue-"], a[class*="bg-blue-"],
+    button[class*="bg-indigo-"], a[class*="bg-indigo-"],
+    button[class*="bg-green-"], a[class*="bg-green-"],
+    button[class*="bg-emerald-"], a[class*="bg-emerald-"],
+    button[class*="bg-red-"], a[class*="bg-red-"],
+    button[class*="bg-rose-"], a[class*="bg-rose-"],
+    button[class*="bg-purple-"], a[class*="bg-purple-"],
+    button[class*="bg-violet-"], a[class*="bg-violet-"],
+    button[class*="bg-sky-"], a[class*="bg-sky-"],
+    button[class*="bg-teal-"], a[class*="bg-teal-"],
+    .portal-button, .neon-button, .admin-pagination-button
+) * {
+    color: #ffffff !important;
+}
+html:not(.dark) .app-shell :is(
+    .dashboard-hero, .portal-gradient, .admin-service-card,
+    .admin-add-service-card, .admin-document-panel, .admin-services-pagination,
+    [class*="bg-gradient-to-"], [class*="from-slate-800"], [class*="from-slate-900"],
+    [class*="bg-slate-800"], [class*="bg-slate-900"], [class*="bg-gray-800"],
+    [class*="bg-gray-900"], [class*="bg-green-800"], [class*="bg-green-900"],
+    [class*="bg-emerald-800"], [class*="bg-emerald-900"],
+    [class*="bg-blue-800"], [class*="bg-blue-900"]
+) :is(
+    [class~="text-white"], [class~="text-slate-50"],
+    [class~="text-slate-100"], [class~="text-slate-200"],
+    [class~="text-slate-300"], [class~="text-slate-400"],
+    p, span, label, small, strong, h1, h2, h3, h4, h5, h6
+) {
+    color: #f8fafc !important;
+}
+/* Inputs, selects, date fields, textareas, and editable areas use explicit theme colors. */
+html:not(.dark) .app-shell :is(input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):not([type="submit"]):not([type="button"]), select, textarea, [contenteditable="true"]) {
+    color: #111827 !important;
+    background-color: #ffffff !important;
+    border-color: #cbd5e1;
+    caret-color: #111827;
+}
+html.dark .app-shell :is(input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):not([type="submit"]):not([type="button"]), select, textarea, [contenteditable="true"]) {
+    color: #f8fafc !important;
+    background-color: #0f172a !important;
+    border-color: #475569;
+    caret-color: #f8fafc;
+}
+.app-shell :is(input, textarea, select)::placeholder {
+    color: #64748b !important;
+    opacity: 1;
+}
+html.dark .app-shell :is(input, textarea, select)::placeholder {
+    color: #94a3b8 !important;
+}
+/* The toggle itself always has a readable label and visible keyboard focus. */
+.theme-toggle-switch, .theme-toggle-switch * {
+    text-shadow: none;
+}
+.theme-toggle-switch:focus-visible {
+    outline: 3px solid #2563eb;
+    outline-offset: 3px;
+}
