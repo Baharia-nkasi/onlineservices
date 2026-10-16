@@ -1,3 +1,5 @@
+import '../css/responsive-dashboard.css';
+
 import './bootstrap';
 
 import Alpine from 'alpinejs';

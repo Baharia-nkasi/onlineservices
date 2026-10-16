@@ -1,0 +1,206 @@
+/*
+ * Responsive portal layout corrections.
+ * Keep navigation in document flow (not over the page), prevent horizontal
+ * overflow, and adapt dashboard grids and controls to tablet/mobile widths.
+ */
+.app-shell {
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-x: clip;
+}
+
+.app-shell > .min-h-screen {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* The navigation belongs at the top of the page, not as a floating overlay. */
+.app-shell .site-navigation {
+    position: relative !important;
+    inset: auto !important;
+    z-index: 40;
+    width: 100%;
+    flex: 0 0 auto;
+}
+
+.app-shell .site-navigation > div {
+    min-width: 0;
+}
+
+.app-shell .site-navigation a,
+.app-shell .site-navigation button {
+    max-width: 100%;
+}
+
+.app-main {
+    width: 100%;
+    min-width: 0;
+    flex: 1 0 auto;
+}
+
+.app-main > * {
+    min-width: 0;
+}
+
+.neon-admin-shell main,
+.neon-admin-shell main > div,
+.neon-admin-shell main section,
+.neon-admin-shell main article {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.neon-admin-shell .neon-card,
+.neon-admin-shell .neon-glow-border,
+.neon-admin-shell .portal-card {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+/* Avoid wide tables forcing the entire page wider than the viewport. */
+.app-main table {
+    width: 100%;
+    max-width: 100%;
+}
+
+.app-main :where(.overflow-x-auto, [class*="overflow-x-scroll"]) {
+    max-width: 100%;
+    overscroll-behavior-x: contain;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Search/filter rows can wrap without shrinking controls to unusable widths. */
+.app-main form,
+.app-main [role="search"],
+.app-main .filter-row {
+    min-width: 0;
+}
+
+.app-main input,
+.app-main select,
+.app-main textarea {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.theme-toggle-dock {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    flex: 0 0 auto;
+}
+
+/* Tablet: provide room for the long admin/customer navigation. */
+@media (max-width: 1023px) {
+    .site-navigation .md\:flex {
+        display: none !important;
+    }
+
+    .site-navigation .md\:hidden {
+        display: inline-flex !important;
+    }
+
+    .site-navigation > div > div.flex.h-16 {
+        min-height: 4rem;
+        height: auto;
+        gap: .75rem;
+        flex-wrap: wrap;
+        padding-top: .65rem;
+        padding-bottom: .65rem;
+    }
+
+    .site-navigation > div > div.flex.h-16 > div:first-child {
+        min-width: 0;
+        flex: 1 1 auto;
+        gap: .5rem;
+    }
+
+    .site-navigation > div > div.flex.h-16 > div[role="group"] {
+        flex: 0 0 auto;
+    }
+}
+
+/* Phone: compact header, stacked content, reachable touch controls. */
+@media (max-width: 640px) {
+    .app-main {
+        padding-bottom: .5rem;
+    }
+
+    .site-navigation > div {
+        padding-left: .75rem;
+        padding-right: .75rem;
+    }
+
+    .site-navigation > div > div.flex.h-16 {
+        gap: .5rem;
+    }
+
+    .site-navigation .font-extrabold.tracking-tight {
+        font-size: .88rem;
+    }
+
+    .site-navigation .mobile-menu {
+        max-height: calc(100dvh - 4.5rem);
+        overflow-y: auto;
+    }
+
+    .neon-admin-shell main .grid {
+        grid-template-columns: minmax(0, 1fr) !important;
+    }
+
+    .neon-admin-shell main .flex {
+        min-width: 0;
+    }
+
+    .neon-admin-shell main h1 {
+        font-size: clamp(1.45rem, 6vw, 2rem);
+        line-height: 1.2;
+        overflow-wrap: anywhere;
+    }
+
+    .neon-admin-shell main h2 {
+        font-size: clamp(1.15rem, 5vw, 1.55rem);
+        line-height: 1.25;
+        overflow-wrap: anywhere;
+    }
+
+    .neon-admin-shell main .neon-button,
+    .neon-admin-shell main .neon-button-outline {
+        min-height: 44px;
+        width: 100%;
+        white-space: normal;
+        text-align: center;
+    }
+
+    .neon-admin-shell main input,
+    .neon-admin-shell main select,
+    .neon-admin-shell main textarea,
+    .neon-admin-shell main button {
+        font-size: 16px;
+    }
+
+    .theme-toggle-dock {
+        padding: .85rem .75rem calc(.85rem + env(safe-area-inset-bottom));
+    }
+
+    .theme-toggle-switch {
+        min-height: 44px;
+        max-width: 100%;
+    }
+}
+
+/* Extra-small phones. */
+@media (max-width: 380px) {
+    .site-navigation .font-extrabold.tracking-tight {
+        max-width: 8.5rem;
+        white-space: normal;
+        line-height: 1.15;
+    }
+
+    .site-navigation > div > div.flex.h-16 > div[role="group"] a {
+        padding-left: .45rem;
+        padding-right: .45rem;
+    }
+}
