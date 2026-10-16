@@ -227,8 +227,11 @@
                         <div id="service-dots" class="flex flex-wrap items-center justify-center gap-1.5" aria-label="{{ __('Service navigation') }}"></div>
                         <button type="button" id="service-next" class="portal-button !w-auto" aria-label="{{ __('Next service') }}">{{ __('Next') }} →</button>
                     </div>
-                    <p id="service-step-label" class="text-center text-sm font-bold text-slate-500"></p>
+                    <p id="service-step-label" class="text-center text-sm font-bold text-slate-500" aria-live="polite"></p>
                 </div>
+                <nav class="border-t border-slate-200 bg-slate-50 px-4 py-4 sm:px-6" aria-label="{{ __('Service result pages') }}">
+                    {{ $services->links() }}
+                </nav>
             @endif
         </section>
     </div>
@@ -282,13 +285,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     previous.addEventListener('click', () => render(current - 1, true));
     next.addEventListener('click', () => render(current + 1, true));
-
-    document.addEventListener('keydown', (event) => {
-        if (event.key !== '/' || event.ctrlKey || event.metaKey || event.altKey) return;
-        if (['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement?.tagName)) return;
-        event.preventDefault();
-        search?.focus();
-    });
 
     search?.addEventListener('keydown', (event) => {
         if (event.key === 'Escape') {
