@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" class="site-navigation sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur">
+<nav x-data="{ open: false }" @keydown.escape.window="open = false" class="site-navigation sticky top-0 z-40 border-b border-slate-200 bg-white/95 backdrop-blur">
 <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
 <div class="flex h-16 items-center justify-between">
     <div class="flex items-center gap-8">
@@ -11,23 +11,23 @@
             <span class="font-extrabold tracking-tight text-slate-900">Online Services</span>
         </a>
 
-        @auth
-            <div class="hidden items-center gap-6 md:flex">
-                <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">{{ __('Dashboard') }}</x-nav-link>
-                <x-nav-link :href="route('services.index')" :active="request()->routeIs('services.*')">{{ __('Services') }}</x-nav-link>
-                <x-nav-link :href="route('customer.applications.index')" :active="request()->routeIs('customer.applications.*')">{{ __('My Applications') }}</x-nav-link>
-                @if(Auth::user()->isAdmin())
-                    <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">{{ __('Admin') }}</x-nav-link>
-                    <x-nav-link :href="route('admin.services.index')" :active="request()->routeIs('admin.services.*')">{{ __('Manage Services') }}</x-nav-link>
-                    <x-nav-link :href="route('admin.help-desk.index')" :active="request()->routeIs('admin.help-desk.*')">{{ __('Help Desk') }}</x-nav-link>
-                @endif
-            </div>
-        @else
-            <div class="hidden items-center gap-6 md:flex">
-                <x-nav-link :href="route('home')" :active="request()->routeIs('home')">{{ __('Home') }}</x-nav-link>
-                <x-nav-link :href="route('services.index')" :active="request()->routeIs('services.*')">{{ __('Services') }}</x-nav-link>
-            </div>
-        @endauth
+        <button type="button"
+            @click="open = !open"
+            class="nav-menu-toggle inline-flex h-10 items-center gap-2 rounded-xl border border-slate-600 bg-slate-800 px-3 text-sm font-bold text-white shadow-sm transition hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2"
+            aria-controls="global-navigation-menu"
+            :aria-expanded="open.toString()"
+            :aria-label="open ? 'Close navigation menu' : 'Open navigation menu'"
+        >
+            <svg x-show="!open" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+            <svg x-cloak x-show="open" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 6l12 12M18 6L6 18"/>
+            </svg>
+            <span x-text="open ? 'Close' : 'Menu'">Menu</span>
+        </button>
+
+
     </div>
 
     <div class="flex items-center gap-1 rounded-xl border border-slate-200 bg-slate-50 p-1" role="group" aria-label="Language">
@@ -152,43 +152,69 @@
         </div>
     @endauth
 
-    <button type="button" @click="open=!open" class="rounded-xl p-2 text-slate-500 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 md:hidden" aria-label="Toggle navigation menu" :aria-expanded="open.toString()" aria-controls="mobile-menu">
-        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path x-show="!open" stroke-linecap="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-            <path x-show="open" stroke-linecap="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-        </svg>
-    </button>
+
 </div>
 </div>
 
-<div id="mobile-menu" x-cloak x-show="open" x-transition class="mobile-menu border-t border-slate-200 bg-white px-4 py-3 md:hidden">
-    <div class="mb-3 flex items-center gap-2 border-b border-slate-200 pb-3"><div class="flex items-center gap-1 rounded-xl border border-slate-200 bg-slate-50 p-1" role="group" aria-label="Language">
-    <a href="{{ route('language.switch', 'en') }}" class="rounded-lg px-2.5 py-1.5 text-xs font-extrabold {{ app()->getLocale() === 'en' ? 'bg-white text-blue-700 shadow-sm' : 'text-slate-500 hover:text-slate-800' }}">EN</a>
-    <a href="{{ route('language.switch', 'sw') }}" class="rounded-lg px-2.5 py-1.5 text-xs font-extrabold {{ app()->getLocale() === 'sw' ? 'bg-white text-blue-700 shadow-sm' : 'text-slate-500 hover:text-slate-800' }}">SW</a>
-</div></div>
-    <div class="space-y-1">
-        @auth
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">{{ __('Dashboard') }}</x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('services.index')" :active="request()->routeIs('services.*')">{{ __('Services') }}</x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('customer.applications.index')" :active="request()->routeIs('customer.applications.*')">{{ __('My Applications') }}</x-responsive-nav-link>
-            @if(Auth::user()->isAdmin())
-                <x-responsive-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">{{ __('Admin') }}</x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('admin.services.index')" :active="request()->routeIs('admin.services.*')">{{ __('Manage Services') }}</x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('admin.help-desk.index')" :active="request()->routeIs('admin.help-desk.*')">{{ __('Help Desk') }}</x-responsive-nav-link>
-            @endif
-            <x-responsive-nav-link :href="route('profile.edit')">{{ __('Profile') }}</x-responsive-nav-link>
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit" class="block w-full rounded-lg px-3 py-2 text-left text-sm font-semibold text-slate-700 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                    {{ __('Log Out') }}
-                </button>
-            </form>
-        @else
-            <x-responsive-nav-link :href="route('home')" :active="request()->routeIs('home')">{{ __('Home') }}</x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('services.index')" :active="request()->routeIs('services.*')">{{ __('Services') }}</x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('login')">{{ __('Sign in') }}</x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('register')">{{ __('Get started') }}</x-responsive-nav-link>
-        @endauth
+<div id="global-navigation-menu"
+    x-cloak
+    x-show="open"
+    x-transition:enter="transition ease-out duration-200"
+    x-transition:enter-start="opacity-0 -translate-y-2"
+    x-transition:enter-end="opacity-100 translate-y-0"
+    x-transition:leave="transition ease-in duration-150"
+    x-transition:leave-start="opacity-100 translate-y-0"
+    x-transition:leave-end="opacity-0 -translate-y-2"
+    @click.outside="open = false"
+    class="global-navigation-menu absolute left-0 right-0 top-full z-50 border-t border-slate-700 shadow-2xl"
+>
+    <div class="mx-auto max-w-7xl px-4 py-4 sm:px-6 lg:px-8">
+        <div class="mb-3 flex items-center justify-between gap-3 border-b border-slate-700 pb-3">
+            <p class="text-xs font-extrabold uppercase tracking-[.18em] text-slate-400">{{ __('Navigation menu') }}</p>
+            <div class="flex items-center gap-1 rounded-xl border border-slate-600 bg-slate-800 p-1" role="group" aria-label="Language">
+                <a href="{{ route('language.switch', 'en') }}" class="rounded-lg px-3 py-1.5 text-xs font-extrabold transition {{ app()->getLocale() === 'en' ? 'bg-emerald-500 text-slate-950 shadow-sm' : 'text-slate-200 hover:bg-slate-700' }}">EN</a>
+                <a href="{{ route('language.switch', 'sw') }}" class="rounded-lg px-3 py-1.5 text-xs font-extrabold transition {{ app()->getLocale() === 'sw' ? 'bg-emerald-500 text-slate-950 shadow-sm' : 'text-slate-200 hover:bg-slate-700' }}">SW</a>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 gap-1 sm:grid-cols-2 lg:grid-cols-3">
+            @auth
+                <a href="{{ route('dashboard') }}" @click="open = false" @class(['global-nav-link', 'global-nav-link-active' => request()->routeIs('dashboard')]) aria-current="{{ request()->routeIs('dashboard') ? 'page' : 'false' }}">
+                    <span class="global-nav-link-icon">⌂</span>{{ __('Dashboard') }}
+                </a>
+                <a href="{{ route('services.index') }}" @click="open = false" @class(['global-nav-link', 'global-nav-link-active' => request()->routeIs('services.*')]) aria-current="{{ request()->routeIs('services.*') ? 'page' : 'false' }}">
+                    <span class="global-nav-link-icon">▦</span>{{ __('Services') }}
+                </a>
+                <a href="{{ route('customer.applications.index') }}" @click="open = false" @class(['global-nav-link', 'global-nav-link-active' => request()->routeIs('customer.applications.*')]) aria-current="{{ request()->routeIs('customer.applications.*') ? 'page' : 'false' }}">
+                    <span class="global-nav-link-icon">▤</span>{{ __('My Applications') }}
+                </a>
+                @if(Auth::user()->isAdmin())
+                    <a href="{{ route('admin.dashboard') }}" @click="open = false" @class(['global-nav-link', 'global-nav-link-active' => request()->routeIs('admin.dashboard')]) aria-current="{{ request()->routeIs('admin.dashboard') ? 'page' : 'false' }}">
+                        <span class="global-nav-link-icon">⌘</span>{{ __('Admin') }}
+                    </a>
+                    <a href="{{ route('admin.services.index') }}" @click="open = false" @class(['global-nav-link', 'global-nav-link-active' => request()->routeIs('admin.services.*')]) aria-current="{{ request()->routeIs('admin.services.*') ? 'page' : 'false' }}">
+                        <span class="global-nav-link-icon">＋</span>{{ __('Manage Services') }}
+                        <span class="global-nav-active-dot" aria-hidden="true"></span>
+                    </a>
+                    <a href="{{ route('admin.help-desk.index') }}" @click="open = false" @class(['global-nav-link', 'global-nav-link-active' => request()->routeIs('admin.help-desk.*')]) aria-current="{{ request()->routeIs('admin.help-desk.*') ? 'page' : 'false' }}">
+                        <span class="global-nav-link-icon">?</span>{{ __('Help Desk') }}
+                    </a>
+                @endif
+                <a href="{{ route('profile.edit') }}" @click="open = false" @class(['global-nav-link', 'global-nav-link-active' => request()->routeIs('profile.edit')])>
+                    <span class="global-nav-link-icon">◉</span>{{ __('Profile') }}
+                </a>
+                <form method="POST" action="{{ route('logout') }}" class="contents">
+                    @csrf
+                    <button type="submit" class="global-nav-link w-full text-left">
+                        <span class="global-nav-link-icon">↪</span>{{ __('Log Out') }}
+                    </button>
+                </form>
+            @else
+                <a href="{{ route('home') }}" @click="open = false" @class(['global-nav-link', 'global-nav-link-active' => request()->routeIs('home')])>{{ __('Home') }}</a>
+                <a href="{{ route('services.index') }}" @click="open = false" @class(['global-nav-link', 'global-nav-link-active' => request()->routeIs('services.*')])>{{ __('Services') }}</a>
+                <a href="{{ route('login') }}" @click="open = false" class="global-nav-link">{{ __('Sign in') }}</a>
+                <a href="{{ route('register') }}" @click="open = false" class="global-nav-link">{{ __('Get started') }}</a>
+            @endauth
+        </div>
     </div>
 </div>
 </nav>

@@ -2559,3 +2559,98 @@ html.dark .app-shell :is(input, textarea, select)::placeholder {
     outline: 3px solid #2563eb;
     outline-offset: 3px;
 }
+
+
+/* Global collapsible navigation: one menu button on every viewport. */
+.site-navigation {
+    position: sticky;
+    isolation: isolate;
+}
+.site-navigation .nav-menu-toggle {
+    flex: 0 0 auto;
+    min-height: 2.5rem;
+}
+.site-navigation .global-navigation-menu {
+    background: #0f172a;
+    color: #f8fafc;
+    border-color: #334155;
+    transform-origin: top center;
+    max-height: min(75vh, 42rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+.site-navigation .global-navigation-menu [class~="text-slate-400"] {
+    color: #94a3b8 !important;
+}
+.site-navigation .global-nav-link {
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    min-height: 3rem;
+    padding: .75rem 1rem;
+    border: 1px solid transparent;
+    border-radius: .8rem;
+    background: transparent;
+    color: #e2e8f0;
+    font-size: .925rem;
+    font-weight: 700;
+    text-align: left;
+    text-decoration: none;
+    transition: color .16s ease, background-color .16s ease, border-color .16s ease, transform .16s ease;
+}
+.site-navigation .global-nav-link:hover {
+    color: #ffffff;
+    background: #1e293b;
+    border-color: #334155;
+    transform: translateX(2px);
+}
+.site-navigation .global-nav-link:focus-visible {
+    outline: 3px solid #34d399;
+    outline-offset: 2px;
+}
+.site-navigation .global-nav-link-active {
+    color: #bbf7d0 !important;
+    background: #14532d;
+    border-color: #16a34a;
+    box-shadow: inset 3px 0 0 #4ade80;
+}
+.site-navigation .global-nav-link-active:hover {
+    background: #166534;
+    color: #ffffff !important;
+}
+.site-navigation .global-nav-link-icon {
+    display: inline-flex;
+    width: 1.6rem;
+    flex: 0 0 1.6rem;
+    align-items: center;
+    justify-content: center;
+    color: #86efac;
+    font-size: 1.1rem;
+    font-weight: 900;
+}
+.site-navigation .global-nav-active-dot {
+    width: .45rem;
+    height: .45rem;
+    margin-left: auto;
+    border-radius: 9999px;
+    background: #4ade80;
+    box-shadow: 0 0 0 3px rgb(74 222 128 / 14%);
+}
+html:not(.dark) .site-navigation .global-navigation-menu {
+    background: #0f172a !important;
+    color: #f8fafc !important;
+}
+@media (max-width: 640px) {
+    .site-navigation .global-navigation-menu {
+        max-height: calc(100dvh - 4rem);
+    }
+    .site-navigation .global-nav-link {
+        min-height: 2.85rem;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .site-navigation .global-nav-link,
+    .site-navigation .global-navigation-menu {
+        transition: none !important;
+    }
+}
