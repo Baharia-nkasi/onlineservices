@@ -207,7 +207,17 @@
                         </div>
                     </article>
                 @empty
-                    <div class="p-12 text-center text-slate-500">{{ __('No active services found. Deactivated services are hidden from this list.') }}</div>
+                    <div class="p-12 text-center" role="status" aria-live="polite">
+                        <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50 text-3xl font-black text-emerald-700" aria-hidden="true">⌕</div>
+                        @if(!empty($search))
+                            <h4 class="text-base font-extrabold text-slate-800">{{ __('No matching services found') }}</h4>
+                            <p class="mx-auto mt-2 max-w-lg text-sm text-slate-500">{{ __('Try another service name, slug or description, or clear the search to see all active services.') }}</p>
+                            <a href="{{ route('admin.services.index') }}" class="portal-button-secondary mt-4 !w-auto">{{ __('Clear search') }}</a>
+                        @else
+                            <h4 class="text-base font-extrabold text-slate-800">{{ __('No active services found') }}</h4>
+                            <p class="mx-auto mt-2 max-w-lg text-sm text-slate-500">{{ __('Deactivated services are hidden from this list. Add a new service above or activate an existing service to make it available here.') }}</p>
+                        @endif
+                    </div>
                 @endforelse
             </div>
             @if($services->count() > 0)
