@@ -67,7 +67,7 @@ class AdminCustomerController extends Controller
             DB::table('sessions')->where('user_id', $user->id)->delete();
 
             // applications and application_documents cascade from the user FK.
-            $user->forceDelete();
+            $user->delete();
         });
 
         foreach ($filePaths as $path) {
