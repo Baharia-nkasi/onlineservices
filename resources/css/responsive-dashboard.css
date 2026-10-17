@@ -204,3 +204,164 @@
         padding-right: .45rem;
     }
 }
+
+/* -------------------------------------------------------------------------
+   Unified portal theme: shared by Admin and Customer pages.
+   Color-only overrides; preserve existing layout, spacing, and responsive rules.
+   ------------------------------------------------------------------------- */
+:root {
+    color-scheme: light;
+    --portal-page-bg: #f3f4f6;
+    --portal-text: #1e293b;
+    --portal-text-muted: #475569;
+    --portal-nav-bg: #0f172a;
+    --portal-nav-text: #ffffff;
+    --portal-nav-active: #22c55e;
+    --portal-card-bg: #ffffff;
+    --portal-card-border: #e2e8f0;
+    --portal-card-shadow: 0 1px 3px rgb(15 23 42 / 8%);
+    --portal-input-bg: #ffffff;
+    --portal-input-text: #111827;
+    --portal-input-border: #cbd5e1;
+    --portal-focus-ring: #16a34a;
+}
+
+html,
+body {
+    background-color: var(--portal-page-bg);
+    color: var(--portal-text);
+}
+
+body {
+    color: var(--portal-text);
+}
+
+/* Make the shared shell inherit the same page colors on both dashboards. */
+.app-shell,
+.app-shell > .min-h-screen,
+.app-main {
+    background-color: var(--portal-page-bg);
+    color: var(--portal-text);
+}
+
+/* Top navigation and the bottom theme/navigation dock use the same palette. */
+.site-navigation,
+.site-navigation > div,
+.theme-toggle-dock,
+.bottom-navigation,
+.bottom-nav,
+footer nav {
+    background-color: var(--portal-nav-bg);
+    color: var(--portal-nav-text);
+}
+
+.site-navigation a,
+.site-navigation button,
+.theme-toggle-dock a,
+.theme-toggle-dock button,
+.bottom-navigation a,
+.bottom-navigation button,
+.bottom-nav a,
+.bottom-nav button,
+footer nav a,
+footer nav button {
+    color: var(--portal-nav-text);
+}
+
+.site-navigation a[aria-current="page"],
+.site-navigation a[aria-current="true"],
+.site-navigation a.active,
+.site-navigation .active,
+.theme-toggle-dock a[aria-current="page"],
+.theme-toggle-dock a.active,
+.bottom-navigation a[aria-current="page"],
+.bottom-navigation a.active,
+.bottom-nav a[aria-current="page"],
+.bottom-nav a.active,
+footer nav a[aria-current="page"],
+footer nav a.active {
+    color: var(--portal-nav-active);
+}
+
+/* White surfaces shared by admin and customer cards/panels. */
+.portal-card,
+.neon-card,
+.neon-glow-border,
+.app-main .card,
+.app-main [data-portal-card] {
+    background-color: var(--portal-card-bg);
+    border-color: var(--portal-card-border);
+    box-shadow: var(--portal-card-shadow);
+    color: var(--portal-text);
+}
+
+/* Normalize readable text without overriding intentional status/badge colors. */
+.app-main,
+.app-main p,
+.app-main label,
+.app-main li,
+.app-main td,
+.app-main th,
+.app-main h1,
+.app-main h2,
+.app-main h3,
+.app-main h4,
+.app-main h5,
+.app-main h6,
+.app-main legend {
+    color: var(--portal-text);
+}
+
+.app-main .text-gray-500,
+.app-main .text-gray-600,
+.app-main .text-slate-500,
+.app-main .text-slate-600 {
+    color: var(--portal-text-muted);
+}
+
+/* Inputs stay white with dark text in both dashboards and while typing. */
+.app-main input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+.app-main select,
+.app-main textarea {
+    background-color: var(--portal-input-bg);
+    color: var(--portal-input-text);
+    border-color: var(--portal-input-border);
+}
+
+.app-main input::placeholder,
+.app-main textarea::placeholder {
+    color: #64748b;
+    opacity: 1;
+}
+
+.app-main input:focus,
+.app-main select:focus,
+.app-main textarea:focus {
+    outline-color: var(--portal-focus-ring);
+}
+
+/* Keep dark mode coherent while sharing the exact same token names. */
+html.dark {
+    color-scheme: dark;
+    --portal-page-bg: #0b1220;
+    --portal-text: #e2e8f0;
+    --portal-text-muted: #cbd5e1;
+    --portal-nav-bg: #0f172a;
+    --portal-nav-text: #ffffff;
+    --portal-nav-active: #4ade80;
+    --portal-card-bg: #111827;
+    --portal-card-border: #334155;
+    --portal-card-shadow: 0 1px 3px rgb(0 0 0 / 25%);
+    --portal-input-bg: #0f172a;
+    --portal-input-text: #f8fafc;
+    --portal-input-border: #475569;
+    --portal-focus-ring: #4ade80;
+}
+
+html.dark .app-main .text-gray-500,
+html.dark .app-main .text-gray-600,
+html.dark .app-main .text-slate-500,
+html.dark .app-main .text-slate-600 {
+    color: var(--portal-text-muted);
+}
+
