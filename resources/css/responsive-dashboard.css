@@ -451,3 +451,157 @@ html.dark .neon-admin-shell main :is(input, textarea)::placeholder {
     color: #cbd5e1;
     opacity: 1;
 }
+
+
+/* Admin-only monochrome redesign: remove every green/neon accent. */
+body:has(.neon-admin-shell) .site-navigation,
+body:has(.neon-admin-shell) .site-navigation > div,
+body:has(.neon-admin-shell) .theme-toggle-dock,
+body:has(.neon-admin-shell) .bottom-navigation,
+body:has(.neon-admin-shell) .bottom-nav {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border-color: #e5e7eb !important;
+    box-shadow: 0 1px 3px rgb(15 23 42 / 8%) !important;
+}
+
+body:has(.neon-admin-shell) .site-navigation :is(a, button, span, p),
+body:has(.neon-admin-shell) .theme-toggle-dock :is(a, button, span, p),
+body:has(.neon-admin-shell) .bottom-navigation :is(a, button, span, p),
+body:has(.neon-admin-shell) .bottom-nav :is(a, button, span, p) {
+    color: #000000 !important;
+}
+
+body:has(.neon-admin-shell) .site-navigation :is(a:hover, button:hover),
+body:has(.neon-admin-shell) .theme-toggle-dock :is(a:hover, button:hover),
+body:has(.neon-admin-shell) .bottom-navigation :is(a:hover, button:hover),
+body:has(.neon-admin-shell) .bottom-nav :is(a:hover, button:hover) {
+    background-color: #f3f4f6 !important;
+    color: #000000 !important;
+}
+
+body:has(.neon-admin-shell) .neon-admin-shell {
+    background: #ffffff !important;
+    color: #000000 !important;
+    --portal-page-bg: #ffffff;
+    --portal-text: #000000;
+    --portal-text-muted: #374151;
+    --portal-nav-bg: #ffffff;
+    --portal-nav-text: #000000;
+    --portal-nav-active: #000000;
+    --portal-card-bg: #ffffff;
+    --portal-card-border: #e5e7eb;
+    --portal-card-shadow: 0 2px 8px rgb(15 23 42 / 6%);
+    --portal-input-bg: #ffffff;
+    --portal-input-text: #000000;
+    --portal-input-border: #cbd5e1;
+    --portal-focus-ring: #6b7280;
+}
+
+body:has(.neon-admin-shell) .neon-admin-shell,
+body:has(.neon-admin-shell) .neon-admin-shell main,
+body:has(.neon-admin-shell) .neon-admin-shell main > div,
+body:has(.neon-admin-shell) .neon-admin-shell main section,
+body:has(.neon-admin-shell) .neon-admin-shell main article {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+}
+
+body:has(.neon-admin-shell) .neon-admin-shell :is(.neon-card, .neon-glow-border, .portal-card, [data-portal-card], .card) {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border: 1px solid #e5e7eb !important;
+    box-shadow: 0 2px 8px rgb(15 23 42 / 6%) !important;
+    text-shadow: none !important;
+}
+
+body:has(.neon-admin-shell) .neon-admin-shell main :is(h1, h2, h3, h4, h5, h6, p, label, li, td, th, legend, small, strong, span) {
+    text-shadow: none;
+}
+
+body:has(.neon-admin-shell) .neon-admin-shell main :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), select, textarea) {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border: 1px solid #cbd5e1 !important;
+    box-shadow: none !important;
+}
+
+body:has(.neon-admin-shell) .neon-admin-shell main :is(input, textarea)::placeholder {
+    color: #4b5563 !important;
+    opacity: 1;
+}
+
+/* Neutralize Tailwind green/emerald/lime utilities, including hover and focus states. */
+body:has(.neon-admin-shell) .neon-admin-shell [class*="green-"],
+body:has(.neon-admin-shell) .neon-admin-shell [class*="emerald-"],
+body:has(.neon-admin-shell) .neon-admin-shell [class*="lime-"] {
+    --tw-ring-color: #9ca3af !important;
+    --tw-shadow-color: rgb(0 0 0 / 8%) !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+}
+
+body:has(.neon-admin-shell) .neon-admin-shell :is(
+    [class~="bg-green-50"], [class~="bg-green-100"], [class~="bg-green-200"],
+    [class~="bg-green-300"], [class~="bg-green-400"], [class~="bg-green-500"],
+    [class~="bg-green-600"], [class~="bg-green-700"], [class~="bg-green-800"],
+    [class~="bg-green-900"], [class~="bg-emerald-50"], [class~="bg-emerald-100"],
+    [class~="bg-emerald-200"], [class~="bg-emerald-300"], [class~="bg-emerald-400"],
+    [class~="bg-emerald-500"], [class~="bg-emerald-600"], [class~="bg-emerald-700"],
+    [class~="bg-emerald-800"], [class~="bg-emerald-900"], [class~="bg-lime-50"],
+    [class~="bg-lime-100"], [class~="bg-lime-200"], [class~="bg-lime-300"],
+    [class~="bg-lime-400"], [class~="bg-lime-500"], [class~="bg-lime-600"],
+    [class~="bg-lime-700"], [class~="bg-lime-800"], [class~="bg-lime-900"]
+) {
+    background-color: #f3f4f6 !important;
+}
+
+body:has(.neon-admin-shell) .neon-admin-shell :is(
+    [class~="text-green-400"], [class~="text-green-500"], [class~="text-green-600"],
+    [class~="text-green-700"], [class~="text-green-800"], [class~="text-emerald-400"],
+    [class~="text-emerald-500"], [class~="text-emerald-600"], [class~="text-emerald-700"],
+    [class~="text-lime-400"], [class~="text-lime-500"], [class~="text-lime-600"],
+    [class~="text-lime-700"]
+) {
+    color: #000000 !important;
+}
+
+body:has(.neon-admin-shell) .neon-admin-shell :is(
+    [class~="border-green-400"], [class~="border-green-500"], [class~="border-green-600"],
+    [class~="border-emerald-400"], [class~="border-emerald-500"], [class~="border-emerald-600"],
+    [class~="border-lime-400"], [class~="border-lime-500"], [class~="border-lime-600"]
+) {
+    border-color: #d1d5db !important;
+}
+
+body:has(.neon-admin-shell) .neon-admin-shell main :is(button, a[role="button"], input[type="submit"], input[type="button"]) {
+    border-color: #111827;
+    box-shadow: none !important;
+    text-shadow: none !important;
+}
+
+body:has(.neon-admin-shell) .neon-admin-shell main :is(button, a[role="button"], input[type="submit"], input[type="button"]).neon-button,
+body:has(.neon-admin-shell) .neon-admin-shell main :is(button, a[role="button"], input[type="submit"], input[type="button"])[class*="bg-green-"],
+body:has(.neon-admin-shell) .neon-admin-shell main :is(button, a[role="button"], input[type="submit"], input[type="button"])[class*="bg-emerald-"],
+body:has(.neon-admin-shell) .neon-admin-shell main :is(button, a[role="button"], input[type="submit"], input[type="button"])[class*="bg-lime-"] {
+    background: #111827 !important;
+    color: #ffffff !important;
+    border-color: #111827 !important;
+}
+
+body:has(.neon-admin-shell) .neon-admin-shell main :is(button, a[role="button"], input[type="submit"], input[type="button"]):hover {
+    background-color: #374151 !important;
+    color: #ffffff !important;
+    border-color: #374151 !important;
+}
+
+/* Admin remains intentionally monochrome even if the shared theme toggle is set to dark. */
+body:has(.neon-admin-shell) html.dark,
+html.dark body:has(.neon-admin-shell),
+html.dark body:has(.neon-admin-shell) .neon-admin-shell,
+html.dark body:has(.neon-admin-shell) .neon-admin-shell main,
+html.dark body:has(.neon-admin-shell) .neon-admin-shell main > div,
+html.dark body:has(.neon-admin-shell) .neon-admin-shell main section {
+    background: #ffffff !important;
+    color: #000000 !important;
+}
