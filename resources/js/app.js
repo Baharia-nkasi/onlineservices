@@ -134,6 +134,22 @@ function initDynamicTableSearch() {
 }
 
 
+function readSavedTheme() {
+    try {
+        return localStorage.getItem('theme');
+    } catch {
+        return null;
+    }
+}
+
+function saveTheme(theme) {
+    try {
+        localStorage.setItem('theme', theme);
+    } catch {
+        // The theme still works for this page view if storage is unavailable.
+    }
+}
+
 function applyTheme(theme, persist = true) {
     const root = document.documentElement;
     const isDark = theme === 'dark';
@@ -141,7 +157,7 @@ function applyTheme(theme, persist = true) {
     root.classList.toggle('dark', isDark);
 
     if (persist) {
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        saveTheme(isDark ? 'dark' : 'light');
     }
 
     const toggle = document.getElementById('theme-toggle');
@@ -170,7 +186,7 @@ function initThemeToggle() {
 
     toggle.dataset.themeReady = '1';
 
-    const saved = localStorage.getItem('theme');
+    const saved = readSavedTheme();
     const preferred = saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)
         ? 'dark'
         : 'light';
@@ -184,7 +200,7 @@ function initThemeToggle() {
 
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     mediaQuery.addEventListener?.('change', (event) => {
-        if (!localStorage.getItem('theme')) {
+        if (!readSavedTheme()) {
             applyTheme(event.matches ? 'dark' : 'light', false);
         }
     });
