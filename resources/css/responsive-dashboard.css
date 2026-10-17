@@ -1117,3 +1117,147 @@ button[class*="bg-green-"],a[class*="bg-green-"],button[class*="bg-emerald-"],a[
 html.dark .app-main :is(.bg-white,.bg-slate-50,.bg-slate-100,.bg-gray-50,.bg-gray-100,
 .bg-zinc-50,.bg-neutral-50,.bg-green-50,.bg-green-100,.bg-emerald-50,.bg-emerald-100,
 .bg-blue-50,.bg-indigo-50,.bg-purple-50) { background:var(--portal-surface)!important; }
+
+/* Theme-specificity repair (Oct 17): override older gold/green/navy selectors.
+   These rules deliberately have higher specificity than legacy !important rules.
+   Light mode: white surfaces + dark text. Dark mode: black surfaces + white text. */
+html:not(.dark) body.app-shell .site-navigation,
+html:not(.dark) body.app-shell .site-navigation > div,
+html:not(.dark) body.app-shell .theme-toggle-dock {
+    background: #ffffff !important;
+    background-image: none !important;
+    color: #111111 !important;
+    border-color: #d4d4d4 !important;
+}
+html.dark body.app-shell .site-navigation,
+html.dark body.app-shell .site-navigation > div,
+html.dark body.app-shell .theme-toggle-dock {
+    background: #000000 !important;
+    background-image: none !important;
+    color: #ffffff !important;
+    border-color: #4a4a4a !important;
+}
+html:not(.dark) body.app-shell .site-navigation .global-navigation-menu {
+    background: #ffffff !important;
+    background-image: none !important;
+    color: #111111 !important;
+    border-color: #d4d4d4 !important;
+    box-shadow: 0 12px 28px rgb(0 0 0 / 10%) !important;
+}
+html.dark body.app-shell .site-navigation .global-navigation-menu {
+    background: #111111 !important;
+    background-image: none !important;
+    color: #ffffff !important;
+    border-color: #4a4a4a !important;
+    box-shadow: 0 12px 28px rgb(0 0 0 / 35%) !important;
+}
+html:not(.dark) body.app-shell .site-navigation .global-navigation-menu :is(p,span,a,button,label) {
+    color: #111111 !important;
+    text-shadow: none !important;
+}
+html.dark body.app-shell .site-navigation .global-navigation-menu :is(p,span,a,button,label) {
+    color: #ffffff !important;
+    text-shadow: none !important;
+}
+html:not(.dark) body.app-shell .site-navigation .global-navigation-menu .global-nav-link,
+html:not(.dark) body.app-shell .site-navigation .global-navigation-menu .global-nav-link-active,
+html:not(.dark) body.app-shell .site-navigation .global-navigation-menu .global-nav-link[aria-current="page"] {
+    background: #f5f5f5 !important;
+    background-image: none !important;
+    color: #111111 !important;
+    border-color: #d4d4d4 !important;
+    box-shadow: none !important;
+}
+html:not(.dark) body.app-shell .site-navigation .global-navigation-menu .global-nav-link:hover,
+html:not(.dark) body.app-shell .site-navigation .global-navigation-menu .global-nav-link:focus-visible {
+    background: #e5e5e5 !important;
+    color: #000000 !important;
+    border-color: #777777 !important;
+}
+html.dark body.app-shell .site-navigation .global-navigation-menu .global-nav-link,
+html.dark body.app-shell .site-navigation .global-navigation-menu .global-nav-link-active,
+html.dark body.app-shell .site-navigation .global-navigation-menu .global-nav-link[aria-current="page"] {
+    background: #1a1a1a !important;
+    background-image: none !important;
+    color: #ffffff !important;
+    border-color: #4a4a4a !important;
+    box-shadow: none !important;
+}
+html.dark body.app-shell .site-navigation .global-navigation-menu .global-nav-link:hover,
+html.dark body.app-shell .site-navigation .global-navigation-menu .global-nav-link:focus-visible {
+    background: #333333 !important;
+    color: #ffffff !important;
+    border-color: #888888 !important;
+}
+html:not(.dark) body.app-shell .site-navigation .global-navigation-menu [role="group"] {
+    background: #f5f5f5 !important;
+    border-color: #d4d4d4 !important;
+}
+html.dark body.app-shell .site-navigation .global-navigation-menu [role="group"] {
+    background: #1a1a1a !important;
+    border-color: #4a4a4a !important;
+}
+html:not(.dark) body.app-shell .site-navigation .global-navigation-menu [role="group"] a,
+html:not(.dark) body.app-shell .site-navigation .global-navigation-menu [role="group"] a:hover,
+html:not(.dark) body.app-shell .site-navigation .global-navigation-menu [role="group"] a:focus-visible {
+    background: #e5e5e5 !important;
+    color: #111111 !important;
+    border-color: #777777 !important;
+}
+html.dark body.app-shell .site-navigation .global-navigation-menu [role="group"] a,
+html.dark body.app-shell .site-navigation .global-navigation-menu [role="group"] a:hover,
+html.dark body.app-shell .site-navigation .global-navigation-menu [role="group"] a:focus-visible {
+    background: #333333 !important;
+    color: #ffffff !important;
+    border-color: #888888 !important;
+}
+html:not(.dark) body.app-shell .site-navigation .nav-menu-toggle,
+html:not(.dark) body.app-shell .site-navigation .nav-menu-toggle:hover,
+html:not(.dark) body.app-shell .site-navigation .nav-menu-toggle:focus-visible {
+    background: #111111 !important;
+    background-image: none !important;
+    color: #ffffff !important;
+    border-color: #111111 !important;
+    box-shadow: none !important;
+}
+html.dark body.app-shell .site-navigation .nav-menu-toggle,
+html.dark body.app-shell .site-navigation .nav-menu-toggle:hover,
+html.dark body.app-shell .site-navigation .nav-menu-toggle:focus-visible {
+    background: #ffffff !important;
+    background-image: none !important;
+    color: #000000 !important;
+    border-color: #ffffff !important;
+    box-shadow: none !important;
+}
+html:not(.dark) body.app-shell .theme-toggle-switch,
+html:not(.dark) body.app-shell .theme-toggle-switch:hover {
+    background: #111111 !important;
+    color: #ffffff !important;
+    border-color: #111111 !important;
+}
+html.dark body.app-shell .theme-toggle-switch,
+html.dark body.app-shell .theme-toggle-switch:hover {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border-color: #ffffff !important;
+}
+html:not(.dark) body.app-shell .theme-toggle-track {
+    background: #777777 !important;
+}
+html.dark body.app-shell .theme-toggle-track {
+    background: #555555 !important;
+}
+html:not(.dark) body.app-shell .theme-toggle-thumb {
+    background: #ffffff !important;
+    border-color: #111111 !important;
+}
+html.dark body.app-shell .theme-toggle-thumb {
+    background: #000000 !important;
+    border-color: #ffffff !important;
+}
+html:not(.dark) body.app-shell .site-navigation .global-nav-link-icon {
+    color: #111111 !important;
+}
+html.dark body.app-shell .site-navigation .global-nav-link-icon {
+    color: #ffffff !important;
+}
