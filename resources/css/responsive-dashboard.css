@@ -695,3 +695,32 @@ body.neon-admin-shell > .min-h-screen > header :is(h1, h2, h3, h4, h5, h6, p, sp
 .site-navigation [class*="border-red-"] {
     border-color: var(--portal-border) !important;
 }
+
+
+/* Outrank legacy !important dark-theme rules from the base app stylesheet. */
+html.dark .site-navigation,
+html.dark .site-navigation > div,
+html.dark .theme-toggle-dock,
+html.dark .bottom-navigation,
+html.dark .bottom-nav,
+html.dark body.app-shell > .min-h-screen > header,
+html.dark body.app-shell > .min-h-screen > header > div {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+    border-color: #404040 !important;
+}
+html.dark body.app-shell > .min-h-screen > header :is(h1, h2, h3, h4, h5, h6, p, span, label) {
+    color: #ffffff !important;
+}
+html.dark body.app-shell .app-main .portal-card,
+html.dark body.app-shell .app-main .dashboard-recent,
+html.dark body.app-shell .app-main .dashboard-service-card,
+html.dark body.app-shell .app-main .dashboard-help-card,
+html.dark body.app-shell .app-main .admin-management-card,
+html.dark body.app-shell .app-main .dashboard-hero,
+html.dark body.app-shell .app-main .portal-gradient {
+    background: #111111 !important;
+    background-image: none !important;
+    color: #ffffff !important;
+    border-color: #404040 !important;
+}
