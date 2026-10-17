@@ -798,3 +798,151 @@ html.dark .app-main :is(button,a[role="button"],input[type="submit"],input[type=
 html.dark .neon-admin-shell main :is(button,a[role="button"],input[type="submit"],input[type="button"]) {
     color: var(--portal-button-text);
 }
+
+
+/* Final authoritative theme overrides. Keep all existing page features/layouts. */
+:root {
+    color-scheme: light;
+    --portal-page-bg: #ffffff;
+    --portal-text: #000000;
+    --portal-muted: #404040;
+    --portal-surface: #ffffff;
+    --portal-border: #d4d4d4;
+    --portal-nav-bg: #ffffff;
+    --portal-nav-text: #000000;
+    --portal-nav-active-bg: #e5e5e5;
+    --portal-nav-active-text: #000000;
+    --portal-input-bg: #ffffff;
+    --portal-input-text: #000000;
+    --portal-input-border: #a3a3a3;
+    --portal-focus: #404040;
+    --portal-button-bg: #111111;
+    --portal-button-text: #ffffff;
+    --portal-button-hover: #404040;
+}
+html:not(.dark), html:not(.dark) body, html:not(.dark) body.app-shell,
+html:not(.dark) .app-shell, html:not(.dark) .app-shell > .min-h-screen,
+html:not(.dark) .app-main, html:not(.dark) .app-main > *,
+html:not(.dark) .neon-admin-shell, html:not(.dark) .neon-admin-shell main,
+html:not(.dark) .neon-admin-shell main > div,
+html:not(.dark) .neon-admin-shell main section,
+html:not(.dark) .neon-admin-shell main article {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+}
+html:not(.dark) .app-main :is(div,section,article,aside,header,footer,form,fieldset),
+html:not(.dark) .neon-admin-shell main :is(div,section,article,aside,form,fieldset) {
+    color: #000000;
+}
+html:not(.dark) .app-main :is(h1,h2,h3,h4,h5,h6,p,span,label,li,td,th,legend,small,strong,em,a),
+html:not(.dark) .neon-admin-shell main :is(h1,h2,h3,h4,h5,h6,p,span,label,li,td,th,legend,small,strong,em,a) {
+    color: #000000;
+}
+html:not(.dark) .site-navigation,
+html:not(.dark) .site-navigation > div,
+html:not(.dark) .theme-toggle-dock,
+html:not(.dark) .bottom-navigation,
+html:not(.dark) .bottom-nav {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border-color: #e5e5e5 !important;
+}
+html:not(.dark) .site-navigation :is(a,button,span,p),
+html:not(.dark) .theme-toggle-dock :is(a,button,span,p),
+html:not(.dark) .bottom-navigation :is(a,button,span,p),
+html:not(.dark) .bottom-nav :is(a,button,span,p) {
+    color: #000000 !important;
+}
+html:not(.dark) .app-main :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),select,textarea),
+html:not(.dark) .neon-admin-shell main :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),select,textarea) {
+    background: #ffffff !important;
+    color: #000000 !important;
+    border-color: #a3a3a3 !important;
+}
+html:not(.dark) .app-main :is(input,textarea)::placeholder,
+html:not(.dark) .neon-admin-shell main :is(input,textarea)::placeholder {
+    color: #404040 !important;
+    opacity: 1;
+}
+
+html.dark {
+    color-scheme: dark;
+    --portal-page-bg: #000000;
+    --portal-text: #ffffff;
+    --portal-muted: #d4d4d4;
+    --portal-surface: #111111;
+    --portal-border: #404040;
+    --portal-nav-bg: #000000;
+    --portal-nav-text: #ffffff;
+    --portal-nav-active-bg: #404040;
+    --portal-nav-active-text: #ffffff;
+    --portal-input-bg: #111111;
+    --portal-input-text: #ffffff;
+    --portal-input-border: #737373;
+    --portal-focus: #d4d4d4;
+    --portal-button-bg: #ffffff;
+    --portal-button-text: #000000;
+    --portal-button-hover: #d4d4d4;
+}
+html.dark, html.dark body, html.dark body.app-shell,
+html.dark .app-shell, html.dark .app-shell > .min-h-screen,
+html.dark .app-main, html.dark .app-main > *,
+html.dark .neon-admin-shell, html.dark .neon-admin-shell main,
+html.dark .neon-admin-shell main > div,
+html.dark .neon-admin-shell main section,
+html.dark .neon-admin-shell main article {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+}
+html.dark .app-main :is(div,section,article,aside,header,footer,form,fieldset),
+html.dark .neon-admin-shell main :is(div,section,article,aside,form,fieldset) {
+    color: #ffffff;
+}
+html.dark .app-main :is(h1,h2,h3,h4,h5,h6,p,span,label,li,td,th,legend,small,strong,em,a),
+html.dark .neon-admin-shell main :is(h1,h2,h3,h4,h5,h6,p,span,label,li,td,th,legend,small,strong,em,a) {
+    color: #ffffff;
+}
+html.dark .app-main :is(.portal-card,.neon-card,.neon-glow-border,.card,[data-portal-card]),
+html.dark .neon-admin-shell main :is(.portal-card,.neon-card,.neon-glow-border,.card,[data-portal-card]) {
+    background: #111111 !important;
+    color: #ffffff !important;
+    border-color: #404040 !important;
+}
+html.dark .site-navigation,
+html.dark .site-navigation > div,
+html.dark .theme-toggle-dock,
+html.dark .bottom-navigation,
+html.dark .bottom-nav {
+    background: #000000 !important;
+    color: #ffffff !important;
+    border-color: #404040 !important;
+}
+html.dark .site-navigation :is(a,button,span,p),
+html.dark .theme-toggle-dock :is(a,button,span,p),
+html.dark .bottom-navigation :is(a,button,span,p),
+html.dark .bottom-nav :is(a,button,span,p) {
+    color: #ffffff !important;
+}
+html.dark .app-main :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),select,textarea),
+html.dark .neon-admin-shell main :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),select,textarea) {
+    background: #111111 !important;
+    color: #ffffff !important;
+    border-color: #737373 !important;
+}
+html.dark .app-main :is(input,textarea)::placeholder,
+html.dark .neon-admin-shell main :is(input,textarea)::placeholder {
+    color: #d4d4d4 !important;
+    opacity: 1;
+}
+
+/* Monochrome only: remove green/neon visual accents without removing features. */
+:is(.app-main,.neon-admin-shell) [class*="text-green-"],
+:is(.app-main,.neon-admin-shell) [class*="text-emerald-"],
+:is(.app-main,.neon-admin-shell) [class*="text-lime-"] {
+    color: var(--portal-text) !important;
+}
+:is(.app-main,.neon-admin-shell) [class*="border-green-"],
+:is(.app-main,.neon-admin-shell) [class*="border-emerald-"],
+:is(.app-main,.neon-admin-shell) [class*="border-lime-"] {
+    border-color: var(--portal-border) !important;
+}
