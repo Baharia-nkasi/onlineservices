@@ -116,7 +116,7 @@
                         @csrf @method('PATCH')
                         <label for="status" class="block text-sm font-extrabold text-slate-800">Application status</label>
                         <div class="mt-2 flex flex-col gap-3 sm:flex-row">
-                            <select id="status" name="status" x-model="status" class="input-modern flex-1" {{ $application->status === 'completed' ? 'disabled' : '' }}>
+                            <select id="status" name="status" x-model="status" class="input-modern flex-1" {{ in_array($application->status, ['completed', 'rejected'], true) ? 'disabled' : '' }}>
                                 @foreach($statusOptions as $status)
                                     <option value="{{ $status }}" @selected($application->status === $status)>{{ ucfirst($status) }}</option>
                                 @endforeach
@@ -124,7 +124,7 @@
                             @if($application->status === 'completed')
                                 <input type="hidden" name="status" value="completed">
                             @endif
-                            <button class="portal-button" {{ $application->status === 'completed' ? 'disabled' : '' }}>Update Status</button>
+                            <button class="portal-button" {{ in_array($application->status, ['completed', 'rejected'], true) ? 'disabled' : '' }}>Update Status</button>
                         </div>
 
                         <div class="mt-4">
@@ -142,7 +142,7 @@
                                 :placeholder="status === 'rejected'
                                     ? 'Explain briefly why this application was rejected and what the customer should correct before re-applying.'
                                     : 'Write a short remark for the customer. It will appear on their application dashboard when the application is approved.'"
-                                {{ $application->status === 'completed' ? 'disabled' : '' }}
+                                {{ in_array($application->status, ['completed', 'rejected'], true) ? 'disabled' : '' }}
                             >{{ old('approval_remark', $application->approval_remark) }}</textarea>
                             <p class="mt-2 text-xs font-semibold text-slate-500" x-show="status === 'rejected'">A rejection remark is required. After rejection, this application leaves the active admin queue and the customer receives a notification with a direct link to start a new application.</p>
                             <p class="mt-2 text-xs font-semibold text-slate-500" x-show="status !== 'rejected'">This remark is saved with the application and shown to the customer.</p>
@@ -255,17 +255,17 @@
                                 @endif
                                 <form method="POST" action="{{ route('admin.documents.destroy',$document) }}" class="shrink-0" onsubmit="return confirm('Delete this file? The customer will need to upload it again.');">
                                     @csrf @method('DELETE')
-                                    <button type="submit" class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-extrabold text-red-700 hover:bg-red-100" {{ $application->status === 'completed' ? 'disabled' : '' }}>Delete File</button>
+                                    <button type="submit" class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-extrabold text-red-700 hover:bg-red-100" {{ in_array($application->status, ['completed', 'rejected'], true) ? 'disabled' : '' }}>Delete File</button>
                                 </form>
                                 <form method="POST" action="{{ route('admin.documents.status',$document) }}" class="flex flex-col gap-2 sm:flex-row">
                                     @csrf @method('PATCH')
-                                    <select name="status" class="rounded-xl border-slate-300 text-sm" {{ $application->status === 'completed' ? 'disabled' : '' }}>
+                                    <select name="status" class="rounded-xl border-slate-300 text-sm" {{ in_array($application->status, ['completed', 'rejected'], true) ? 'disabled' : '' }}>
                                         @foreach(['pending','processing','approved','rejected'] as $status)
                                             <option value="{{ $status }}" @selected($document->status === $status)>{{ ucfirst($status) }}</option>
                                         @endforeach
                                     </select>
-                                    <input type="text" name="notes" maxlength="1000" value="{{ old('notes', $document->notes) }}" placeholder="Review note (optional)" class="rounded-xl border-slate-300 text-sm" {{ $application->status === 'completed' ? 'disabled' : '' }}>
-                                    <button class="rounded-xl bg-slate-900 px-4 py-3 text-sm font-extrabold text-white hover:bg-slate-800" {{ $application->status === 'completed' ? 'disabled' : '' }}>Save Review</button>
+                                    <input type="text" name="notes" maxlength="1000" value="{{ old('notes', $document->notes) }}" placeholder="Review note (optional)" class="rounded-xl border-slate-300 text-sm" {{ in_array($application->status, ['completed', 'rejected'], true) ? 'disabled' : '' }}>
+                                    <button class="rounded-xl bg-slate-900 px-4 py-3 text-sm font-extrabold text-white hover:bg-slate-800" {{ in_array($application->status, ['completed', 'rejected'], true) ? 'disabled' : '' }}>Save Review</button>
                                 </form>
                             </div>
                         </div>
