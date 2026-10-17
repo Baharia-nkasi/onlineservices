@@ -2654,3 +2654,129 @@ html:not(.dark) .site-navigation .global-navigation-menu {
         transition: none !important;
     }
 }
+
+
+/* Admin dashboard theme consistency: use the shared theme instead of a permanently
+   black neon canvas. Keep the familiar green accent in both themes. */
+.neon-shell {
+    background:
+        radial-gradient(circle at 12% 15%, rgb(34 197 94 / 0.10), transparent 28%),
+        radial-gradient(circle at 88% 8%, rgb(16 185 129 / 0.08), transparent 24%),
+        radial-gradient(circle at 70% 85%, rgb(132 204 22 / 0.08), transparent 30%),
+        #f0fdf4;
+    color: #14532d;
+}
+
+.neon-shell::before {
+    background-image:
+        linear-gradient(rgb(22 163 74 / 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgb(22 163 74 / 0.035) 1px, transparent 1px);
+}
+
+.neon-shell .neon-card {
+    border-color: #bbf7d0;
+    background: linear-gradient(145deg, rgb(255 255 255 / 0.98), rgb(240 253 244 / 0.98));
+    color: #14532d;
+    box-shadow: 0 12px 34px rgb(20 83 45 / 0.08);
+}
+
+.neon-shell .neon-card:hover {
+    border-color: #86efac;
+    box-shadow: 0 16px 42px rgb(20 83 45 / 0.12);
+}
+
+.neon-shell .neon-title,
+.neon-shell .neon-value {
+    color: #15803d;
+    text-shadow: none;
+}
+
+.neon-shell .neon-muted {
+    color: #3f6250;
+}
+
+.neon-shell .neon-row {
+    color: #14532d;
+    background: rgb(240 253 244 / 0.72);
+}
+
+.neon-shell .neon-row:hover {
+    background: #dcfce7;
+}
+
+.neon-shell .neon-input {
+    border-color: #bbf7d0;
+    background: #ffffff;
+    color: #14532d;
+}
+
+.neon-shell .neon-input::placeholder {
+    color: #52715e;
+}
+
+.neon-shell .neon-status {
+    border-color: #86efac;
+    background: #dcfce7;
+    color: #166534;
+}
+
+html.dark .neon-shell {
+    background:
+        radial-gradient(circle at 12% 15%, rgb(0 255 102 / 0.09), transparent 28%),
+        radial-gradient(circle at 88% 8%, rgb(0 255 102 / 0.06), transparent 24%),
+        radial-gradient(circle at 70% 85%, rgb(132 204 22 / 0.05), transparent 30%),
+        #07130d;
+    color: #e7fbeD;
+}
+
+html.dark .neon-shell::before {
+    background-image:
+        linear-gradient(rgb(0 255 102 / 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgb(0 255 102 / 0.025) 1px, transparent 1px);
+}
+
+html.dark .neon-shell .neon-card {
+    border-color: rgb(74 222 128 / 0.28);
+    background: linear-gradient(145deg, rgb(10 30 19 / 0.96), rgb(5 19 12 / 0.96));
+    color: #e7fbed;
+    box-shadow: 0 16px 42px rgb(0 0 0 / 0.24);
+}
+
+html.dark .neon-shell .neon-card:hover {
+    border-color: rgb(74 222 128 / 0.5);
+}
+
+html.dark .neon-shell .neon-title,
+html.dark .neon-shell .neon-value {
+    color: #86efac;
+    text-shadow: 0 0 12px rgb(0 255 102 / 0.18);
+}
+
+html.dark .neon-shell .neon-muted {
+    color: #a7c4b1;
+}
+
+html.dark .neon-shell .neon-row {
+    color: #e7fbed;
+    background: rgb(7 30 17 / 0.7);
+}
+
+html.dark .neon-shell .neon-row:hover {
+    background: rgb(20 83 45 / 0.5);
+}
+
+html.dark .neon-shell .neon-input {
+    border-color: #28583b;
+    background: #0b1f13;
+    color: #e7fbed;
+}
+
+html.dark .neon-shell .neon-input::placeholder {
+    color: #8fae99;
+}
+
+html.dark .neon-shell .neon-status {
+    border-color: #286443;
+    background: #123822;
+    color: #bbf7d0;
+}
