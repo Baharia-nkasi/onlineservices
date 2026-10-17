@@ -946,3 +946,95 @@ html.dark .neon-admin-shell main :is(input,textarea)::placeholder {
 :is(.app-main,.neon-admin-shell) [class*="border-lime-"] {
     border-color: var(--portal-border) !important;
 }
+
+
+/* Admin Management sections: predictable monochrome light/dark mode.
+   Covers Management, Send to Application, Operations, and Service Infrastructure
+   without changing markup, spacing, or existing functionality. */
+html:not(.dark) .neon-admin-shell,
+html:not(.dark) .neon-admin-shell main,
+html:not(.dark) .neon-admin-shell main > *,
+html:not(.dark) .neon-admin-shell main section,
+html:not(.dark) .neon-admin-shell main article,
+html:not(.dark) .neon-admin-shell main aside,
+html:not(.dark) .neon-admin-shell main form {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+}
+html:not(.dark) .neon-admin-shell main :is(
+    h1,h2,h3,h4,h5,h6,p,span,label,li,td,th,legend,small,strong,em,a
+) {
+    color: #000000 !important;
+}
+html:not(.dark) .neon-admin-shell main :is(
+    .portal-card,.neon-card,.neon-glow-border,.card,[data-portal-card],
+    table,thead,tbody,tr,th,td
+) {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    border-color: #d4d4d4 !important;
+    text-shadow: none !important;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 6%) !important;
+}
+html:not(.dark) .neon-admin-shell main :is(
+    input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+    select,textarea
+) {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    border-color: #a3a3a3 !important;
+}
+html:not(.dark) .neon-admin-shell main :is(input,textarea)::placeholder {
+    color: #404040 !important;
+    opacity: 1;
+}
+
+/* Dark mode must actually become black/dark, including all Management panels. */
+html.dark .neon-admin-shell,
+html.dark .neon-admin-shell main,
+html.dark .neon-admin-shell main > *,
+html.dark .neon-admin-shell main section,
+html.dark .neon-admin-shell main article,
+html.dark .neon-admin-shell main aside,
+html.dark .neon-admin-shell main form {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+}
+html.dark .neon-admin-shell main :is(
+    h1,h2,h3,h4,h5,h6,p,span,label,li,td,th,legend,small,strong,em,a
+) {
+    color: #ffffff !important;
+}
+html.dark .neon-admin-shell main :is(
+    .portal-card,.neon-card,.neon-glow-border,.card,[data-portal-card],
+    table,thead,tbody,tr,th,td
+) {
+    background-color: #111111 !important;
+    color: #ffffff !important;
+    border-color: #404040 !important;
+    text-shadow: none !important;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 30%) !important;
+}
+html.dark .neon-admin-shell main :is(
+    input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+    select,textarea
+) {
+    background-color: #111111 !important;
+    color: #ffffff !important;
+    border-color: #737373 !important;
+}
+html.dark .neon-admin-shell main :is(input,textarea)::placeholder {
+    color: #d4d4d4 !important;
+    opacity: 1;
+}
+
+/* Monochrome states for admin controls; no green/neon hover or active styling. */
+html:not(.dark) .neon-admin-shell main :is(button,a[role="button"],input[type="submit"],input[type="button"]) {
+    border-color: #333333;
+    text-shadow: none !important;
+    box-shadow: none !important;
+}
+html.dark .neon-admin-shell main :is(button,a[role="button"],input[type="submit"],input[type="button"]) {
+    text-shadow: none !important;
+    box-shadow: none !important;
+}
