@@ -29,7 +29,7 @@ function setLiveFieldState(input, messageElement, valid, message = '') {
     input.classList.toggle('border-red-400', !valid);
     input.classList.toggle('ring-2', !valid);
     input.classList.toggle('ring-red-100', !valid);
-    input.classList.toggle('border-emerald-400', valid);
+    input.classList.toggle('border-neutral-400', valid);
     messageElement.textContent = message;
     input.setAttribute('aria-invalid', valid ? 'false' : 'true');
 }
