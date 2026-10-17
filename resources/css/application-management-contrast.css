@@ -18,16 +18,7 @@ html:not(.dark) body.neon-admin-shell .app-main > .min-h-screen.page-enter :is(
     color: #292524 !important;
 }
 
-/* Make subdued metadata and helper text readable without flattening semantic
-   success, warning, error, or status-badge colors. */
-html:not(.dark) body.neon-admin-shell .app-main > .min-h-screen.page-enter :is(
-    dt, dd, label, th, td, p, li, small
-):not(.text-emerald-600):not(.text-emerald-700):not(.text-emerald-800)
- :not(.text-red-600):not(.text-red-700):not(.text-red-800)
- :not(.text-amber-700):not(.text-amber-800):not(.text-blue-700) {
-    text-shadow: none;
-}
-
+/* Inputs and placeholders remain legible against white form surfaces. */
 html:not(.dark) body.neon-admin-shell .app-main > .min-h-screen.page-enter :is(
     input:not([type="checkbox"]):not([type="radio"]), select, textarea
 ) {
