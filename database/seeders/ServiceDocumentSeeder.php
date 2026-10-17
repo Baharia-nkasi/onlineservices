@@ -394,7 +394,7 @@ class ServiceDocumentSeeder extends Seeder
                 // Requirements are seeded as defaults only. Never overwrite an
                 // existing requirement because admins may intentionally change
                 // its active state, description, ordering or validation rules.
-                ServiceDocument::firstOrCreate(
+                ServiceDocument::withTrashed()->firstOrCreate(
                     [
                         'service_id' => $service->id,
                         'name' => $document['name'],
