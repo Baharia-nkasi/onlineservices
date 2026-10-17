@@ -34,4 +34,9 @@
             <span>↳</span> {{ __('Log in') }}
         </button>
     </form>
+
+    <div class="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-[#e4d3a0] pt-5">
+        <span class="text-sm font-medium text-[#5f5545]">{{ __('New to Online Services?') }}</span>
+        <a href="{{ route('register') }}" class="auth-switch-button">{{ __('Create an account') }}</a>
+    </div>
 </x-guest-layout>
