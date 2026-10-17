@@ -2780,3 +2780,322 @@ html.dark .neon-shell .neon-status {
     background: #123822;
     color: #bbf7d0;
 }
+
+
+/* WCAG-oriented professional navy/blue theme override for the admin dashboard.
+   Light and dark surfaces are designed independently; do not invert colors. */
+.neon-shell {
+    --admin-bg: #f1f5f9;
+    --admin-surface: #ffffff;
+    --admin-surface-raised: #f8fafc;
+    --admin-text: #0f172a;
+    --admin-muted: #475569;
+    --admin-border: #cbd5e1;
+    --admin-primary: #1e40af;
+    --admin-primary-hover: #1e3a8a;
+    --admin-primary-soft: #dbeafe;
+    background:
+        radial-gradient(circle at 10% 0%, rgb(37 99 235 / 0.09), transparent 30%),
+        radial-gradient(circle at 95% 95%, rgb(14 165 233 / 0.07), transparent 32%),
+        var(--admin-bg);
+    color: var(--admin-text);
+}
+
+.neon-shell,
+.neon-shell p,
+.neon-shell h1,
+.neon-shell h2,
+.neon-shell h3,
+.neon-shell td,
+.neon-shell th,
+.neon-shell label {
+    color: var(--admin-text);
+}
+
+.neon-shell .neon-card {
+    border: 1px solid var(--admin-border);
+    background: var(--admin-surface);
+    color: var(--admin-text);
+    box-shadow: 0 8px 24px rgb(15 23 42 / 0.07);
+}
+
+.neon-shell .neon-card:hover {
+    border-color: #93c5fd;
+    box-shadow: 0 12px 30px rgb(15 23 42 / 0.10);
+}
+
+.neon-shell .neon-title,
+.neon-shell .neon-value {
+    color: var(--admin-primary);
+    text-shadow: none;
+}
+
+.neon-shell .neon-muted,
+.neon-shell .text-slate-400,
+.neon-shell .text-slate-500,
+.neon-shell .text-gray-500 {
+    color: var(--admin-muted) !important;
+}
+
+.neon-shell .neon-button {
+    border: 1px solid var(--admin-primary);
+    background: var(--admin-primary);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgb(30 64 175 / 0.20);
+}
+
+.neon-shell .neon-button:hover,
+.neon-shell .neon-button:focus-visible {
+    background: var(--admin-primary-hover);
+    border-color: var(--admin-primary-hover);
+    color: #ffffff;
+}
+
+.neon-shell .neon-button-outline {
+    border: 1px solid #64748b;
+    background: var(--admin-surface);
+    color: #1e3a8a;
+    box-shadow: 0 2px 5px rgb(15 23 42 / 0.06);
+}
+
+.neon-shell .neon-button-outline:hover,
+.neon-shell .neon-button-outline:focus-visible {
+    border-color: var(--admin-primary);
+    background: var(--admin-primary-soft);
+    color: #172554;
+    box-shadow: 0 4px 12px rgb(30 64 175 / 0.12);
+}
+
+.neon-shell .neon-input,
+.neon-shell input,
+.neon-shell select,
+.neon-shell textarea {
+    border: 1px solid #94a3b8 !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    box-shadow: none;
+}
+
+.neon-shell .neon-input::placeholder,
+.neon-shell input::placeholder,
+.neon-shell textarea::placeholder {
+    color: #475569 !important;
+    opacity: 1;
+}
+
+.neon-shell .neon-input:focus,
+.neon-shell input:focus,
+.neon-shell select:focus,
+.neon-shell textarea:focus {
+    border-color: #1d4ed8 !important;
+    box-shadow: 0 0 0 3px rgb(37 99 235 / 0.20) !important;
+}
+
+.neon-shell .neon-status {
+    border: 1px solid #93c5fd;
+    background: #dbeafe;
+    color: #1e3a8a;
+    box-shadow: none;
+}
+
+.neon-shell .neon-status::before {
+    background: #1d4ed8;
+    box-shadow: none;
+}
+
+.neon-shell .neon-row {
+    color: var(--admin-text);
+    background: #f8fafc;
+    border-color: #e2e8f0;
+}
+
+.neon-shell .neon-row:hover {
+    background: #eff6ff;
+    border-color: #93c5fd;
+    box-shadow: none;
+}
+
+.neon-shell .neon-indicator {
+    background: #2563eb;
+    box-shadow: none;
+}
+
+.neon-shell table thead {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+
+.neon-shell .status-pill {
+    border-color: #94a3b8 !important;
+    background: #e2e8f0 !important;
+    color: #0f172a !important;
+}
+
+html.dark .neon-shell {
+    --admin-bg: #0b1220;
+    --admin-surface: #111c2e;
+    --admin-surface-raised: #172338;
+    --admin-text: #f1f5f9;
+    --admin-muted: #cbd5e1;
+    --admin-border: #475569;
+    --admin-primary: #93c5fd;
+    --admin-primary-hover: #bfdbfe;
+    --admin-primary-soft: #1e3a5f;
+    background:
+        radial-gradient(circle at 10% 0%, rgb(59 130 246 / 0.12), transparent 30%),
+        radial-gradient(circle at 95% 95%, rgb(14 165 233 / 0.08), transparent 32%),
+        var(--admin-bg);
+    color: var(--admin-text);
+}
+
+html.dark .neon-shell,
+html.dark .neon-shell p,
+html.dark .neon-shell h1,
+html.dark .neon-shell h2,
+html.dark .neon-shell h3,
+html.dark .neon-shell td,
+html.dark .neon-shell th,
+html.dark .neon-shell label {
+    color: var(--admin-text);
+}
+
+html.dark .neon-shell .neon-card {
+    border-color: var(--admin-border);
+    background: var(--admin-surface);
+    color: var(--admin-text);
+    box-shadow: 0 10px 28px rgb(0 0 0 / 0.22);
+}
+
+html.dark .neon-shell .neon-card:hover {
+    border-color: #60a5fa;
+}
+
+html.dark .neon-shell .neon-title,
+html.dark .neon-shell .neon-value {
+    color: #bfdbfe;
+    text-shadow: none;
+}
+
+html.dark .neon-shell .neon-muted,
+html.dark .neon-shell .text-slate-400,
+html.dark .neon-shell .text-slate-500,
+html.dark .neon-shell .text-gray-500 {
+    color: #cbd5e1 !important;
+}
+
+html.dark .neon-shell .neon-button {
+    border-color: #2563eb;
+    background: #1d4ed8;
+    color: #ffffff;
+}
+
+html.dark .neon-shell .neon-button:hover,
+html.dark .neon-shell .neon-button:focus-visible {
+    border-color: #3b82f6;
+    background: #2563eb;
+    color: #ffffff;
+}
+
+html.dark .neon-shell .neon-button-outline {
+    border-color: #64748b;
+    background: #1e293b;
+    color: #f8fafc;
+}
+
+html.dark .neon-shell .neon-button-outline:hover,
+html.dark .neon-shell .neon-button-outline:focus-visible {
+    border-color: #93c5fd;
+    background: #334155;
+    color: #ffffff;
+}
+
+html.dark .neon-shell .neon-input,
+html.dark .neon-shell input,
+html.dark .neon-shell select,
+html.dark .neon-shell textarea {
+    border-color: #64748b !important;
+    background: #0f172a !important;
+    color: #f8fafc !important;
+}
+
+html.dark .neon-shell .neon-input::placeholder,
+html.dark .neon-shell input::placeholder,
+html.dark .neon-shell textarea::placeholder {
+    color: #cbd5e1 !important;
+    opacity: 1;
+}
+
+html.dark .neon-shell .neon-input:focus,
+html.dark .neon-shell input:focus,
+html.dark .neon-shell select:focus,
+html.dark .neon-shell textarea:focus {
+    border-color: #93c5fd !important;
+    box-shadow: 0 0 0 3px rgb(96 165 250 / 0.28) !important;
+}
+
+html.dark .neon-shell .neon-status {
+    border-color: #60a5fa;
+    background: #1e3a5f;
+    color: #dbeafe;
+}
+
+html.dark .neon-shell .neon-status::before {
+    background: #93c5fd;
+}
+
+html.dark .neon-shell .neon-row {
+    border-color: #334155;
+    background: #172338;
+    color: #f1f5f9;
+}
+
+html.dark .neon-shell .neon-row:hover {
+    border-color: #60a5fa;
+    background: #1e293b;
+}
+
+html.dark .neon-shell .neon-indicator {
+    background: #60a5fa;
+}
+
+html.dark .neon-shell table thead {
+    background: #1e293b;
+    color: #f8fafc;
+}
+
+html.dark .neon-shell .status-pill {
+    border-color: #64748b !important;
+    background: #334155 !important;
+    color: #f8fafc !important;
+}
+
+/* Navigation and account controls must remain distinct in dark mode.
+   Avoid black text on dark dropdowns/buttons and keep hover/focus obvious. */
+html.dark .site-navigation a,
+html.dark .site-navigation button,
+html.dark .mobile-menu a,
+html.dark .mobile-menu button,
+html.dark header nav a,
+html.dark header nav button {
+    color: #f1f5f9;
+}
+
+html.dark .site-navigation a:hover,
+html.dark .site-navigation button:hover,
+html.dark .mobile-menu a:hover,
+html.dark .mobile-menu button:hover,
+html.dark header nav a:hover,
+html.dark header nav button:hover {
+    background-color: #334155;
+    color: #ffffff;
+}
+
+html.dark .site-navigation a:focus-visible,
+html.dark .site-navigation button:focus-visible,
+html.dark .mobile-menu a:focus-visible,
+html.dark .mobile-menu button:focus-visible,
+html.dark header nav a:focus-visible,
+html.dark header nav button:focus-visible {
+    outline: 2px solid #93c5fd;
+    outline-offset: 2px;
+}
