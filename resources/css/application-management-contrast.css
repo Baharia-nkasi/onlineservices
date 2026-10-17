@@ -1,0 +1,45 @@
+/* Application management: ensure slate utility text remains readable in Light Mode.
+   Scoped to the admin application queue and individual application review page. */
+html:not(.dark) body.neon-admin-shell .app-main > .neon-shell.page-enter,
+html:not(.dark) body.neon-admin-shell .app-main > .min-h-screen.page-enter {
+    color: #171717;
+}
+
+html:not(.dark) body.neon-admin-shell .app-main > .neon-shell.page-enter :is(
+    .text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700,
+    .text-slate-800, .text-slate-900, .text-neutral-400, .text-neutral-500,
+    .text-neutral-600, .text-neutral-700, .text-neutral-800, .text-neutral-900
+),
+html:not(.dark) body.neon-admin-shell .app-main > .min-h-screen.page-enter :is(
+    .text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700,
+    .text-slate-800, .text-slate-900, .text-neutral-400, .text-neutral-500,
+    .text-neutral-600, .text-neutral-700, .text-neutral-800, .text-neutral-900
+) {
+    color: #292524 !important;
+}
+
+/* Inputs and placeholders remain legible against white form surfaces. */
+html:not(.dark) body.neon-admin-shell .app-main > .min-h-screen.page-enter :is(
+    input:not([type="checkbox"]):not([type="radio"]), select, textarea
+) {
+    color: #171717 !important;
+    background-color: #ffffff !important;
+    border-color: #a8a29e !important;
+}
+
+html:not(.dark) body.neon-admin-shell .app-main > .min-h-screen.page-enter :is(input, textarea, select)::placeholder {
+    color: #57534e !important;
+    opacity: 1;
+}
+
+html:not(.dark) body.neon-admin-shell .app-main > .min-h-screen.page-enter :is(
+    .text-slate-400, .text-slate-500
+) {
+    color: #57534e !important;
+}
+
+/* The application review hero intentionally stays dark with light text. */
+html:not(.dark) body.neon-admin-shell .app-main > .min-h-screen.page-enter > div > section.bg-slate-950,
+html:not(.dark) body.neon-admin-shell .app-main > .min-h-screen.page-enter > div > section.bg-slate-950 :is(.text-white, .text-slate-300, .text-blue-300) {
+    color: #f8fafc !important;
+}
