@@ -196,9 +196,36 @@
                     <div class="flex items-start gap-3 p-5">
                         <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-600 text-lg font-black text-white">✓</span>
                         <div>
-                            <h2 class="font-black text-emerald-950">Uploaded Documents Cleared</h2>
-                            <p class="mt-1 text-sm leading-6 text-emerald-800">All customer-uploaded documents were permanently removed when this application was approved. The application can now be kept as a clean approval record.</p>
+                            <h2 class="font-black text-emerald-950">Application Approved — Read-only Record</h2>
+                            <p class="mt-1 text-sm leading-6 text-emerald-800">Any retained uploaded files remain available below for authorized review. Files purged before the retention update cannot be restored and must be uploaded again in a new application if needed.</p>
                         </div>
+                    </div>
+                </section>
+                <section class="portal-card overflow-hidden">
+                    <div class="border-b border-slate-200 p-6">
+                        <h2 class="text-xl font-black text-slate-900">Uploaded Documents</h2>
+                        <p class="mt-1 text-sm text-slate-500">Approved application files are read-only.</p>
+                    </div>
+                    <div class="divide-y divide-slate-100">
+                        @forelse($application->documents as $document)
+                            <div class="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
+                                <div class="min-w-0">
+                                    <div class="font-extrabold text-slate-900">{{ $document->document_name }}</div>
+                                    <div class="mt-1 truncate text-sm text-slate-500">{{ $document->file_name }} · {{ number_format(($document->file_size ?? 0)/1024,1) }} KB</div>
+                                    <span class="mt-2 inline-block rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">{{ ucfirst($document->status) }}</span>
+                                </div>
+                                <div class="flex flex-wrap gap-2">
+                                    @if($document->hasAvailableFile())
+                                        <a target="_blank" rel="noopener" href="{{ route('application.documents.view',$document) }}" class="portal-button-secondary text-center">{{ __('View File') }}</a>
+                                        <a href="{{ route('application.documents.download',$document) }}" class="portal-button-secondary text-center">{{ __('Download') }}</a>
+                                    @else
+                                        <span class="inline-flex items-center rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-extrabold text-amber-700 text-center">File unavailable</span>
+                                    @endif
+                                </div>
+                            </div>
+                        @empty
+                            <div class="p-12 text-center text-slate-500">No retained uploaded files are available for this application.</div>
+                        @endforelse
                     </div>
                 </section>
             @else
