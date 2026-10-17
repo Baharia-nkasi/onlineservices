@@ -451,3 +451,100 @@ html.dark body.neon-admin-shell > .min-h-screen > header [class*="text-black"] {
         text-align: center;
     }
 }
+
+
+/* Neutralize the remaining legacy "neon" component styles on Admin Dashboard. */
+body.neon-admin-shell .app-main .neon-shell {
+    background: var(--portal-page) !important;
+    color: var(--portal-text) !important;
+}
+body.neon-admin-shell .app-main .neon-shell::before,
+body.neon-admin-shell .app-main .neon-shell::after {
+    background: none !important;
+    box-shadow: none !important;
+    opacity: 0 !important;
+}
+body.neon-admin-shell .app-main :is(.neon-status, .neon-row, .neon-indicator, .neon-value, .neon-waka) {
+    background-color: var(--portal-panel) !important;
+    background-image: none !important;
+    color: var(--portal-text) !important;
+    border-color: var(--portal-border) !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+}
+body.neon-admin-shell .app-main .neon-indicator {
+    width: .55rem;
+    height: .55rem;
+    min-width: .55rem;
+    border-radius: 9999px;
+    background: var(--portal-text) !important;
+}
+body.neon-admin-shell .app-main :is(.neon-button, .neon-button-outline, .neon-input) {
+    background: var(--portal-surface) !important;
+    color: var(--portal-text) !important;
+    border-color: var(--portal-border) !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+}
+body.neon-admin-shell .app-main .neon-button,
+body.neon-admin-shell .app-main button.neon-button,
+body.neon-admin-shell .app-main input.neon-button {
+    background: var(--portal-button) !important;
+    color: var(--portal-button-text) !important;
+    border-color: var(--portal-button) !important;
+}
+body.neon-admin-shell .app-main .neon-button-outline,
+body.neon-admin-shell .app-main a.neon-button-outline {
+    background: var(--portal-surface) !important;
+    color: var(--portal-text) !important;
+    border-color: var(--portal-border) !important;
+}
+body.neon-admin-shell .app-main .neon-input {
+    background: var(--portal-surface) !important;
+    color: var(--portal-text) !important;
+}
+body.neon-admin-shell .app-main .neon-row {
+    border: 1px solid var(--portal-border) !important;
+    border-radius: .75rem;
+}
+body.neon-admin-shell .app-main :is(.neon-status, .neon-row, .neon-indicator, .neon-value, .neon-waka) * {
+    color: var(--portal-text) !important;
+}
+
+/* Arbitrary hex text/background/border utilities are also normalized. */
+.app-main [class*="text-[#"],
+.admin-management-header [class*="text-[#"] {
+    color: var(--portal-text) !important;
+}
+.app-main [class*="bg-[#"],
+.admin-management-header [class*="bg-[#"] {
+    background-color: var(--portal-panel) !important;
+}
+.app-main [class*="border-[#"],
+.admin-management-header [class*="border-[#"] {
+    border-color: var(--portal-border) !important;
+}
+
+/* Standard Tailwind accent utilities become neutral monochrome, too. */
+.app-main [class*="text-blue-"],
+.app-main [class*="text-cyan-"],
+.app-main [class*="text-amber-"],
+.app-main [class*="text-red-"],
+.app-main [class*="text-purple-"],
+.app-main [class*="text-indigo-"],
+.admin-management-header [class*="text-blue-"],
+.admin-management-header [class*="text-cyan-"],
+.admin-management-header [class*="text-amber-"],
+.admin-management-header [class*="text-red-"],
+.admin-management-header [class*="text-purple-"],
+.admin-management-header [class*="text-indigo-"] {
+    color: var(--portal-text) !important;
+}
+.app-main [class*="border-blue-"],
+.app-main [class*="border-cyan-"],
+.app-main [class*="border-amber-"],
+.app-main [class*="border-red-"],
+.app-main [class*="border-purple-"],
+.app-main [class*="border-indigo-"] {
+    border-color: var(--portal-border) !important;
+}
