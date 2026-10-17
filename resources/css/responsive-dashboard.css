@@ -206,22 +206,22 @@
 }
 
 /* -------------------------------------------------------------------------
-   Unified portal theme: shared by Admin and Customer pages.
-   Color-only overrides; preserve existing layout, spacing, and responsive rules.
+   Unified portal theme: white light mode + consistent dark mode.
+   Color-only overrides; preserve layout, spacing, and responsive rules.
    ------------------------------------------------------------------------- */
 :root {
     color-scheme: light;
-    --portal-page-bg: #f3f4f6;
-    --portal-text: #1e293b;
-    --portal-text-muted: #475569;
+    --portal-page-bg: #ffffff;
+    --portal-text: #000000;
+    --portal-text-muted: #374151;
     --portal-nav-bg: #0f172a;
     --portal-nav-text: #ffffff;
     --portal-nav-active: #22c55e;
     --portal-card-bg: #ffffff;
-    --portal-card-border: #e2e8f0;
+    --portal-card-border: #e5e7eb;
     --portal-card-shadow: 0 1px 3px rgb(15 23 42 / 8%);
     --portal-input-bg: #ffffff;
-    --portal-input-text: #111827;
+    --portal-input-text: #000000;
     --portal-input-border: #cbd5e1;
     --portal-focus-ring: #16a34a;
 }
@@ -236,15 +236,25 @@ body {
     color: var(--portal-text);
 }
 
-/* Make the shared shell inherit the same page colors on both dashboards. */
+/* Main page surfaces follow the active theme instead of fixed gray utilities. */
 .app-shell,
 .app-shell > .min-h-screen,
-.app-main {
+.app-main,
+.neon-admin-shell,
+.neon-admin-shell main {
     background-color: var(--portal-page-bg);
     color: var(--portal-text);
 }
 
-/* Top navigation and the bottom theme/navigation dock use the same palette. */
+/* Keep common page-level utility backgrounds in sync with the active theme. */
+html:not(.dark) :is(.bg-gray-50, .bg-gray-100, .bg-slate-50, .bg-slate-100) {
+    background-color: #ffffff;
+}
+html.dark :is(.bg-white, .bg-gray-50, .bg-gray-100, .bg-slate-50, .bg-slate-100) {
+    background-color: var(--portal-card-bg);
+}
+
+/* Navigation retains the shared dark-blue palette in both modes. */
 .site-navigation,
 .site-navigation > div,
 .theme-toggle-dock,
@@ -283,7 +293,7 @@ footer nav a.active {
     color: var(--portal-nav-active);
 }
 
-/* White surfaces shared by admin and customer cards/panels. */
+/* Cards/panels follow the selected theme. */
 .portal-card,
 .neon-card,
 .neon-glow-border,
@@ -295,7 +305,7 @@ footer nav a.active {
     color: var(--portal-text);
 }
 
-/* Normalize readable text without overriding intentional status/badge colors. */
+/* Explicit default text colors; avoid changing semantic status/badge colors. */
 .app-main,
 .app-main p,
 .app-main label,
@@ -312,14 +322,15 @@ footer nav a.active {
     color: var(--portal-text);
 }
 
-.app-main .text-gray-500,
-.app-main .text-gray-600,
-.app-main .text-slate-500,
-.app-main .text-slate-600 {
-    color: var(--portal-text-muted);
+html:not(.dark) .app-main :is(.text-gray-400, .text-gray-500, .text-gray-600, .text-gray-700, .text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700) {
+    color: #000000;
 }
 
-/* Inputs stay white with dark text in both dashboards and while typing. */
+html.dark .app-main :is(.text-gray-400, .text-gray-500, .text-gray-600, .text-gray-700, .text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-black) {
+    color: #e2e8f0;
+}
+
+/* Inputs stay readable while typing, and switch with the active mode. */
 .app-main input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
 .app-main select,
 .app-main textarea {
@@ -330,7 +341,7 @@ footer nav a.active {
 
 .app-main input::placeholder,
 .app-main textarea::placeholder {
-    color: #64748b;
+    color: var(--portal-text-muted);
     opacity: 1;
 }
 
@@ -340,11 +351,11 @@ footer nav a.active {
     outline-color: var(--portal-focus-ring);
 }
 
-/* Keep dark mode coherent while sharing the exact same token names. */
+/* Dark mode tokens: the theme toggle's html.dark class drives all surfaces. */
 html.dark {
     color-scheme: dark;
     --portal-page-bg: #0b1220;
-    --portal-text: #e2e8f0;
+    --portal-text: #f8fafc;
     --portal-text-muted: #cbd5e1;
     --portal-nav-bg: #0f172a;
     --portal-nav-text: #ffffff;
@@ -358,10 +369,23 @@ html.dark {
     --portal-focus-ring: #4ade80;
 }
 
-html.dark .app-main .text-gray-500,
-html.dark .app-main .text-gray-600,
-html.dark .app-main .text-slate-500,
-html.dark .app-main .text-slate-600 {
-    color: var(--portal-text-muted);
+html.dark body,
+html.dark .app-shell,
+html.dark .app-shell > .min-h-screen,
+html.dark .app-main,
+html.dark .neon-admin-shell,
+html.dark .neon-admin-shell main {
+    background-color: var(--portal-page-bg);
+    color: var(--portal-text);
+}
+
+html.dark .app-main .portal-card,
+html.dark .app-main .neon-card,
+html.dark .app-main .neon-glow-border,
+html.dark .app-main .card,
+html.dark .app-main [data-portal-card] {
+    background-color: var(--portal-card-bg);
+    border-color: var(--portal-card-border);
+    color: var(--portal-text);
 }
 
