@@ -206,442 +206,170 @@
 }
 
 /* -------------------------------------------------------------------------
-   Unified portal theme: white light mode + consistent dark mode.
-   Color-only overrides; preserve layout, spacing, and responsive rules.
+   Single source of truth for the monochrome portal theme.
+   Light: white surfaces + black text. Dark: black surfaces + white text.
+   The existing #theme-toggle sets/removes html.dark; layout stays unchanged.
    ------------------------------------------------------------------------- */
 :root {
     color-scheme: light;
-    --portal-page-bg: #ffffff;
+    --portal-page: #ffffff;
     --portal-text: #000000;
-    --portal-text-muted: #374151;
-    --portal-nav-bg: #0f172a;
+    --portal-muted: #404040;
+    --portal-surface: #ffffff;
+    --portal-panel: #f5f5f5;
+    --portal-border: #d4d4d4;
+    --portal-nav: #ffffff;
+    --portal-nav-text: #000000;
+    --portal-button: #111111;
+    --portal-button-text: #ffffff;
+    --portal-hover: #e5e5e5;
+    --portal-focus: #525252;
+    --portal-shadow: 0 2px 8px rgb(0 0 0 / 6%);
+}
+
+html.dark {
+    color-scheme: dark;
+    --portal-page: #000000;
+    --portal-text: #ffffff;
+    --portal-muted: #d4d4d4;
+    --portal-surface: #111111;
+    --portal-panel: #171717;
+    --portal-border: #404040;
+    --portal-nav: #000000;
     --portal-nav-text: #ffffff;
-    --portal-nav-active: #22c55e;
-    --portal-card-bg: #ffffff;
-    --portal-card-border: #e5e7eb;
-    --portal-card-shadow: 0 1px 3px rgb(15 23 42 / 8%);
-    --portal-input-bg: #ffffff;
-    --portal-input-text: #000000;
-    --portal-input-border: #cbd5e1;
-    --portal-focus-ring: #16a34a;
+    --portal-button: #ffffff;
+    --portal-button-text: #000000;
+    --portal-hover: #333333;
+    --portal-focus: #d4d4d4;
+    --portal-shadow: 0 2px 8px rgb(0 0 0 / 28%);
 }
 
-html,
-body {
-    background-color: var(--portal-page-bg);
+html, body, body.app-shell {
+    min-height: 100%;
+    background-color: var(--portal-page);
     color: var(--portal-text);
 }
-
-body {
+body.app-shell > .min-h-screen,
+.app-main {
+    background-color: var(--portal-page);
     color: var(--portal-text);
 }
-
-/* Main page surfaces follow the active theme instead of fixed gray utilities. */
-.app-shell,
-.app-shell > .min-h-screen,
-.app-main,
-.neon-admin-shell,
-.neon-admin-shell main {
-    background-color: var(--portal-page-bg);
-    color: var(--portal-text);
+.theme-transition,
+.theme-transition * {
+    transition-property: background-color, border-color, color, box-shadow;
+    transition-duration: 160ms;
+    transition-timing-function: ease-out;
 }
 
-/* Keep common page-level utility backgrounds in sync with the active theme. */
-html:not(.dark) :is(.bg-gray-50, .bg-gray-100, .bg-slate-50, .bg-slate-100) {
-    background-color: #ffffff;
-}
-html.dark :is(.bg-white, .bg-gray-50, .bg-gray-100, .bg-slate-50, .bg-slate-100) {
-    background-color: var(--portal-card-bg);
-}
-
-/* Navigation retains the shared dark-blue palette in both modes. */
+/* Navigation, header and theme control must switch together. */
 .site-navigation,
 .site-navigation > div,
 .theme-toggle-dock,
 .bottom-navigation,
 .bottom-nav,
 footer nav {
-    background-color: var(--portal-nav-bg);
+    background-color: var(--portal-nav) !important;
+    color: var(--portal-nav-text) !important;
+    border-color: var(--portal-border) !important;
+}
+.site-navigation :is(a, button, span, p),
+.theme-toggle-dock :is(a, button, span, p),
+.bottom-navigation :is(a, button, span, p),
+.bottom-nav :is(a, button, span, p),
+footer nav :is(a, button, span, p) {
     color: var(--portal-nav-text);
 }
-
-.site-navigation a,
-.site-navigation button,
-.theme-toggle-dock a,
-.theme-toggle-dock button,
-.bottom-navigation a,
-.bottom-navigation button,
-.bottom-nav a,
-.bottom-nav button,
-footer nav a,
-footer nav button {
+.site-navigation :is(a:hover, button:hover),
+.theme-toggle-dock :is(a:hover, button:hover),
+.bottom-navigation :is(a:hover, button:hover),
+.bottom-nav :is(a:hover, button:hover) {
+    background-color: var(--portal-hover);
+    color: var(--portal-text);
+}
+.nav-menu-toggle {
+    background-color: var(--portal-button) !important;
+    color: var(--portal-button-text) !important;
+    border-color: var(--portal-border) !important;
+}
+.theme-toggle-switch {
     color: var(--portal-nav-text);
+    border-color: var(--portal-border);
+    background-color: var(--portal-nav);
 }
 
-.site-navigation a[aria-current="page"],
-.site-navigation a[aria-current="true"],
-.site-navigation a.active,
-.site-navigation .active,
-.theme-toggle-dock a[aria-current="page"],
-.theme-toggle-dock a.active,
-.bottom-navigation a[aria-current="page"],
-.bottom-navigation a.active,
-.bottom-nav a[aria-current="page"],
-.bottom-nav a.active,
-footer nav a[aria-current="page"],
-footer nav a.active {
-    color: var(--portal-nav-active);
+/* The header slot is outside <main>; style it explicitly so Admin Management
+   doesn't retain its old fixed white/green colors. */
+body.neon-admin-shell > .min-h-screen > header,
+body.neon-admin-shell > .min-h-screen > header > div,
+.admin-management-header {
+    background-color: var(--portal-page) !important;
+    color: var(--portal-text) !important;
+    border-color: var(--portal-border) !important;
+}
+.admin-management-header :is(h1, h2, h3, h4, h5, h6, p, span, label, a) {
+    color: var(--portal-text) !important;
+}
+.admin-management-header .neon-button,
+.admin-management-header .neon-button-outline,
+.admin-management-header a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: .625rem .875rem;
+    border: 1px solid var(--portal-border) !important;
+    border-radius: .75rem;
+    background: var(--portal-button) !important;
+    color: var(--portal-button-text) !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    text-decoration: none;
+}
+.admin-management-header :is(a, button):hover {
+    filter: brightness(.9);
 }
 
-/* Cards/panels follow the selected theme. */
+/* Consistent card and table surfaces in every dashboard. */
 .portal-card,
 .neon-card,
 .neon-glow-border,
 .app-main .card,
 .app-main [data-portal-card] {
-    background-color: var(--portal-card-bg);
-    border-color: var(--portal-card-border);
-    box-shadow: var(--portal-card-shadow);
-    color: var(--portal-text);
-}
-
-/* Explicit default text colors; avoid changing semantic status/badge colors. */
-.app-main,
-.app-main p,
-.app-main label,
-.app-main li,
-.app-main td,
-.app-main th,
-.app-main h1,
-.app-main h2,
-.app-main h3,
-.app-main h4,
-.app-main h5,
-.app-main h6,
-.app-main legend {
-    color: var(--portal-text);
-}
-
-html:not(.dark) .app-main :is(.text-gray-400, .text-gray-500, .text-gray-600, .text-gray-700, .text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700) {
-    color: #000000;
-}
-
-html.dark .app-main :is(.text-gray-400, .text-gray-500, .text-gray-600, .text-gray-700, .text-slate-400, .text-slate-500, .text-slate-600, .text-slate-700, .text-black) {
-    color: #e2e8f0;
-}
-
-/* Inputs stay readable while typing, and switch with the active mode. */
-.app-main input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
-.app-main select,
-.app-main textarea {
-    background-color: var(--portal-input-bg);
-    color: var(--portal-input-text);
-    border-color: var(--portal-input-border);
-}
-
-.app-main input::placeholder,
-.app-main textarea::placeholder {
-    color: var(--portal-text-muted);
-    opacity: 1;
-}
-
-.app-main input:focus,
-.app-main select:focus,
-.app-main textarea:focus {
-    outline-color: var(--portal-focus-ring);
-}
-
-/* Dark mode tokens: the theme toggle's html.dark class drives all surfaces. */
-html.dark {
-    color-scheme: dark;
-    --portal-page-bg: #0b1220;
-    --portal-text: #f8fafc;
-    --portal-text-muted: #cbd5e1;
-    --portal-nav-bg: #0f172a;
-    --portal-nav-text: #ffffff;
-    --portal-nav-active: #4ade80;
-    --portal-card-bg: #111827;
-    --portal-card-border: #334155;
-    --portal-card-shadow: 0 1px 3px rgb(0 0 0 / 25%);
-    --portal-input-bg: #0f172a;
-    --portal-input-text: #f8fafc;
-    --portal-input-border: #475569;
-    --portal-focus-ring: #4ade80;
-}
-
-html.dark body,
-html.dark .app-shell,
-html.dark .app-shell > .min-h-screen,
-html.dark .app-main,
-html.dark .neon-admin-shell,
-html.dark .neon-admin-shell main {
-    background-color: var(--portal-page-bg);
-    color: var(--portal-text);
-}
-
-html.dark .app-main .portal-card,
-html.dark .app-main .neon-card,
-html.dark .app-main .neon-glow-border,
-html.dark .app-main .card,
-html.dark .app-main [data-portal-card] {
-    background-color: var(--portal-card-bg);
-    border-color: var(--portal-card-border);
-    color: var(--portal-text);
-}
-
-
-
-/* Admin dashboard: explicitly match the shared light/dark theme tokens. */
-html:not(.dark) .neon-admin-shell,
-html:not(.dark) .neon-admin-shell main,
-html:not(.dark) .neon-admin-shell main > div,
-html:not(.dark) .neon-admin-shell main section {
-    background-color: #ffffff;
-    color: #000000;
-}
-
-html:not(.dark) .neon-admin-shell :is(.neon-card, .neon-glow-border, .portal-card, [data-portal-card]) {
-    background-color: #ffffff;
-    color: #000000;
-    border-color: #e5e7eb;
-    box-shadow: 0 1px 3px rgb(15 23 42 / 8%);
-}
-
-html:not(.dark) .neon-admin-shell main :is(h1, h2, h3, h4, h5, h6, p, label, li, td, th, legend) {
-    color: #000000;
-}
-
-html:not(.dark) .neon-admin-shell main :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), select, textarea) {
-    background-color: #ffffff;
-    color: #000000;
-    border-color: #cbd5e1;
-}
-
-html:not(.dark) .neon-admin-shell main :is(input, textarea)::placeholder {
-    color: #374151;
-    opacity: 1;
-}
-
-html.dark .neon-admin-shell,
-html.dark .neon-admin-shell main,
-html.dark .neon-admin-shell main > div,
-html.dark .neon-admin-shell main section {
-    background-color: #0b1220;
-    color: #f8fafc;
-}
-
-html.dark .neon-admin-shell :is(.neon-card, .neon-glow-border, .portal-card, [data-portal-card]) {
-    background-color: #111827;
-    color: #f8fafc;
-    border-color: #334155;
-    box-shadow: 0 1px 3px rgb(0 0 0 / 25%);
-}
-
-html.dark .neon-admin-shell main :is(h1, h2, h3, h4, h5, h6, p, label, li, td, th, legend) {
-    color: #f8fafc;
-}
-
-html.dark .neon-admin-shell main :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), select, textarea) {
-    background-color: #0f172a;
-    color: #f8fafc;
-    border-color: #475569;
-}
-
-html.dark .neon-admin-shell main :is(input, textarea)::placeholder {
-    color: #cbd5e1;
-    opacity: 1;
-}
-
-
-/* Admin-only monochrome redesign: remove every green/neon accent. */
-body:has(.neon-admin-shell) .site-navigation,
-body:has(.neon-admin-shell) .site-navigation > div,
-body:has(.neon-admin-shell) .theme-toggle-dock,
-body:has(.neon-admin-shell) .bottom-navigation,
-body:has(.neon-admin-shell) .bottom-nav {
-    background: #ffffff !important;
-    color: #000000 !important;
-    border-color: #e5e7eb !important;
-    box-shadow: 0 1px 3px rgb(15 23 42 / 8%) !important;
-}
-
-body:has(.neon-admin-shell) .site-navigation :is(a, button, span, p),
-body:has(.neon-admin-shell) .theme-toggle-dock :is(a, button, span, p),
-body:has(.neon-admin-shell) .bottom-navigation :is(a, button, span, p),
-body:has(.neon-admin-shell) .bottom-nav :is(a, button, span, p) {
-    color: #000000 !important;
-}
-
-body:has(.neon-admin-shell) .site-navigation :is(a:hover, button:hover),
-body:has(.neon-admin-shell) .theme-toggle-dock :is(a:hover, button:hover),
-body:has(.neon-admin-shell) .bottom-navigation :is(a:hover, button:hover),
-body:has(.neon-admin-shell) .bottom-nav :is(a:hover, button:hover) {
-    background-color: #f3f4f6 !important;
-    color: #000000 !important;
-}
-
-body:has(.neon-admin-shell) .neon-admin-shell {
-    background: #ffffff !important;
-    color: #000000 !important;
-    --portal-page-bg: #ffffff;
-    --portal-text: #000000;
-    --portal-text-muted: #374151;
-    --portal-nav-bg: #ffffff;
-    --portal-nav-text: #000000;
-    --portal-nav-active: #000000;
-    --portal-card-bg: #ffffff;
-    --portal-card-border: #e5e7eb;
-    --portal-card-shadow: 0 2px 8px rgb(15 23 42 / 6%);
-    --portal-input-bg: #ffffff;
-    --portal-input-text: #000000;
-    --portal-input-border: #cbd5e1;
-    --portal-focus-ring: #6b7280;
-}
-
-body:has(.neon-admin-shell) .neon-admin-shell,
-body:has(.neon-admin-shell) .neon-admin-shell main,
-body:has(.neon-admin-shell) .neon-admin-shell main > div,
-body:has(.neon-admin-shell) .neon-admin-shell main section,
-body:has(.neon-admin-shell) .neon-admin-shell main article {
-    background-color: #ffffff !important;
-    color: #000000 !important;
-}
-
-body:has(.neon-admin-shell) .neon-admin-shell :is(.neon-card, .neon-glow-border, .portal-card, [data-portal-card], .card) {
-    background: #ffffff !important;
-    color: #000000 !important;
-    border: 1px solid #e5e7eb !important;
-    box-shadow: 0 2px 8px rgb(15 23 42 / 6%) !important;
+    background-color: var(--portal-surface) !important;
+    color: var(--portal-text) !important;
+    border-color: var(--portal-border) !important;
+    box-shadow: var(--portal-shadow) !important;
     text-shadow: none !important;
 }
-
-body:has(.neon-admin-shell) .neon-admin-shell main :is(h1, h2, h3, h4, h5, h6, p, label, li, td, th, legend, small, strong, span) {
-    text-shadow: none;
+.app-main :is(table, thead, tbody, tr, th, td) {
+    border-color: var(--portal-border);
 }
-
-body:has(.neon-admin-shell) .neon-admin-shell main :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), select, textarea) {
-    background: #ffffff !important;
-    color: #000000 !important;
-    border: 1px solid #cbd5e1 !important;
-    box-shadow: none !important;
-}
-
-body:has(.neon-admin-shell) .neon-admin-shell main :is(input, textarea)::placeholder {
-    color: #4b5563 !important;
-    opacity: 1;
-}
-
-/* Neutralize Tailwind green/emerald/lime utilities, including hover and focus states. */
-body:has(.neon-admin-shell) .neon-admin-shell [class*="green-"],
-body:has(.neon-admin-shell) .neon-admin-shell [class*="emerald-"],
-body:has(.neon-admin-shell) .neon-admin-shell [class*="lime-"] {
-    --tw-ring-color: #9ca3af !important;
-    --tw-shadow-color: rgb(0 0 0 / 8%) !important;
-    text-shadow: none !important;
-    box-shadow: none !important;
-}
-
-body:has(.neon-admin-shell) .neon-admin-shell :is(
-    [class~="bg-green-50"], [class~="bg-green-100"], [class~="bg-green-200"],
-    [class~="bg-green-300"], [class~="bg-green-400"], [class~="bg-green-500"],
-    [class~="bg-green-600"], [class~="bg-green-700"], [class~="bg-green-800"],
-    [class~="bg-green-900"], [class~="bg-emerald-50"], [class~="bg-emerald-100"],
-    [class~="bg-emerald-200"], [class~="bg-emerald-300"], [class~="bg-emerald-400"],
-    [class~="bg-emerald-500"], [class~="bg-emerald-600"], [class~="bg-emerald-700"],
-    [class~="bg-emerald-800"], [class~="bg-emerald-900"], [class~="bg-lime-50"],
-    [class~="bg-lime-100"], [class~="bg-lime-200"], [class~="bg-lime-300"],
-    [class~="bg-lime-400"], [class~="bg-lime-500"], [class~="bg-lime-600"],
-    [class~="bg-lime-700"], [class~="bg-lime-800"], [class~="bg-lime-900"]
-) {
-    background-color: #f3f4f6 !important;
-}
-
-body:has(.neon-admin-shell) .neon-admin-shell :is(
-    [class~="text-green-400"], [class~="text-green-500"], [class~="text-green-600"],
-    [class~="text-green-700"], [class~="text-green-800"], [class~="text-emerald-400"],
-    [class~="text-emerald-500"], [class~="text-emerald-600"], [class~="text-emerald-700"],
-    [class~="text-lime-400"], [class~="text-lime-500"], [class~="text-lime-600"],
-    [class~="text-lime-700"]
-) {
-    color: #000000 !important;
-}
-
-body:has(.neon-admin-shell) .neon-admin-shell :is(
-    [class~="border-green-400"], [class~="border-green-500"], [class~="border-green-600"],
-    [class~="border-emerald-400"], [class~="border-emerald-500"], [class~="border-emerald-600"],
-    [class~="border-lime-400"], [class~="border-lime-500"], [class~="border-lime-600"]
-) {
-    border-color: #d1d5db !important;
-}
-
-body:has(.neon-admin-shell) .neon-admin-shell main :is(button, a[role="button"], input[type="submit"], input[type="button"]) {
-    border-color: #111827;
-    box-shadow: none !important;
-    text-shadow: none !important;
-}
-
-body:has(.neon-admin-shell) .neon-admin-shell main :is(button, a[role="button"], input[type="submit"], input[type="button"]).neon-button,
-body:has(.neon-admin-shell) .neon-admin-shell main :is(button, a[role="button"], input[type="submit"], input[type="button"])[class*="bg-green-"],
-body:has(.neon-admin-shell) .neon-admin-shell main :is(button, a[role="button"], input[type="submit"], input[type="button"])[class*="bg-emerald-"],
-body:has(.neon-admin-shell) .neon-admin-shell main :is(button, a[role="button"], input[type="submit"], input[type="button"])[class*="bg-lime-"] {
-    background: #111827 !important;
-    color: #ffffff !important;
-    border-color: #111827 !important;
-}
-
-body:has(.neon-admin-shell) .neon-admin-shell main :is(button, a[role="button"], input[type="submit"], input[type="button"]):hover {
-    background-color: #374151 !important;
-    color: #ffffff !important;
-    border-color: #374151 !important;
-}
-
-/* Admin remains intentionally monochrome even if the shared theme toggle is set to dark. */
-body:has(.neon-admin-shell) html.dark,
-html.dark body:has(.neon-admin-shell),
-html.dark body:has(.neon-admin-shell) .neon-admin-shell,
-html.dark body:has(.neon-admin-shell) .neon-admin-shell main,
-html.dark body:has(.neon-admin-shell) .neon-admin-shell main > div,
-html.dark body:has(.neon-admin-shell) .neon-admin-shell main section {
-    background: #ffffff !important;
-    color: #000000 !important;
-}
-
-
-/* FINAL GLOBAL THEME NORMALIZATION
-   One neutral palette across public, customer, and admin pages.
-   The html.dark class is controlled by the existing theme toggle.
-   Color-only rules: preserve page structure, spacing, and responsive layout. */
-:root {
-    color-scheme: light;
-    --portal-page-bg: #ffffff;
-    --portal-text: #000000;
-    --portal-muted: #404040;
-    --portal-surface: #ffffff;
-    --portal-border: #d4d4d8;
-    --portal-shadow: 0 2px 8px rgb(0 0 0 / 6%);
-    --portal-nav-bg: #111111;
-    --portal-nav-text: #ffffff;
-    --portal-nav-active-bg: #e5e5e5;
-    --portal-nav-active-text: #000000;
-    --portal-input-bg: #ffffff;
-    --portal-input-text: #000000;
-    --portal-input-border: #a3a3a3;
-    --portal-focus: #525252;
-    --portal-button-bg: #111111;
-    --portal-button-text: #ffffff;
-    --portal-button-hover: #404040;
-}
-
-html, body, body.app-shell,
-.app-shell, .app-shell > .min-h-screen, .app-main,
-.app-main > *, .neon-admin-shell, .neon-admin-shell main,
-.neon-admin-shell main > div, .neon-admin-shell main section,
-.neon-admin-shell main article {
-    background-color: var(--portal-page-bg);
+.app-main :is(h1, h2, h3, h4, h5, h6, p, span, label, li, td, th, legend, small, strong, em, a),
+body.neon-admin-shell > .min-h-screen > header :is(h1, h2, h3, h4, h5, h6, p, span, label, a) {
     color: var(--portal-text);
 }
+.app-main :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), select, textarea),
+body.neon-admin-shell > .min-h-screen > header input,
+body.neon-admin-shell > .min-h-screen > header select,
+body.neon-admin-shell > .min-h-screen > header textarea {
+    min-width: 0;
+    max-width: 100%;
+    background-color: var(--portal-surface) !important;
+    color: var(--portal-text) !important;
+    border-color: var(--portal-border) !important;
+    box-shadow: none !important;
+}
+.app-main :is(input, textarea)::placeholder {
+    color: var(--portal-muted) !important;
+    opacity: 1;
+}
+.app-main :is(input, select, textarea, button, a):focus-visible,
+.admin-management-header :is(a, button):focus-visible {
+    outline: 2px solid var(--portal-focus);
+    outline-offset: 2px;
+}
 
-/* Normalize common legacy utility surfaces across every role/page. */
+/* Neutralize legacy light-gray utility surfaces without overriding the theme. */
 html:not(.dark) :is(.bg-slate-50, .bg-slate-100, .bg-gray-50, .bg-gray-100, .bg-zinc-50, .bg-neutral-50) {
     background-color: #ffffff !important;
 }
@@ -649,392 +377,350 @@ html.dark :is(.bg-white, .bg-slate-50, .bg-slate-100, .bg-gray-50, .bg-gray-100,
     background-color: var(--portal-surface) !important;
 }
 
-/* One navigation treatment everywhere; active items use neutral contrast, never green. */
-.site-navigation, .site-navigation > div,
-.theme-toggle-dock, .bottom-navigation, .bottom-nav, footer nav {
-    background: var(--portal-nav-bg) !important;
-    color: var(--portal-nav-text) !important;
-    border-color: #333333;
-}
-.site-navigation :is(a, button, span, p),
-.theme-toggle-dock :is(a, button, span, p),
-.bottom-navigation :is(a, button, span, p),
-.bottom-nav :is(a, button, span, p), footer nav :is(a, button, span, p) {
-    color: var(--portal-nav-text);
-}
-.site-navigation :is(a[aria-current="page"], a[aria-current="true"], a.active, .active),
-.theme-toggle-dock :is(a[aria-current="page"], a.active),
-.bottom-navigation :is(a[aria-current="page"], a.active),
-.bottom-nav :is(a[aria-current="page"], a.active),
-footer nav :is(a[aria-current="page"], a.active) {
-    color: var(--portal-nav-active-text) !important;
-    background-color: var(--portal-nav-active-bg) !important;
-    border-radius: .375rem;
-}
-
-/* Card, table, and panel surfaces use a consistent neutral treatment. */
-.portal-card, .neon-card, .neon-glow-border, .app-main .card,
-.app-main [data-portal-card], .neon-admin-shell .portal-card,
-.neon-admin-shell .neon-card, .neon-admin-shell .neon-glow-border {
-    background: var(--portal-surface) !important;
+/* Remove green/emerald/lime and neon-green visual accents from portal UI.
+   Status and validation behavior remain functional; only their presentation changes. */
+:is(.app-main, .admin-management-header, body.neon-admin-shell) [class*="text-green-"],
+:is(.app-main, .admin-management-header, body.neon-admin-shell) [class*="text-emerald-"],
+:is(.app-main, .admin-management-header, body.neon-admin-shell) [class*="text-lime-"],
+:is(.app-main, .admin-management-header, body.neon-admin-shell) [class*="text-[#39ff14"],
+:is(.app-main, .admin-management-header, body.neon-admin-shell) [class*="text-[#9dffbb"] {
     color: var(--portal-text) !important;
+}
+:is(.app-main, .admin-management-header, body.neon-admin-shell) [class*="bg-green-"],
+:is(.app-main, .admin-management-header, body.neon-admin-shell) [class*="bg-emerald-"],
+:is(.app-main, .admin-management-header, body.neon-admin-shell) [class*="bg-lime-"],
+:is(.app-main, .admin-management-header, body.neon-admin-shell) [class*="bg-[#00ff66"] {
+    background-color: var(--portal-panel) !important;
+}
+:is(.app-main, .admin-management-header, body.neon-admin-shell) [class*="border-green-"],
+:is(.app-main, .admin-management-header, body.neon-admin-shell) [class*="border-emerald-"],
+:is(.app-main, .admin-management-header, body.neon-admin-shell) [class*="border-lime-"],
+:is(.app-main, .admin-management-header, body.neon-admin-shell) [class*="border-[#00ff66"] {
     border-color: var(--portal-border) !important;
-    box-shadow: var(--portal-shadow) !important;
-    text-shadow: none !important;
 }
-
-/* Default text is black in light mode and white in dark mode. */
-.app-main :is(h1,h2,h3,h4,h5,h6,p,label,li,td,th,legend,small,strong),
-.neon-admin-shell main :is(h1,h2,h3,h4,h5,h6,p,label,li,td,th,legend,small,strong,span) {
-    color: var(--portal-text);
+:is(.app-main, .admin-management-header, body.neon-admin-shell) [class*="ring-green-"],
+:is(.app-main, .admin-management-header, body.neon-admin-shell) [class*="ring-emerald-"],
+:is(.app-main, .admin-management-header, body.neon-admin-shell) [class*="ring-lime-"] {
+    --tw-ring-color: var(--portal-focus) !important;
 }
-html:not(.dark) .app-main :is(.text-gray-400,.text-gray-500,.text-gray-600,.text-gray-700,.text-slate-400,.text-slate-500,.text-slate-600,.text-slate-700,.text-black),
-html:not(.dark) .neon-admin-shell main :is(.text-gray-400,.text-gray-500,.text-gray-600,.text-gray-700,.text-slate-400,.text-slate-500,.text-slate-600,.text-slate-700) {
-    color: #000000 !important;
-}
-html.dark .app-main :is(.text-gray-400,.text-gray-500,.text-gray-600,.text-gray-700,.text-slate-400,.text-slate-500,.text-slate-600,.text-slate-700,.text-black),
-html.dark .neon-admin-shell main :is(.text-gray-400,.text-gray-500,.text-gray-600,.text-gray-700,.text-slate-400,.text-slate-500,.text-slate-600,.text-slate-700,.text-black) {
-    color: #ffffff !important;
-}
-
-/* Inputs, selects, search fields and textareas remain readable in both modes. */
-.app-main input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
-.app-main select, .app-main textarea,
-.neon-admin-shell main input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
-.neon-admin-shell main select, .neon-admin-shell main textarea {
-    background: var(--portal-input-bg) !important;
-    color: var(--portal-input-text) !important;
-    border-color: var(--portal-input-border) !important;
-    box-shadow: none;
-}
-.app-main :is(input,textarea)::placeholder,
-.neon-admin-shell main :is(input,textarea)::placeholder {
-    color: var(--portal-muted) !important;
-    opacity: 1;
-}
-.app-main :is(input,select,textarea,button,a):focus-visible {
-    outline: 2px solid var(--portal-focus);
-    outline-offset: 2px;
-}
-
-/* Neutralize green/emerald/lime utility styling across all roles.
-   Error and warning feedback can retain semantic red/amber indicators. */
-:is(.app-main, .neon-admin-shell) [class*="green-"],
-:is(.app-main, .neon-admin-shell) [class*="emerald-"],
-:is(.app-main, .neon-admin-shell) [class*="lime-"] {
-    --tw-ring-color: #737373 !important;
-    --tw-shadow-color: rgb(0 0 0 / 8%) !important;
-    text-shadow: none !important;
-    box-shadow: none !important;
-}
-:is(.app-main, .neon-admin-shell) :is(
- [class~="bg-green-50"],[class~="bg-green-100"],[class~="bg-green-200"],[class~="bg-green-300"],[class~="bg-green-400"],[class~="bg-green-500"],[class~="bg-green-600"],[class~="bg-green-700"],[class~="bg-green-800"],[class~="bg-green-900"],
- [class~="bg-emerald-50"],[class~="bg-emerald-100"],[class~="bg-emerald-200"],[class~="bg-emerald-300"],[class~="bg-emerald-400"],[class~="bg-emerald-500"],[class~="bg-emerald-600"],[class~="bg-emerald-700"],[class~="bg-emerald-800"],[class~="bg-emerald-900"],
- [class~="bg-lime-50"],[class~="bg-lime-100"],[class~="bg-lime-200"],[class~="bg-lime-300"],[class~="bg-lime-400"],[class~="bg-lime-500"],[class~="bg-lime-600"],[class~="bg-lime-700"],[class~="bg-lime-800"],[class~="bg-lime-900"]
-) { background-color: #e5e5e5 !important; }
-:is(.app-main, .neon-admin-shell) :is(
- [class~="text-green-400"],[class~="text-green-500"],[class~="text-green-600"],[class~="text-green-700"],[class~="text-green-800"],
- [class~="text-emerald-400"],[class~="text-emerald-500"],[class~="text-emerald-600"],[class~="text-emerald-700"],
- [class~="text-lime-400"],[class~="text-lime-500"],[class~="text-lime-600"],[class~="text-lime-700"]
-) { color: #000000 !important; }
-:is(.app-main, .neon-admin-shell) :is(
- [class~="border-green-400"],[class~="border-green-500"],[class~="border-green-600"],
- [class~="border-emerald-400"],[class~="border-emerald-500"],[class~="border-emerald-600"],
- [class~="border-lime-400"],[class~="border-lime-500"],[class~="border-lime-600"]
-) { border-color: #d4d4d8 !important; }
-
-/* Primary controls are black with white text, using grey hover/focus states. */
-.app-main :is(button,a[role="button"],input[type="submit"],input[type="button"]),
-.neon-admin-shell main :is(button,a[role="button"],input[type="submit"],input[type="button"]) {
+.app-main :is(button, input[type="submit"], input[type="button"], a[role="button"]) {
+    border-color: var(--portal-border);
     box-shadow: none !important;
     text-shadow: none !important;
 }
-.app-main :is(button,a[role="button"],input[type="submit"],input[type="button"])[class*="bg-green-"],
-.app-main :is(button,a[role="button"],input[type="submit"],input[type="button"])[class*="bg-emerald-"],
-.app-main :is(button,a[role="button"],input[type="submit"],input[type="button"])[class*="bg-lime-"],
-.neon-admin-shell main :is(button,a[role="button"],input[type="submit"],input[type="button"])[class*="bg-green-"],
-.neon-admin-shell main :is(button,a[role="button"],input[type="submit"],input[type="button"])[class*="bg-emerald-"],
-.neon-admin-shell main :is(button,a[role="button"],input[type="submit"],input[type="button"])[class*="bg-lime-"] {
-    background: var(--portal-button-bg) !important;
+.app-main :is(button, input[type="submit"], input[type="button"], a[role="button"])[class*="bg-green-"],
+.app-main :is(button, input[type="submit"], input[type="button"], a[role="button"])[class*="bg-emerald-"],
+.app-main :is(button, input[type="submit"], input[type="button"], a[role="button"])[class*="bg-lime-"] {
+    background: var(--portal-button) !important;
     color: var(--portal-button-text) !important;
-    border-color: var(--portal-button-bg) !important;
+    border-color: var(--portal-button) !important;
 }
-.app-main :is(button,a[role="button"],input[type="submit"],input[type="button"]):hover,
-.neon-admin-shell main :is(button,a[role="button"],input[type="submit"],input[type="button"]):hover {
+.app-main :is(button, input[type="submit"], input[type="button"], a[role="button"]):hover {
     filter: brightness(.92);
 }
 
-/* Dark mode changes the shared surfaces and text, including Admin. */
-html.dark {
-    color-scheme: dark;
-    --portal-page-bg: #000000;
-    --portal-text: #ffffff;
-    --portal-muted: #d4d4d4;
-    --portal-surface: #111111;
-    --portal-border: #404040;
-    --portal-shadow: 0 2px 8px rgb(0 0 0 / 30%);
-    --portal-nav-bg: #000000;
-    --portal-nav-text: #ffffff;
-    --portal-nav-active-bg: #404040;
-    --portal-nav-active-text: #ffffff;
-    --portal-input-bg: #111111;
-    --portal-input-text: #ffffff;
-    --portal-input-border: #737373;
-    --portal-focus: #d4d4d4;
-    --portal-button-bg: #ffffff;
-    --portal-button-text: #000000;
-    --portal-button-hover: #d4d4d4;
+/* Admin Dashboard main area and management cards use the exact same toggle. */
+body.neon-admin-shell .app-main,
+body.neon-admin-shell .app-main > .neon-shell,
+body.neon-admin-shell .app-main > .neon-shell > div {
+    background-color: var(--portal-page);
+    color: var(--portal-text);
 }
-html.dark, html.dark body, html.dark body.app-shell,
-html.dark .app-shell, html.dark .app-shell > .min-h-screen,
-html.dark .app-main, html.dark .app-main > *,
-html.dark .neon-admin-shell, html.dark .neon-admin-shell main,
-html.dark .neon-admin-shell main > div, html.dark .neon-admin-shell main section,
-html.dark .neon-admin-shell main article {
-    background-color: var(--portal-page-bg) !important;
+body.neon-admin-shell .app-main .neon-shell :is(.neon-card, .neon-glow-border, .portal-card, [data-portal-card], .card) {
+    background-color: var(--portal-surface) !important;
+    color: var(--portal-text) !important;
+    border-color: var(--portal-border) !important;
+}
+body.neon-admin-shell .app-main .neon-shell :is(h1, h2, h3, h4, h5, h6, p, span, label, li, td, th, small, strong, em, a) {
+    color: var(--portal-text);
+}
+
+/* In dark mode, all old text-black classes are explicitly corrected. */
+html.dark .app-main [class*="text-black"],
+html.dark body.neon-admin-shell > .min-h-screen > header [class*="text-black"] {
+    color: #ffffff !important;
+}
+
+/* Keep responsive controls comfortably tappable on phones. */
+@media (max-width: 640px) {
+    .admin-management-header .neon-button,
+    .admin-management-header .neon-button-outline,
+    .admin-management-header a {
+        width: 100%;
+        white-space: normal;
+        text-align: center;
+    }
+}
+
+
+/* Neutralize the remaining legacy "neon" component styles on Admin Dashboard. */
+body.neon-admin-shell .app-main .neon-shell {
+    background: var(--portal-page) !important;
     color: var(--portal-text) !important;
 }
-html.dark .app-main :is(button,a[role="button"],input[type="submit"],input[type="button"]),
-html.dark .neon-admin-shell main :is(button,a[role="button"],input[type="submit"],input[type="button"]) {
-    color: var(--portal-button-text);
+body.neon-admin-shell .app-main .neon-shell::before,
+body.neon-admin-shell .app-main .neon-shell::after {
+    background: none !important;
+    box-shadow: none !important;
+    opacity: 0 !important;
+}
+body.neon-admin-shell .app-main :is(.neon-status, .neon-row, .neon-indicator, .neon-value, .neon-waka) {
+    background-color: var(--portal-panel) !important;
+    background-image: none !important;
+    color: var(--portal-text) !important;
+    border-color: var(--portal-border) !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+}
+body.neon-admin-shell .app-main .neon-indicator {
+    width: .55rem;
+    height: .55rem;
+    min-width: .55rem;
+    border-radius: 9999px;
+    background: var(--portal-text) !important;
+}
+body.neon-admin-shell .app-main :is(.neon-button, .neon-button-outline, .neon-input) {
+    background: var(--portal-surface) !important;
+    color: var(--portal-text) !important;
+    border-color: var(--portal-border) !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+}
+body.neon-admin-shell .app-main .neon-button,
+body.neon-admin-shell .app-main button.neon-button,
+body.neon-admin-shell .app-main input.neon-button {
+    background: var(--portal-button) !important;
+    color: var(--portal-button-text) !important;
+    border-color: var(--portal-button) !important;
+}
+body.neon-admin-shell .app-main .neon-button-outline,
+body.neon-admin-shell .app-main a.neon-button-outline {
+    background: var(--portal-surface) !important;
+    color: var(--portal-text) !important;
+    border-color: var(--portal-border) !important;
+}
+body.neon-admin-shell .app-main .neon-input {
+    background: var(--portal-surface) !important;
+    color: var(--portal-text) !important;
+}
+body.neon-admin-shell .app-main .neon-row {
+    border: 1px solid var(--portal-border) !important;
+    border-radius: .75rem;
+}
+body.neon-admin-shell .app-main :is(.neon-status, .neon-row, .neon-indicator, .neon-value, .neon-waka) * {
+    color: var(--portal-text) !important;
+}
+
+/* Arbitrary hex text/background/border utilities are also normalized. */
+.app-main [class*="text-[#"],
+.admin-management-header [class*="text-[#"] {
+    color: var(--portal-text) !important;
+}
+.app-main [class*="bg-[#"],
+.admin-management-header [class*="bg-[#"] {
+    background-color: var(--portal-panel) !important;
+}
+.app-main [class*="border-[#"],
+.admin-management-header [class*="border-[#"] {
+    border-color: var(--portal-border) !important;
+}
+
+/* Standard Tailwind accent utilities become neutral monochrome, too. */
+.app-main [class*="text-blue-"],
+.app-main [class*="text-cyan-"],
+.app-main [class*="text-amber-"],
+.app-main [class*="text-red-"],
+.app-main [class*="text-purple-"],
+.app-main [class*="text-indigo-"],
+.admin-management-header [class*="text-blue-"],
+.admin-management-header [class*="text-cyan-"],
+.admin-management-header [class*="text-amber-"],
+.admin-management-header [class*="text-red-"],
+.admin-management-header [class*="text-purple-"],
+.admin-management-header [class*="text-indigo-"] {
+    color: var(--portal-text) !important;
+}
+.app-main [class*="border-blue-"],
+.app-main [class*="border-cyan-"],
+.app-main [class*="border-amber-"],
+.app-main [class*="border-red-"],
+.app-main [class*="border-purple-"],
+.app-main [class*="border-indigo-"] {
+    border-color: var(--portal-border) !important;
 }
 
 
-/* Final authoritative theme overrides. Keep all existing page features/layouts. */
-:root {
-    color-scheme: light;
-    --portal-page-bg: #ffffff;
-    --portal-text: #000000;
-    --portal-muted: #404040;
-    --portal-surface: #ffffff;
-    --portal-border: #d4d4d4;
-    --portal-nav-bg: #ffffff;
-    --portal-nav-text: #000000;
-    --portal-nav-active-bg: #e5e5e5;
-    --portal-nav-active-text: #000000;
-    --portal-input-bg: #ffffff;
-    --portal-input-text: #000000;
-    --portal-input-border: #a3a3a3;
-    --portal-focus: #404040;
-    --portal-button-bg: #111111;
-    --portal-button-text: #ffffff;
-    --portal-button-hover: #404040;
+/* Final neutral overrides for the switcher, active language links, and legacy accents. */
+.theme-toggle-track {
+    background: #e5e5e5 !important;
 }
-html:not(.dark), html:not(.dark) body, html:not(.dark) body.app-shell,
-html:not(.dark) .app-shell, html:not(.dark) .app-shell > .min-h-screen,
-html:not(.dark) .app-main, html:not(.dark) .app-main > *,
-html:not(.dark) .neon-admin-shell, html:not(.dark) .neon-admin-shell main,
-html:not(.dark) .neon-admin-shell main > div,
-html:not(.dark) .neon-admin-shell main section,
-html:not(.dark) .neon-admin-shell main article {
-    background-color: #ffffff !important;
+.theme-toggle-sun,
+.theme-toggle-moon {
     color: #000000 !important;
 }
-html:not(.dark) .app-main :is(div,section,article,aside,header,footer,form,fieldset),
-html:not(.dark) .neon-admin-shell main :is(div,section,article,aside,form,fieldset) {
-    color: #000000;
-}
-html:not(.dark) .app-main :is(h1,h2,h3,h4,h5,h6,p,span,label,li,td,th,legend,small,strong,em,a),
-html:not(.dark) .neon-admin-shell main :is(h1,h2,h3,h4,h5,h6,p,span,label,li,td,th,legend,small,strong,em,a) {
-    color: #000000;
-}
-html:not(.dark) .site-navigation,
-html:not(.dark) .site-navigation > div,
-html:not(.dark) .theme-toggle-dock,
-html:not(.dark) .bottom-navigation,
-html:not(.dark) .bottom-nav {
+.theme-toggle-thumb {
     background: #ffffff !important;
-    color: #000000 !important;
-    border-color: #e5e5e5 !important;
 }
-html:not(.dark) .site-navigation :is(a,button,span,p),
-html:not(.dark) .theme-toggle-dock :is(a,button,span,p),
-html:not(.dark) .bottom-navigation :is(a,button,span,p),
-html:not(.dark) .bottom-nav :is(a,button,span,p) {
-    color: #000000 !important;
+.theme-toggle-switch:hover {
+    border-color: var(--portal-border) !important;
+    box-shadow: 0 4px 12px var(--portal-shadow) !important;
 }
-html:not(.dark) .app-main :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),select,textarea),
-html:not(.dark) .neon-admin-shell main :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),select,textarea) {
-    background: #ffffff !important;
-    color: #000000 !important;
-    border-color: #a3a3a3 !important;
+.theme-toggle-switch:focus-visible {
+    outline: 2px solid var(--portal-focus) !important;
+    box-shadow: 0 0 0 3px var(--portal-panel) !important;
 }
-html:not(.dark) .app-main :is(input,textarea)::placeholder,
-html:not(.dark) .neon-admin-shell main :is(input,textarea)::placeholder {
-    color: #404040 !important;
-    opacity: 1;
+html.dark .theme-toggle-track {
+    background: #333333 !important;
 }
-
-html.dark {
-    color-scheme: dark;
-    --portal-page-bg: #000000;
-    --portal-text: #ffffff;
-    --portal-muted: #d4d4d4;
-    --portal-surface: #111111;
-    --portal-border: #404040;
-    --portal-nav-bg: #000000;
-    --portal-nav-text: #ffffff;
-    --portal-nav-active-bg: #404040;
-    --portal-nav-active-text: #ffffff;
-    --portal-input-bg: #111111;
-    --portal-input-text: #ffffff;
-    --portal-input-border: #737373;
-    --portal-focus: #d4d4d4;
-    --portal-button-bg: #ffffff;
-    --portal-button-text: #000000;
-    --portal-button-hover: #d4d4d4;
-}
-html.dark, html.dark body, html.dark body.app-shell,
-html.dark .app-shell, html.dark .app-shell > .min-h-screen,
-html.dark .app-main, html.dark .app-main > *,
-html.dark .neon-admin-shell, html.dark .neon-admin-shell main,
-html.dark .neon-admin-shell main > div,
-html.dark .neon-admin-shell main section,
-html.dark .neon-admin-shell main article {
-    background-color: #000000 !important;
+html.dark .theme-toggle-sun,
+html.dark .theme-toggle-moon {
     color: #ffffff !important;
 }
-html.dark .app-main :is(div,section,article,aside,header,footer,form,fieldset),
-html.dark .neon-admin-shell main :is(div,section,article,aside,form,fieldset) {
-    color: #ffffff;
+html.dark .theme-toggle-thumb {
+    background: #000000 !important;
 }
-html.dark .app-main :is(h1,h2,h3,h4,h5,h6,p,span,label,li,td,th,legend,small,strong,em,a),
-html.dark .neon-admin-shell main :is(h1,h2,h3,h4,h5,h6,p,span,label,li,td,th,legend,small,strong,em,a) {
-    color: #ffffff;
+.site-navigation .nav-menu-toggle,
+.site-navigation .nav-menu-toggle :is(span, svg) {
+    color: var(--portal-button-text) !important;
 }
-html.dark .app-main :is(.portal-card,.neon-card,.neon-glow-border,.card,[data-portal-card]),
-html.dark .neon-admin-shell main :is(.portal-card,.neon-card,.neon-glow-border,.card,[data-portal-card]) {
-    background: #111111 !important;
+.site-navigation .site-brand-mark {
+    background: var(--portal-button) !important;
+    color: var(--portal-button-text) !important;
+}
+.site-navigation a[class*="bg-neutral-200"] {
+    background: #e5e5e5 !important;
+    color: #000000 !important;
+}
+html.dark .site-navigation a[class*="bg-neutral-200"] {
+    background: #333333 !important;
     color: #ffffff !important;
-    border-color: #404040 !important;
 }
+.app-main [class*="text-white"] {
+    color: var(--portal-text) !important;
+}
+.app-main [class*="bg-blue-"],
+.app-main [class*="bg-cyan-"],
+.app-main [class*="bg-amber-"],
+.app-main [class*="bg-red-"],
+.app-main [class*="bg-purple-"],
+.app-main [class*="bg-indigo-"] {
+    background-color: var(--portal-panel) !important;
+}
+.app-main :is(button, input[type="submit"], input[type="button"], a[role="button"])[class*="bg-blue-"],
+.app-main :is(button, input[type="submit"], input[type="button"], a[role="button"])[class*="bg-cyan-"],
+.app-main :is(button, input[type="submit"], input[type="button"], a[role="button"])[class*="bg-amber-"],
+.app-main :is(button, input[type="submit"], input[type="button"], a[role="button"])[class*="bg-red-"],
+.app-main :is(button, input[type="submit"], input[type="button"], a[role="button"])[class*="bg-purple-"],
+.app-main :is(button, input[type="submit"], input[type="button"], a[role="button"])[class*="bg-indigo-"] {
+    background: var(--portal-button) !important;
+    color: var(--portal-button-text) !important;
+    border-color: var(--portal-button) !important;
+}
+
+
+/* Final specificity guard: header links must retain contrasting button text. */
+.admin-management-header :is(h1, h2, h3, h4, h5, h6, p, span, label) {
+    color: var(--portal-text) !important;
+}
+body.neon-admin-shell > .min-h-screen > header :is(h1, h2, h3, h4, h5, h6, p, span, label) {
+    color: var(--portal-text) !important;
+}
+.admin-management-header a,
+.admin-management-header a.neon-button,
+.admin-management-header a.neon-button-outline {
+    background: var(--portal-button) !important;
+    color: var(--portal-button-text) !important;
+    border-color: var(--portal-button) !important;
+}
+
+/* Bring reusable customer/public components into the same black-and-white system. */
+.app-main :is(.portal-button, .dashboard-hero-action) {
+    background: var(--portal-button) !important;
+    color: var(--portal-button-text) !important;
+    border-color: var(--portal-button) !important;
+    box-shadow: none !important;
+}
+.app-main :is(.portal-button-secondary, .portal-button-ghost, .dashboard-hero-action-secondary) {
+    background: var(--portal-surface) !important;
+    color: var(--portal-text) !important;
+    border-color: var(--portal-border) !important;
+    box-shadow: none !important;
+}
+.app-main :is(.portal-accent, .dashboard-kicker, .dashboard-link) {
+    color: var(--portal-text) !important;
+}
+.app-main :is(.portal-gradient, .dashboard-hero) {
+    background: var(--portal-surface) !important;
+    background-image: none !important;
+    color: var(--portal-text) !important;
+    border: 1px solid var(--portal-border);
+    box-shadow: var(--portal-shadow) !important;
+}
+.app-main :is(.dashboard-hero, .portal-gradient) * {
+    color: var(--portal-text) !important;
+}
+.app-main :is(.dashboard-stat, .dashboard-icon, .portal-stat) {
+    background: var(--portal-panel) !important;
+    color: var(--portal-text) !important;
+    border-color: var(--portal-border) !important;
+    box-shadow: none !important;
+}
+.app-main .portal-stat::after {
+    display: none !important;
+}
+.app-main :is(.portal-card, .dashboard-recent-row, .dashboard-service-card, .dashboard-help-card):hover {
+    box-shadow: var(--portal-shadow) !important;
+    border-color: var(--portal-border) !important;
+}
+.site-navigation [class*="text-green-"],
+.site-navigation [class*="text-emerald-"],
+.site-navigation [class*="text-lime-"],
+.site-navigation [class*="text-blue-"],
+.site-navigation [class*="text-cyan-"],
+.site-navigation [class*="text-red-"] {
+    color: var(--portal-nav-text) !important;
+}
+.site-navigation [class*="bg-green-"],
+.site-navigation [class*="bg-emerald-"],
+.site-navigation [class*="bg-lime-"],
+.site-navigation [class*="bg-blue-"],
+.site-navigation [class*="bg-cyan-"],
+.site-navigation [class*="bg-red-"] {
+    background-color: var(--portal-panel) !important;
+}
+.site-navigation [class*="border-green-"],
+.site-navigation [class*="border-emerald-"],
+.site-navigation [class*="border-lime-"],
+.site-navigation [class*="border-blue-"],
+.site-navigation [class*="border-red-"] {
+    border-color: var(--portal-border) !important;
+}
+
+
+/* Outrank legacy !important dark-theme rules from the base app stylesheet. */
 html.dark .site-navigation,
 html.dark .site-navigation > div,
 html.dark .theme-toggle-dock,
 html.dark .bottom-navigation,
-html.dark .bottom-nav {
-    background: #000000 !important;
-    color: #ffffff !important;
-    border-color: #404040 !important;
-}
-html.dark .site-navigation :is(a,button,span,p),
-html.dark .theme-toggle-dock :is(a,button,span,p),
-html.dark .bottom-navigation :is(a,button,span,p),
-html.dark .bottom-nav :is(a,button,span,p) {
-    color: #ffffff !important;
-}
-html.dark .app-main :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),select,textarea),
-html.dark .neon-admin-shell main :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),select,textarea) {
-    background: #111111 !important;
-    color: #ffffff !important;
-    border-color: #737373 !important;
-}
-html.dark .app-main :is(input,textarea)::placeholder,
-html.dark .neon-admin-shell main :is(input,textarea)::placeholder {
-    color: #d4d4d4 !important;
-    opacity: 1;
-}
-
-/* Monochrome only: remove green/neon visual accents without removing features. */
-:is(.app-main,.neon-admin-shell) [class*="text-green-"],
-:is(.app-main,.neon-admin-shell) [class*="text-emerald-"],
-:is(.app-main,.neon-admin-shell) [class*="text-lime-"] {
-    color: var(--portal-text) !important;
-}
-:is(.app-main,.neon-admin-shell) [class*="border-green-"],
-:is(.app-main,.neon-admin-shell) [class*="border-emerald-"],
-:is(.app-main,.neon-admin-shell) [class*="border-lime-"] {
-    border-color: var(--portal-border) !important;
-}
-
-
-/* Admin Management sections: predictable monochrome light/dark mode.
-   Covers Management, Send to Application, Operations, and Service Infrastructure
-   without changing markup, spacing, or existing functionality. */
-html:not(.dark) .neon-admin-shell,
-html:not(.dark) .neon-admin-shell main,
-html:not(.dark) .neon-admin-shell main > *,
-html:not(.dark) .neon-admin-shell main section,
-html:not(.dark) .neon-admin-shell main article,
-html:not(.dark) .neon-admin-shell main aside,
-html:not(.dark) .neon-admin-shell main form {
-    background-color: #ffffff !important;
-    color: #000000 !important;
-}
-html:not(.dark) .neon-admin-shell main :is(
-    h1,h2,h3,h4,h5,h6,p,span,label,li,td,th,legend,small,strong,em,a
-) {
-    color: #000000 !important;
-}
-html:not(.dark) .neon-admin-shell main :is(
-    .portal-card,.neon-card,.neon-glow-border,.card,[data-portal-card],
-    table,thead,tbody,tr,th,td
-) {
-    background-color: #ffffff !important;
-    color: #000000 !important;
-    border-color: #d4d4d4 !important;
-    text-shadow: none !important;
-    box-shadow: 0 2px 8px rgb(0 0 0 / 6%) !important;
-}
-html:not(.dark) .neon-admin-shell main :is(
-    input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
-    select,textarea
-) {
-    background-color: #ffffff !important;
-    color: #000000 !important;
-    border-color: #a3a3a3 !important;
-}
-html:not(.dark) .neon-admin-shell main :is(input,textarea)::placeholder {
-    color: #404040 !important;
-    opacity: 1;
-}
-
-/* Dark mode must actually become black/dark, including all Management panels. */
-html.dark .neon-admin-shell,
-html.dark .neon-admin-shell main,
-html.dark .neon-admin-shell main > *,
-html.dark .neon-admin-shell main section,
-html.dark .neon-admin-shell main article,
-html.dark .neon-admin-shell main aside,
-html.dark .neon-admin-shell main form {
+html.dark .bottom-nav,
+html.dark body.app-shell > .min-h-screen > header,
+html.dark body.app-shell > .min-h-screen > header > div {
     background-color: #000000 !important;
     color: #ffffff !important;
+    border-color: #404040 !important;
 }
-html.dark .neon-admin-shell main :is(
-    h1,h2,h3,h4,h5,h6,p,span,label,li,td,th,legend,small,strong,em,a
-) {
+html.dark body.app-shell > .min-h-screen > header :is(h1, h2, h3, h4, h5, h6, p, span, label) {
     color: #ffffff !important;
 }
-html.dark .neon-admin-shell main :is(
-    .portal-card,.neon-card,.neon-glow-border,.card,[data-portal-card],
-    table,thead,tbody,tr,th,td
-) {
-    background-color: #111111 !important;
+html.dark body.app-shell .app-main .portal-card,
+html.dark body.app-shell .app-main .dashboard-recent,
+html.dark body.app-shell .app-main .dashboard-service-card,
+html.dark body.app-shell .app-main .dashboard-help-card,
+html.dark body.app-shell .app-main .admin-management-card,
+html.dark body.app-shell .app-main .dashboard-hero,
+html.dark body.app-shell .app-main .portal-gradient {
+    background: #111111 !important;
+    background-image: none !important;
     color: #ffffff !important;
     border-color: #404040 !important;
-    text-shadow: none !important;
-    box-shadow: 0 2px 8px rgb(0 0 0 / 30%) !important;
-}
-html.dark .neon-admin-shell main :is(
-    input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
-    select,textarea
-) {
-    background-color: #111111 !important;
-    color: #ffffff !important;
-    border-color: #737373 !important;
-}
-html.dark .neon-admin-shell main :is(input,textarea)::placeholder {
-    color: #d4d4d4 !important;
-    opacity: 1;
-}
-
-/* Monochrome states for admin controls; no green/neon hover or active styling. */
-html:not(.dark) .neon-admin-shell main :is(button,a[role="button"],input[type="submit"],input[type="button"]) {
-    border-color: #333333;
-    text-shadow: none !important;
-    box-shadow: none !important;
-}
-html.dark .neon-admin-shell main :is(button,a[role="button"],input[type="submit"],input[type="button"]) {
-    text-shadow: none !important;
-    box-shadow: none !important;
 }

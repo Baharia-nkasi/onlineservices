@@ -5,7 +5,12 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script>
         (() => {
-            const saved = localStorage.getItem("theme");
+            let saved = null;
+            try {
+                saved = localStorage.getItem("theme");
+            } catch {
+                // Continue with the system preference if storage is unavailable.
+            }
             const dark = saved === "dark" || (!saved && window.matchMedia("(prefers-color-scheme: dark)").matches);
             document.documentElement.classList.toggle("dark", dark);
         })();

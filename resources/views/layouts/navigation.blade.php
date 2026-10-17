@@ -7,13 +7,13 @@
         @else
             <a href="{{ route('home') }}" class="flex items-center gap-2.5" aria-label="Online Services home">
         @endauth
-            <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-700 text-sm font-black text-white">OS</span>
+            <span class="site-brand-mark flex h-9 w-9 items-center justify-center rounded-xl text-sm font-black">OS</span>
             <span class="font-extrabold tracking-tight text-slate-900">Online Services</span>
         </a>
 
         <button type="button"
             @click="open = !open"
-            class="nav-menu-toggle inline-flex h-10 items-center gap-2 rounded-xl border border-slate-600 bg-slate-800 px-3 text-sm font-bold text-white shadow-sm transition hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:ring-offset-2"
+            class="nav-menu-toggle inline-flex h-10 items-center gap-2 rounded-xl border border-slate-600 bg-slate-800 px-3 text-sm font-bold text-white shadow-sm transition hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-neutral-500 focus:ring-offset-2"
             aria-controls="global-navigation-menu"
             :aria-expanded="open.toString()"
             :aria-label="open ? 'Close navigation menu' : 'Open navigation menu'"
@@ -31,8 +31,8 @@
     </div>
 
     <div class="flex items-center gap-1 rounded-xl border border-slate-200 bg-slate-50 p-1" role="group" aria-label="Language">
-    <a href="{{ route('language.switch', 'en') }}" class="rounded-lg px-2.5 py-1.5 text-xs font-extrabold {{ app()->getLocale() === 'en' ? 'bg-white text-blue-700 shadow-sm' : 'text-slate-500 hover:text-slate-800' }}">EN</a>
-    <a href="{{ route('language.switch', 'sw') }}" class="rounded-lg px-2.5 py-1.5 text-xs font-extrabold {{ app()->getLocale() === 'sw' ? 'bg-white text-blue-700 shadow-sm' : 'text-slate-500 hover:text-slate-800' }}">SW</a>
+    <a href="{{ route('language.switch', 'en') }}" class="rounded-lg px-2.5 py-1.5 text-xs font-extrabold {{ app()->getLocale() === 'en' ? 'bg-neutral-200 text-neutral-900 shadow-sm' : 'text-neutral-600 hover:text-black dark:text-neutral-300 dark:hover:text-white' }}">EN</a>
+    <a href="{{ route('language.switch', 'sw') }}" class="rounded-lg px-2.5 py-1.5 text-xs font-extrabold {{ app()->getLocale() === 'sw' ? 'bg-neutral-200 text-neutral-900 shadow-sm' : 'text-neutral-600 hover:text-black dark:text-neutral-300 dark:hover:text-white' }}">SW</a>
 </div>
 
     @auth
