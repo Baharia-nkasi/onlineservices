@@ -771,3 +771,163 @@ html.dark body.app-shell > .min-h-screen > header :is(h1, h2, h3, h4, h5, h6, p,
 .app-main [class*="to-blue-"] {
     background-image: none !important;
 }
+
+
+/* --------------------------------------------------------------------------
+   Gold institutional theme: Admin dashboards, management tools and actions.
+   Inspired by a restrained academic/institutional palette: warm gold actions,
+   pale champagne surfaces, and deep charcoal text for accessible contrast.
+   -------------------------------------------------------------------------- */
+:root {
+    --portal-gold: #d4a017;
+    --portal-gold-hover: #b8860b;
+    --portal-gold-pale: #fff8e1;
+    --portal-gold-surface: #fffdf5;
+    --portal-gold-border: #e6cf82;
+    --portal-gold-ink: #2b2100;
+}
+
+/* The Admin dashboard and all admin feature pages share a warm gold canvas. */
+body.neon-admin-shell,
+body.neon-admin-shell > .min-h-screen,
+body.neon-admin-shell .app-main,
+body.neon-admin-shell .app-main > .neon-shell,
+body.neon-admin-shell .app-main > .neon-shell > div {
+    background: var(--portal-gold-pale) !important;
+    background-image: none !important;
+    color: #211a08 !important;
+}
+body.neon-admin-shell > .min-h-screen > header,
+body.neon-admin-shell > .min-h-screen > header > div,
+body.neon-admin-shell .admin-management-header {
+    background: var(--portal-gold-pale) !important;
+    color: #211a08 !important;
+    border-color: var(--portal-gold-border) !important;
+}
+body.neon-admin-shell .app-main :is(.neon-card, .neon-glow-border, .portal-card, .card, [data-portal-card]),
+body.neon-admin-shell .app-main .admin-management-card,
+body.neon-admin-shell .app-main .dashboard-recent,
+body.neon-admin-shell .app-main .dashboard-service-card,
+body.neon-admin-shell .app-main .dashboard-help-card {
+    background: var(--portal-gold-surface) !important;
+    background-image: none !important;
+    color: #211a08 !important;
+    border-color: var(--portal-gold-border) !important;
+    box-shadow: 0 5px 18px rgb(94 70 0 / 8%) !important;
+}
+body.neon-admin-shell .app-main :is(.neon-row, .neon-status, .neon-value, .neon-waka, .neon-input),
+body.neon-admin-shell .app-main table :is(thead, tbody, tr, th, td) {
+    background-color: var(--portal-gold-surface) !important;
+    color: #211a08 !important;
+    border-color: var(--portal-gold-border) !important;
+}
+body.neon-admin-shell .app-main :is(h1, h2, h3, h4, h5, h6, p, span, label, li, td, th, small, strong, em, a) {
+    color: #211a08;
+}
+body.neon-admin-shell .app-main :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]), select, textarea),
+body.neon-admin-shell > .min-h-screen > header :is(input, select, textarea) {
+    background: #ffffff !important;
+    color: #211a08 !important;
+    border-color: #d9c47c !important;
+}
+body.neon-admin-shell .app-main :is(input, textarea)::placeholder {
+    color: #76683d !important;
+    opacity: 1;
+}
+
+/* Gold buttons and action links across the portal, including admin navigation,
+   menu links, forms, cards, and public/customer front-facing views. */
+.app-shell :is(
+    button,
+    input[type="submit"],
+    input[type="button"],
+    a[role="button"],
+    .portal-button,
+    .portal-button-secondary,
+    .portal-button-ghost,
+    .dashboard-hero-action,
+    .dashboard-hero-action-secondary,
+    .neon-button,
+    .neon-button-outline,
+    .global-nav-link,
+    .nav-menu-toggle,
+    .admin-management-header a,
+    .theme-toggle-switch
+) {
+    background: var(--portal-gold) !important;
+    background-image: none !important;
+    color: var(--portal-gold-ink) !important;
+    border-color: var(--portal-gold-hover) !important;
+    box-shadow: 0 2px 7px rgb(94 70 0 / 12%) !important;
+    text-shadow: none !important;
+}
+.app-shell :is(
+    button,
+    input[type="submit"],
+    input[type="button"],
+    a[role="button"],
+    .portal-button,
+    .portal-button-secondary,
+    .portal-button-ghost,
+    .dashboard-hero-action,
+    .dashboard-hero-action-secondary,
+    .neon-button,
+    .neon-button-outline,
+    .global-nav-link,
+    .nav-menu-toggle,
+    .admin-management-header a,
+    .theme-toggle-switch
+):hover {
+    background: var(--portal-gold-hover) !important;
+    color: #ffffff !important;
+    border-color: var(--portal-gold-hover) !important;
+}
+.app-shell .global-nav-link-active,
+.app-shell .global-nav-link[aria-current="page"] {
+    background: #9b6d00 !important;
+    color: #ffffff !important;
+    border-color: #9b6d00 !important;
+}
+.app-shell .global-nav-link :is(span, svg),
+.app-shell .nav-menu-toggle :is(span, svg) {
+    color: inherit !important;
+}
+.app-shell :is(button, a, input, select, textarea):focus-visible {
+    outline: 3px solid #8a6500 !important;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgb(212 160 23 / 22%) !important;
+}
+
+/* Keep the theme toggle and language controls within the gold design system. */
+.app-shell .site-navigation,
+.app-shell .site-navigation > div,
+.app-shell .theme-toggle-dock,
+.app-shell .global-navigation-menu {
+    border-color: var(--portal-gold-border) !important;
+}
+.app-shell .site-brand-mark {
+    background: var(--portal-gold) !important;
+    color: var(--portal-gold-ink) !important;
+}
+.app-shell .theme-toggle-track {
+    background: #f1df9e !important;
+}
+.app-shell .theme-toggle-thumb {
+    background: #ffffff !important;
+}
+html.dark .app-shell .theme-toggle-track {
+    background: #9b6d00 !important;
+}
+html.dark .app-shell .theme-toggle-thumb {
+    background: #fff8e1 !important;
+}
+
+/* Keep dashboard body text readable even when action controls are gold. */
+body.neon-admin-shell .app-main :is(.neon-card, .portal-card, .admin-management-card) *:not(button):not(input):not(select):not(textarea):not(a[role="button"]) {
+    text-shadow: none !important;
+}
+@media (max-width: 640px) {
+    .app-shell :is(.global-nav-link, .neon-button, .neon-button-outline, .admin-management-header a) {
+        min-height: 44px;
+    }
+}
