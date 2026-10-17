@@ -3099,3 +3099,167 @@ html.dark header nav button:focus-visible {
     outline: 2px solid #93c5fd;
     outline-offset: 2px;
 }
+
+/* FINAL THEME CONTRACT — stable monochrome, WCAG-conscious light/dark mode.
+   Light = white canvas + black text. Dark = black canvas + white text.
+   Keep this as the last theme layer so legacy dashboard/neon styles cannot win. */
+:root {
+    color-scheme: light;
+    --portal-page: #ffffff;
+    --portal-surface: #ffffff;
+    --portal-panel: #f5f5f5;
+    --portal-text: #111111;
+    --portal-muted: #404040;
+    --portal-border: #d4d4d4;
+    --portal-button: #111111;
+    --portal-button-text: #ffffff;
+    --portal-hover: #e5e5e5;
+    --portal-focus: #404040;
+    --portal-shadow: 0 2px 8px rgb(0 0 0 / 6%);
+}
+html.dark {
+    color-scheme: dark;
+    --portal-page: #000000;
+    --portal-surface: #111111;
+    --portal-panel: #1a1a1a;
+    --portal-text: #ffffff;
+    --portal-muted: #d4d4d4;
+    --portal-border: #4a4a4a;
+    --portal-button: #ffffff;
+    --portal-button-text: #000000;
+    --portal-hover: #333333;
+    --portal-focus: #ffffff;
+    --portal-shadow: 0 2px 10px rgb(0 0 0 / 28%);
+}
+html, body, body.app-shell,
+body.app-shell > .min-h-screen, .app-main,
+body.neon-admin-shell > .min-h-screen > header,
+body.neon-admin-shell > .min-h-screen > header > div,
+body.neon-admin-shell .neon-shell {
+    background-color: var(--portal-page) !important;
+    color: var(--portal-text) !important;
+}
+body.neon-admin-shell .neon-shell {
+    background-image: none !important;
+}
+body.neon-admin-shell .neon-shell::before {
+    content: none !important;
+}
+.site-navigation, .site-navigation > div,
+.site-navigation .global-navigation-menu,
+.site-navigation .global-navigation-menu > div,
+.theme-toggle-dock, .bottom-navigation, .bottom-nav, footer nav {
+    background: var(--portal-surface) !important;
+    color: var(--portal-text) !important;
+    border-color: var(--portal-border) !important;
+}
+.site-navigation :is(a, button, span, p),
+.site-navigation .global-navigation-menu :is(a, button, span, p),
+.theme-toggle-dock :is(a, button, span, p),
+.bottom-navigation :is(a, button, span, p),
+.bottom-nav :is(a, button, span, p), footer nav :is(a, button, span, p) {
+    color: var(--portal-text);
+}
+.site-navigation .global-nav-link,
+.site-navigation .global-nav-link-icon {
+    color: var(--portal-text) !important;
+    background: transparent !important;
+    border-color: transparent !important;
+}
+.site-navigation .global-nav-link:hover,
+.site-navigation .global-nav-link-active,
+.site-navigation .global-nav-link-active:hover,
+.site-navigation .global-navigation-menu [class*="bg-slate-800"],
+.site-navigation .global-navigation-menu [class*="bg-slate-900"] {
+    color: var(--portal-text) !important;
+    background: var(--portal-hover) !important;
+    border-color: var(--portal-border) !important;
+    box-shadow: none !important;
+}
+.nav-menu-toggle, .theme-toggle-switch,
+.admin-management-header .neon-button,
+.admin-management-header .neon-button-outline,
+.admin-management-header a,
+.neon-shell .neon-button,
+.neon-shell .neon-button-outline {
+    background: var(--portal-button) !important;
+    color: var(--portal-button-text) !important;
+    border: 1px solid var(--portal-border) !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+}
+.neon-shell, .neon-shell .neon-card, .neon-shell .neon-row,
+.neon-shell .neon-status, .neon-shell .status-pill,
+.portal-card, .app-main .card, .app-main [data-portal-card] {
+    background: var(--portal-surface) !important;
+    color: var(--portal-text) !important;
+    border-color: var(--portal-border) !important;
+    box-shadow: var(--portal-shadow) !important;
+    text-shadow: none !important;
+}
+.neon-shell .neon-title, .neon-shell .neon-value,
+.neon-shell .neon-muted, .neon-shell p, .neon-shell h1,
+.neon-shell h2, .neon-shell h3, .neon-shell h4, .neon-shell h5,
+.neon-shell h6, .neon-shell label, .neon-shell td, .neon-shell th,
+.neon-shell span, .neon-shell small, .neon-shell strong,
+.app-main :is(h1,h2,h3,h4,h5,h6,p,span,label,li,td,th,legend,small,strong,em),
+.admin-management-header :is(h1,h2,h3,h4,h5,h6,p,span,label,a) {
+    color: var(--portal-text) !important;
+}
+.neon-shell .neon-row:hover, .neon-shell .neon-card:hover,
+.app-main :is(a,button):hover {
+    background-color: var(--portal-hover);
+}
+.app-main :is(input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),select,textarea),
+.neon-shell input, .neon-shell select, .neon-shell textarea,
+.admin-management-header input, .admin-management-header select,
+.admin-management-header textarea {
+    background: var(--portal-surface) !important;
+    color: var(--portal-text) !important;
+    border-color: var(--portal-border) !important;
+    caret-color: var(--portal-text);
+    box-shadow: none;
+}
+.app-main :is(input,textarea,select)::placeholder,
+.neon-shell :is(input,textarea,select)::placeholder {
+    color: var(--portal-muted) !important;
+    opacity: 1;
+}
+.app-main :is(button,a):focus-visible,
+.site-navigation :is(button,a):focus-visible,
+.theme-toggle-switch:focus-visible {
+    outline: 2px solid var(--portal-focus) !important;
+    outline-offset: 3px;
+}
+html:not(.dark) .app-shell :is(
+    button[class*="bg-blue-"],a[class*="bg-blue-"],
+    button[class*="bg-indigo-"],a[class*="bg-indigo-"],
+    button[class*="bg-green-"],a[class*="bg-green-"],
+    button[class*="bg-emerald-"],a[class*="bg-emerald-"],
+    button[class*="bg-red-"],a[class*="bg-red-"],
+    button[class*="bg-rose-"],a[class*="bg-rose-"],
+    button[class*="bg-purple-"],a[class*="bg-purple-"],
+    button[class*="bg-violet-"],a[class*="bg-violet-"],
+    button[class*="bg-sky-"],a[class*="bg-sky-"],
+    button[class*="bg-teal-"],a[class*="bg-teal-"]
+) {
+    background: var(--portal-button) !important;
+    color: var(--portal-button-text) !important;
+    border-color: var(--portal-border) !important;
+}
+html.dark .app-shell :is(
+    button[class*="bg-blue-"],a[class*="bg-blue-"],
+    button[class*="bg-indigo-"],a[class*="bg-indigo-"],
+    button[class*="bg-green-"],a[class*="bg-green-"],
+    button[class*="bg-emerald-"],a[class*="bg-emerald-"],
+    button[class*="bg-red-"],a[class*="bg-red-"],
+    button[class*="bg-rose-"],a[class*="bg-rose-"],
+    button[class*="bg-purple-"],a[class*="bg-purple-"],
+    button[class*="bg-violet-"],a[class*="bg-violet-"],
+    button[class*="bg-sky-"],a[class*="bg-sky-"],
+    button[class*="bg-teal-"],a[class*="bg-teal-"]
+) {
+    background: var(--portal-button) !important;
+    color: var(--portal-button-text) !important;
+    border-color: var(--portal-border) !important;
+}
