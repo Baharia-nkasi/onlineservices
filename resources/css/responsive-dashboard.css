@@ -616,3 +616,82 @@ html.dark .site-navigation a[class*="bg-neutral-200"] {
     color: var(--portal-button-text) !important;
     border-color: var(--portal-button) !important;
 }
+
+
+/* Final specificity guard: header links must retain contrasting button text. */
+.admin-management-header :is(h1, h2, h3, h4, h5, h6, p, span, label) {
+    color: var(--portal-text) !important;
+}
+body.neon-admin-shell > .min-h-screen > header :is(h1, h2, h3, h4, h5, h6, p, span, label) {
+    color: var(--portal-text) !important;
+}
+.admin-management-header a,
+.admin-management-header a.neon-button,
+.admin-management-header a.neon-button-outline {
+    background: var(--portal-button) !important;
+    color: var(--portal-button-text) !important;
+    border-color: var(--portal-button) !important;
+}
+
+/* Bring reusable customer/public components into the same black-and-white system. */
+.app-main :is(.portal-button, .dashboard-hero-action) {
+    background: var(--portal-button) !important;
+    color: var(--portal-button-text) !important;
+    border-color: var(--portal-button) !important;
+    box-shadow: none !important;
+}
+.app-main :is(.portal-button-secondary, .portal-button-ghost, .dashboard-hero-action-secondary) {
+    background: var(--portal-surface) !important;
+    color: var(--portal-text) !important;
+    border-color: var(--portal-border) !important;
+    box-shadow: none !important;
+}
+.app-main :is(.portal-accent, .dashboard-kicker, .dashboard-link) {
+    color: var(--portal-text) !important;
+}
+.app-main :is(.portal-gradient, .dashboard-hero) {
+    background: var(--portal-surface) !important;
+    background-image: none !important;
+    color: var(--portal-text) !important;
+    border: 1px solid var(--portal-border);
+    box-shadow: var(--portal-shadow) !important;
+}
+.app-main :is(.dashboard-hero, .portal-gradient) * {
+    color: var(--portal-text) !important;
+}
+.app-main :is(.dashboard-stat, .dashboard-icon, .portal-stat) {
+    background: var(--portal-panel) !important;
+    color: var(--portal-text) !important;
+    border-color: var(--portal-border) !important;
+    box-shadow: none !important;
+}
+.app-main .portal-stat::after {
+    display: none !important;
+}
+.app-main :is(.portal-card, .dashboard-recent-row, .dashboard-service-card, .dashboard-help-card):hover {
+    box-shadow: var(--portal-shadow) !important;
+    border-color: var(--portal-border) !important;
+}
+.site-navigation [class*="text-green-"],
+.site-navigation [class*="text-emerald-"],
+.site-navigation [class*="text-lime-"],
+.site-navigation [class*="text-blue-"],
+.site-navigation [class*="text-cyan-"],
+.site-navigation [class*="text-red-"] {
+    color: var(--portal-nav-text) !important;
+}
+.site-navigation [class*="bg-green-"],
+.site-navigation [class*="bg-emerald-"],
+.site-navigation [class*="bg-lime-"],
+.site-navigation [class*="bg-blue-"],
+.site-navigation [class*="bg-cyan-"],
+.site-navigation [class*="bg-red-"] {
+    background-color: var(--portal-panel) !important;
+}
+.site-navigation [class*="border-green-"],
+.site-navigation [class*="border-emerald-"],
+.site-navigation [class*="border-lime-"],
+.site-navigation [class*="border-blue-"],
+.site-navigation [class*="border-red-"] {
+    border-color: var(--portal-border) !important;
+}
