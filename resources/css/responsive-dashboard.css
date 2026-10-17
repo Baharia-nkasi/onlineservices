@@ -1261,3 +1261,225 @@ html:not(.dark) body.app-shell .site-navigation .global-nav-link-icon {
 html.dark body.app-shell .site-navigation .global-nav-link-icon {
     color: #ffffff !important;
 }
+
+/* Admin-wide theme repair: override the older gold canvas/cards with the
+   same stable monochrome theme used by the rest of the portal. */
+html:not(.dark) body.neon-admin-shell,
+html:not(.dark) body.neon-admin-shell > .min-h-screen,
+html:not(.dark) body.neon-admin-shell .app-main,
+html:not(.dark) body.neon-admin-shell .app-main > .neon-shell,
+html:not(.dark) body.neon-admin-shell .app-main > .neon-shell > div,
+html:not(.dark) body.neon-admin-shell > .min-h-screen > header,
+html:not(.dark) body.neon-admin-shell > .min-h-screen > header > div,
+html:not(.dark) body.neon-admin-shell .admin-management-header {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    background-image: none !important;
+    color: #111111 !important;
+    border-color: #d4d4d4 !important;
+}
+html.dark body.neon-admin-shell,
+html.dark body.neon-admin-shell > .min-h-screen,
+html.dark body.neon-admin-shell .app-main,
+html.dark body.neon-admin-shell .app-main > .neon-shell,
+html.dark body.neon-admin-shell .app-main > .neon-shell > div,
+html.dark body.neon-admin-shell > .min-h-screen > header,
+html.dark body.neon-admin-shell > .min-h-screen > header > div,
+html.dark body.neon-admin-shell .admin-management-header {
+    background: #000000 !important;
+    background-color: #000000 !important;
+    background-image: none !important;
+    color: #ffffff !important;
+    border-color: #4a4a4a !important;
+}
+html:not(.dark) body.neon-admin-shell .neon-shell::before,
+html.dark body.neon-admin-shell .neon-shell::before {
+    content: none !important;
+    background-image: none !important;
+}
+html:not(.dark) body.neon-admin-shell .app-main :is(
+    .neon-card,.neon-glow-border,.portal-card,.card,[data-portal-card],
+    .admin-management-card,.dashboard-recent,.dashboard-service-card,
+    .dashboard-help-card,.dashboard-hero,.portal-gradient
+) {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    background-image: none !important;
+    color: #111111 !important;
+    border-color: #d4d4d4 !important;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 6%) !important;
+    text-shadow: none !important;
+}
+html.dark body.neon-admin-shell .app-main :is(
+    .neon-card,.neon-glow-border,.portal-card,.card,[data-portal-card],
+    .admin-management-card,.dashboard-recent,.dashboard-service-card,
+    .dashboard-help-card,.dashboard-hero,.portal-gradient
+) {
+    background: #111111 !important;
+    background-color: #111111 !important;
+    background-image: none !important;
+    color: #ffffff !important;
+    border-color: #4a4a4a !important;
+    box-shadow: 0 2px 10px rgb(0 0 0 / 28%) !important;
+    text-shadow: none !important;
+}
+html:not(.dark) body.neon-admin-shell .app-main :is(
+    .neon-row,.neon-status,.status-pill,.dashboard-stat,.dashboard-icon,.portal-stat
+),
+html:not(.dark) body.neon-admin-shell .app-main table :is(thead,tbody,tr,th,td) {
+    background: #f5f5f5 !important;
+    background-color: #f5f5f5 !important;
+    color: #111111 !important;
+    border-color: #d4d4d4 !important;
+    text-shadow: none !important;
+}
+html.dark body.neon-admin-shell .app-main :is(
+    .neon-row,.neon-status,.status-pill,.dashboard-stat,.dashboard-icon,.portal-stat
+),
+html.dark body.neon-admin-shell .app-main table :is(thead,tbody,tr,th,td) {
+    background: #1a1a1a !important;
+    background-color: #1a1a1a !important;
+    color: #ffffff !important;
+    border-color: #4a4a4a !important;
+    text-shadow: none !important;
+}
+html:not(.dark) body.neon-admin-shell .app-main :is(
+    h1,h2,h3,h4,h5,h6,p,span,label,li,td,th,small,strong,em,a,legend
+),
+html:not(.dark) body.neon-admin-shell .admin-management-header :is(
+    h1,h2,h3,h4,h5,h6,p,span,label,a
+) {
+    color: #111111 !important;
+    text-shadow: none !important;
+}
+html.dark body.neon-admin-shell .app-main :is(
+    h1,h2,h3,h4,h5,h6,p,span,label,li,td,th,small,strong,em,a,legend
+),
+html.dark body.neon-admin-shell .admin-management-header :is(
+    h1,h2,h3,h4,h5,h6,p,span,label,a
+) {
+    color: #ffffff !important;
+    text-shadow: none !important;
+}
+html:not(.dark) body.neon-admin-shell .app-main :is(
+    input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+    select,textarea
+),
+html:not(.dark) body.neon-admin-shell > .min-h-screen > header :is(input,select,textarea) {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    color: #111111 !important;
+    border-color: #a3a3a3 !important;
+    caret-color: #111111 !important;
+}
+html.dark body.neon-admin-shell .app-main :is(
+    input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+    select,textarea
+),
+html.dark body.neon-admin-shell > .min-h-screen > header :is(input,select,textarea) {
+    background: #111111 !important;
+    background-color: #111111 !important;
+    color: #ffffff !important;
+    border-color: #666666 !important;
+    caret-color: #ffffff !important;
+}
+html:not(.dark) body.neon-admin-shell .app-main :is(input,textarea,select)::placeholder {
+    color: #404040 !important;
+    opacity: 1 !important;
+}
+html.dark body.neon-admin-shell .app-main :is(input,textarea,select)::placeholder {
+    color: #d4d4d4 !important;
+    opacity: 1 !important;
+}
+html:not(.dark) body.neon-admin-shell .app-main :is(
+    button,input[type="submit"],input[type="button"],a[role="button"],
+    .neon-button,.neon-button-outline,.portal-button,.portal-button-secondary,
+    .portal-button-ghost,.dashboard-hero-action,.dashboard-hero-action-secondary
+),
+html:not(.dark) body.neon-admin-shell .admin-management-header :is(a,button) {
+    background: #111111 !important;
+    background-color: #111111 !important;
+    background-image: none !important;
+    color: #ffffff !important;
+    border-color: #111111 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+}
+html.dark body.neon-admin-shell .app-main :is(
+    button,input[type="submit"],input[type="button"],a[role="button"],
+    .neon-button,.neon-button-outline,.portal-button,.portal-button-secondary,
+    .portal-button-ghost,.dashboard-hero-action,.dashboard-hero-action-secondary
+),
+html.dark body.neon-admin-shell .admin-management-header :is(a,button) {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    background-image: none !important;
+    color: #000000 !important;
+    border-color: #ffffff !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+}
+html:not(.dark) body.neon-admin-shell .app-main :is(
+    button,input[type="submit"],input[type="button"],a[role="button"],
+    .neon-button,.neon-button-outline,.portal-button,.portal-button-secondary,
+    .portal-button-ghost,.dashboard-hero-action,.dashboard-hero-action-secondary
+) *,
+html:not(.dark) body.neon-admin-shell .admin-management-header :is(a,button) * {
+    color: #ffffff !important;
+}
+html.dark body.neon-admin-shell .app-main :is(
+    button,input[type="submit"],input[type="button"],a[role="button"],
+    .neon-button,.neon-button-outline,.portal-button,.portal-button-secondary,
+    .portal-button-ghost,.dashboard-hero-action,.dashboard-hero-action-secondary
+) *,
+html.dark body.neon-admin-shell .admin-management-header :is(a,button) * {
+    color: #000000 !important;
+}
+html:not(.dark) body.app-shell .app-main :is(
+    button,input[type="submit"],input[type="button"],a[role="button"],
+    .portal-button,.portal-button-secondary,.portal-button-ghost,
+    .dashboard-hero-action,.dashboard-hero-action-secondary,.neon-button,.neon-button-outline
+) {
+    background: #111111 !important;
+    background-color: #111111 !important;
+    background-image: none !important;
+    color: #ffffff !important;
+    border-color: #111111 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+}
+html.dark body.app-shell .app-main :is(
+    button,input[type="submit"],input[type="button"],a[role="button"],
+    .portal-button,.portal-button-secondary,.portal-button-ghost,
+    .dashboard-hero-action,.dashboard-hero-action-secondary,.neon-button,.neon-button-outline
+) {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    background-image: none !important;
+    color: #000000 !important;
+    border-color: #ffffff !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+}
+html:not(.dark) body.app-shell .app-main :is(
+    button,input[type="submit"],input[type="button"],a[role="button"],
+    .portal-button,.portal-button-secondary,.portal-button-ghost,
+    .dashboard-hero-action,.dashboard-hero-action-secondary,.neon-button,.neon-button-outline
+) * {
+    color: #ffffff !important;
+}
+html.dark body.app-shell .app-main :is(
+    button,input[type="submit"],input[type="button"],a[role="button"],
+    .portal-button,.portal-button-secondary,.portal-button-ghost,
+    .dashboard-hero-action,.dashboard-hero-action-secondary,.neon-button,.neon-button-outline
+) * {
+    color: #000000 !important;
+}
+html:not(.dark) body.app-shell .site-brand-mark,
+html:not(.dark) body.app-shell .site-navigation .font-extrabold {
+    color: #111111 !important;
+}
+html.dark body.app-shell .site-brand-mark,
+html.dark body.app-shell .site-navigation .font-extrabold {
+    color: #ffffff !important;
+}
