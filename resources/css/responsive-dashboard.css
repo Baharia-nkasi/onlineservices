@@ -548,3 +548,71 @@ body.neon-admin-shell .app-main :is(.neon-status, .neon-row, .neon-indicator, .n
 .app-main [class*="border-indigo-"] {
     border-color: var(--portal-border) !important;
 }
+
+
+/* Final neutral overrides for the switcher, active language links, and legacy accents. */
+.theme-toggle-track {
+    background: #e5e5e5 !important;
+}
+.theme-toggle-sun,
+.theme-toggle-moon {
+    color: #000000 !important;
+}
+.theme-toggle-thumb {
+    background: #ffffff !important;
+}
+.theme-toggle-switch:hover {
+    border-color: var(--portal-border) !important;
+    box-shadow: 0 4px 12px var(--portal-shadow) !important;
+}
+.theme-toggle-switch:focus-visible {
+    outline: 2px solid var(--portal-focus) !important;
+    box-shadow: 0 0 0 3px var(--portal-panel) !important;
+}
+html.dark .theme-toggle-track {
+    background: #333333 !important;
+}
+html.dark .theme-toggle-sun,
+html.dark .theme-toggle-moon {
+    color: #ffffff !important;
+}
+html.dark .theme-toggle-thumb {
+    background: #000000 !important;
+}
+.site-navigation .nav-menu-toggle,
+.site-navigation .nav-menu-toggle :is(span, svg) {
+    color: var(--portal-button-text) !important;
+}
+.site-navigation .site-brand-mark {
+    background: var(--portal-button) !important;
+    color: var(--portal-button-text) !important;
+}
+.site-navigation a[class*="bg-neutral-200"] {
+    background: #e5e5e5 !important;
+    color: #000000 !important;
+}
+html.dark .site-navigation a[class*="bg-neutral-200"] {
+    background: #333333 !important;
+    color: #ffffff !important;
+}
+.app-main [class*="text-white"] {
+    color: var(--portal-text) !important;
+}
+.app-main [class*="bg-blue-"],
+.app-main [class*="bg-cyan-"],
+.app-main [class*="bg-amber-"],
+.app-main [class*="bg-red-"],
+.app-main [class*="bg-purple-"],
+.app-main [class*="bg-indigo-"] {
+    background-color: var(--portal-panel) !important;
+}
+.app-main :is(button, input[type="submit"], input[type="button"], a[role="button"])[class*="bg-blue-"],
+.app-main :is(button, input[type="submit"], input[type="button"], a[role="button"])[class*="bg-cyan-"],
+.app-main :is(button, input[type="submit"], input[type="button"], a[role="button"])[class*="bg-amber-"],
+.app-main :is(button, input[type="submit"], input[type="button"], a[role="button"])[class*="bg-red-"],
+.app-main :is(button, input[type="submit"], input[type="button"], a[role="button"])[class*="bg-purple-"],
+.app-main :is(button, input[type="submit"], input[type="button"], a[role="button"])[class*="bg-indigo-"] {
+    background: var(--portal-button) !important;
+    color: var(--portal-button-text) !important;
+    border-color: var(--portal-button) !important;
+}
