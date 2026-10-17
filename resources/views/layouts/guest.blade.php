@@ -143,9 +143,9 @@
                 </a>
                 <div class="neon-login-card p-6 sm:p-8">
                     <div class="mb-7">
-                        <span class="neon-status">Authentication</span>
-                        <h2 class="mt-4 text-2xl font-black tracking-tight text-white sm:text-3xl">Welcome back</h2>
-                        <p class="mt-2 text-sm leading-6 text-[#8fa79a]">Sign in to continue to your secure service dashboard.</p>
+                        <span class="neon-status">{{ request()->routeIs('register') ? __('Create your account') : __('Secure sign in') }}</span>
+                        <h2 class="mt-4 text-2xl font-black tracking-tight text-white sm:text-3xl">{{ request()->routeIs('register') ? __('Get started with Online Services') : __('Welcome back') }}</h2>
+                        <p class="mt-2 text-sm leading-6 text-[#8fa79a]">{{ request()->routeIs('register') ? __('Create your account to apply for services and track your applications in one place.') : __('Sign in to continue to your secure service dashboard.') }}</p>
                     </div>
                     {{ $slot }}
                 </div>
