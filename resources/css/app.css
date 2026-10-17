@@ -2636,10 +2636,7 @@ html.dark .app-shell :is(input, textarea, select)::placeholder {
     background: #4ade80;
     box-shadow: 0 0 0 3px rgb(74 222 128 / 14%);
 }
-html:not(.dark) .site-navigation .global-navigation-menu {
-    background: #0f172a !important;
-    color: #f8fafc !important;
-}
+/* Removed contradictory rule: Light mode dropdown colors are defined by the final shared theme layer. */
 @media (max-width: 640px) {
     .site-navigation .global-navigation-menu {
         max-height: calc(100dvh - 4rem);
