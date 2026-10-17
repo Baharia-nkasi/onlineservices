@@ -114,10 +114,35 @@
                         <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-600 text-lg font-black text-white">✓</span>
                         <div>
                             <h2 class="font-black text-emerald-950">{{ __('Application approved successfully') }}</h2>
-                            <p class="mt-1 text-sm leading-6 text-emerald-800">{{ __('Uploaded documents have been cleared from this application. If you need another service, start a new application from the beginning.') }}</p>
+                            <p class="mt-1 text-sm leading-6 text-emerald-800">{{ __('Your application is approved. Any retained uploaded files remain available below for your records. If you need another service, start a new application.') }}</p>
                         </div>
                     </div>
                     <a href="{{ route('services.index') }}" class="portal-button shrink-0">{{ __('Start New Application') }}</a>
+                </div>
+            </section>
+            <section class="portal-card overflow-hidden">
+                <div class="border-b border-slate-200 p-5"><h2 class="font-black text-lg text-slate-900">{{ __('Uploaded Documents') }}</h2><p class="mt-1 text-sm text-slate-500">{{ __('Files in an approved application are read-only.') }}</p></div>
+                <div class="divide-y divide-slate-100">
+                    @forelse($application->documents as $document)
+                        <div class="flex flex-col gap-4 p-5 md:flex-row md:items-center md:justify-between">
+                            <div class="min-w-0">
+                                <div class="font-extrabold text-slate-900">{{ $document->document_name }}</div>
+                                <div class="mt-1 truncate text-sm text-slate-500">{{ $document->file_name }} · {{ number_format(($document->file_size ?? 0)/1024,1) }} KB</div>
+                                <div class="mt-2 text-xs font-bold text-emerald-700">{{ __('Review') }}: {{ __($document->status) }}</div>
+                                @if($document->notes)<div class="mt-2 rounded-xl bg-slate-50 px-3 py-2 text-xs leading-5 text-slate-700"><strong>{{ __('Review note:') }}</strong> {{ $document->notes }}</div>@endif
+                            </div>
+                            <div class="flex flex-wrap shrink-0 gap-2">
+                                @if($document->hasAvailableFile())
+                                    <a target="_blank" rel="noopener" href="{{ route('application.documents.view',$document) }}" class="portal-button-secondary">{{ __('View') }}</a>
+                                    <a href="{{ route('application.documents.download',$document) }}" class="portal-button-secondary">{{ __('Download') }}</a>
+                                @else
+                                    <span class="inline-flex items-center rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-extrabold text-amber-700">{{ __('File unavailable') }}</span>
+                                @endif
+                            </div>
+                        </div>
+                    @empty
+                        <div class="p-10 text-center text-slate-500">{{ __('No retained uploaded files are available for this application.') }}</div>
+                    @endforelse
                 </div>
             </section>
         @else
