@@ -724,3 +724,50 @@ html.dark body.app-shell .app-main .portal-gradient {
     color: #ffffff !important;
     border-color: #404040 !important;
 }
+
+
+/* Keep the shared layout header theme-aware on customer and public pages too. */
+body.app-shell > .min-h-screen > header,
+body.app-shell > .min-h-screen > header > div {
+    background-color: var(--portal-page) !important;
+    color: var(--portal-text) !important;
+    border-color: var(--portal-border) !important;
+}
+body.app-shell > .min-h-screen > header :is(h1, h2, h3, h4, h5, h6, p, span, label) {
+    color: var(--portal-text) !important;
+}
+html.dark body.app-shell > .min-h-screen > header :is(h1, h2, h3, h4, h5, h6, p, span, label) {
+    color: #ffffff !important;
+}
+
+/* Large dark/gradient hero utilities previously bypassed the shared theme.
+   Normalize them so white mode never produces black text on a dark hero. */
+.app-main [class*="bg-slate-8"],
+.app-main [class*="bg-slate-9"],
+.app-main [class*="bg-gray-8"],
+.app-main [class*="bg-gray-9"],
+.app-main [class*="bg-zinc-8"],
+.app-main [class*="bg-zinc-9"],
+.app-main [class*="bg-neutral-8"],
+.app-main [class*="bg-neutral-9"] {
+    background-color: var(--portal-surface) !important;
+    background-image: none !important;
+    color: var(--portal-text) !important;
+}
+.app-main :is(button, input[type="submit"], input[type="button"], a[role="button"])[class*="bg-slate-8"],
+.app-main :is(button, input[type="submit"], input[type="button"], a[role="button"])[class*="bg-slate-9"],
+.app-main :is(button, input[type="submit"], input[type="button"], a[role="button"])[class*="bg-gray-8"],
+.app-main :is(button, input[type="submit"], input[type="button"], a[role="button"])[class*="bg-gray-9"],
+.app-main :is(button, input[type="submit"], input[type="button"], a[role="button"])[class*="bg-zinc-8"],
+.app-main :is(button, input[type="submit"], input[type="button"], a[role="button"])[class*="bg-zinc-9"],
+.app-main :is(button, input[type="submit"], input[type="button"], a[role="button"])[class*="bg-neutral-8"],
+.app-main :is(button, input[type="submit"], input[type="button"], a[role="button"])[class*="bg-neutral-9"] {
+    background-color: var(--portal-button) !important;
+    color: var(--portal-button-text) !important;
+    border-color: var(--portal-button) !important;
+}
+.app-main [class*="from-slate-"],
+.app-main [class*="via-blue-"],
+.app-main [class*="to-blue-"] {
+    background-image: none !important;
+}
