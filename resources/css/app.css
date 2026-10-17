@@ -3263,3 +3263,20 @@ html.dark .app-shell :is(
     color: var(--portal-button-text) !important;
     border-color: var(--portal-border) !important;
 }
+
+/* Keep nested labels/icons readable inside inverted monochrome buttons. */
+.app-shell :is(
+    .nav-menu-toggle, .neon-button, .neon-button-outline,
+    .portal-button, .admin-pagination-button,
+    .admin-management-header a, .admin-management-header button
+) *,
+.app-shell :is(
+    button[class*="bg-blue-"],a[class*="bg-blue-"],
+    button[class*="bg-indigo-"],a[class*="bg-indigo-"],
+    button[class*="bg-green-"],a[class*="bg-green-"],
+    button[class*="bg-emerald-"],a[class*="bg-emerald-"],
+    button[class*="bg-red-"],a[class*="bg-red-"],
+    button[class*="bg-purple-"],a[class*="bg-purple-"]
+) * {
+    color: var(--portal-button-text) !important;
+}
