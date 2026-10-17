@@ -6,8 +6,75 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name', 'Online Services') }}</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+<style>
+/* Landing page visual system: match the in-app champagne/gold portal theme. */
+body.landing-page { background:#fffaf0 !important; color:#2b2100 !important; }
+.landing-page header { background:rgba(255,253,245,.97) !important; border-color:#e6cf82 !important; }
+.landing-page header a, .landing-page header nav { color:#2b2100; }
+.landing-page header nav a:hover { color:#8a6200 !important; }
+.landing-page header .bg-blue-700,
+.landing-page header a.bg-blue-700 { background:#d4a017 !important; color:#2b2100 !important; }
+.landing-page header .bg-blue-700:hover,
+.landing-page header a.bg-blue-700:hover { background:#b8860b !important; color:#fff !important; }
+.landing-page header [role="group"] { background:#fff8e1 !important; border-color:#e6cf82 !important; }
+.landing-page header [role="group"] a { color:#5c4814 !important; }
+.landing-page header [role="group"] a.bg-blue-50 { background:#d4a017 !important; color:#2b2100 !important; }
+.landing-page main > section:first-child { background:linear-gradient(135deg,#fff8e1 0%,#f7e7b1 48%,#f3d875 100%) !important; }
+.landing-page main > section:first-child > div:first-child { opacity:.18; }
+.landing-page main > section:first-child h1 { color:#2b2100 !important; }
+.landing-page main > section:first-child h1 span { color:#8a6200 !important; }
+.landing-page main > section:first-child p { color:#51421b !important; }
+.landing-page main > section:first-child [class*="text-blue-200"] { color:#745300 !important; }
+.landing-page main > section:first-child [class*="border-blue-400"] { border-color:#c69b22 !important; }
+.landing-page main > section:first-child [class*="bg-blue-400/10"] { background:rgba(212,160,23,.14) !important; }
+.landing-page main > section:first-child [class*="border-white/10"] { border-color:#e0c56f !important; }
+.landing-page main > section:first-child .backdrop-blur { background:rgba(255,253,245,.94) !important; }
+.landing-page main > section:first-child [data-service-carousel] > div:first-child { background:rgba(184,134,11,.18) !important; }
+.landing-page main > section:first-child [data-service-carousel] > div:nth-child(2) { background:#fffdf5 !important; border-color:#e6cf82 !important; box-shadow:0 22px 55px rgba(94,70,0,.18) !important; }
+.landing-page main > section:first-child [data-service-carousel] article > div:nth-last-child(2) { background:linear-gradient(to top,rgba(43,33,0,.92),rgba(43,33,0,.12),transparent) !important; }
+.landing-page main > section:first-child [data-service-carousel] article p,
+.landing-page main > section:first-child [data-service-carousel] article h2 { color:#fff !important; }
+.landing-page main > section:first-child [data-service-carousel] article p.text-blue-200 { color:#ffe9a3 !important; }
+.landing-page main > section:first-child [data-service-carousel] article a { background:#d4a017 !important; color:#2b2100 !important; }
+.landing-page main > section:first-child [data-service-carousel] article a:hover { background:#b8860b !important; color:#fff !important; }
+.landing-page main > section:first-child [data-service-carousel] [data-carousel-prev],
+.landing-page main > section:first-child [data-service-carousel] [data-carousel-next] { background:#d4a017 !important; color:#2b2100 !important; }
+.landing-page main > section:first-child [data-service-carousel] [data-carousel-dot] { background:#b8860b !important; }
+.landing-page main > section:not(:first-child) { color:#2b2100; }
+.landing-page main > section:not(:first-child) h2,
+.landing-page main > section:not(:first-child) h3,
+.landing-page main > section:not(:first-child) b { color:#2b2100 !important; }
+.landing-page main > section:not(:first-child) p { color:#5c5140 !important; }
+.landing-page main > section:not(:first-child) [class*="text-blue-700"] { color:#8a6200 !important; }
+.landing-page main > section:nth-child(2) { background:#fffaf0 !important; }
+.landing-page main > section:nth-child(2) article { background:#fffdf5 !important; border-color:#e6cf82 !important; box-shadow:0 4px 14px rgba(94,70,0,.06) !important; }
+.landing-page main > section:nth-child(2) article:hover { box-shadow:0 14px 30px rgba(94,70,0,.14) !important; }
+.landing-page main > section:nth-child(2) article a { color:#8a6200 !important; }
+.landing-page main > section:nth-child(2) article a:hover { color:#5c4100 !important; }
+.landing-page main > section:nth-child(3) { background:#fff3cc !important; border-color:#e6cf82 !important; }
+.landing-page main > section:nth-child(3) [class*="bg-slate-50"] { background:#fffdf5 !important; }
+.landing-page main > section:nth-child(3) [class*="border-slate-200"] { border-color:#e6cf82 !important; }
+.landing-page main > section:nth-child(4) [class*="border"] { border-color:#e6cf82 !important; }
+.landing-page main > section:nth-child(4) [class*="bg-white"] { background:#fffdf5 !important; }
+.landing-page footer { background:#2b2100 !important; border-color:#8a6200 !important; color:#fff8e1 !important; }
+.landing-page footer p { color:#fff1c2 !important; }
+.landing-page a:focus-visible,
+.landing-page button:focus-visible { outline:3px solid #8a6200 !important; outline-offset:3px; }
+@media (max-width: 767px) {
+ .landing-page header > div { gap:.75rem; flex-wrap:wrap; }
+ .landing-page header nav { display:none; }
+ .landing-page main > section:first-child > div.relative { gap:2rem; padding-top:3rem; padding-bottom:3rem; }
+ .landing-page main > section:first-child h1 { font-size:clamp(2.2rem,9vw,3.5rem); line-height:1.08; }
+ .landing-page main > section:first-child [data-service-carousel] img { height:330px; }
+ .landing-page main > section:nth-child(2) article { min-width:0; }
+}
+@media (prefers-reduced-motion: reduce) {
+ .landing-page *, .landing-page *::before, .landing-page *::after { scroll-behavior:auto !important; transition-duration:.01ms !important; animation-duration:.01ms !important; }
+}
+</style>
 </head>
-<body class="bg-slate-50 text-slate-900 antialiased">
+<body class="landing-page bg-slate-50 text-slate-900 antialiased">
 <header class="sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 backdrop-blur">
     <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         <a href="{{ url('/') }}" class="flex items-center gap-3">
