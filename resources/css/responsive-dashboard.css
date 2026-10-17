@@ -931,3 +931,87 @@ body.neon-admin-shell .app-main :is(.neon-card, .portal-card, .admin-management-
         min-height: 44px;
     }
 }
+
+
+/* Navigation-menu completion: use the gold palette for the dropdown panel,
+   EN/SW selectors, every menu destination, and the current-page indicator. */
+.app-shell .site-navigation .global-navigation-menu {
+    background: var(--portal-gold-pale, #fff8e1) !important;
+    background-image: none !important;
+    color: var(--portal-gold-ink, #2b2100) !important;
+    border-color: var(--portal-gold-border, #e6cf82) !important;
+    box-shadow: 0 18px 36px rgb(94 70 0 / 18%) !important;
+}
+.app-shell .site-navigation .global-navigation-menu > div > div:first-child {
+    border-color: var(--portal-gold-border, #e6cf82) !important;
+}
+.app-shell .site-navigation .global-navigation-menu p,
+.app-shell .site-navigation .global-navigation-menu [class~="text-slate-400"] {
+    color: #5c4814 !important;
+}
+.app-shell .site-navigation .global-navigation-menu [role="group"] {
+    background: #fffdf5 !important;
+    border-color: var(--portal-gold-border, #e6cf82) !important;
+}
+.app-shell .site-navigation .global-navigation-menu [role="group"] a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.25rem;
+    background: var(--portal-gold, #d4a017) !important;
+    color: var(--portal-gold-ink, #2b2100) !important;
+    border: 1px solid var(--portal-gold-hover, #b8860b) !important;
+    border-radius: .65rem;
+}
+.app-shell .site-navigation .global-navigation-menu [role="group"] a:hover,
+.app-shell .site-navigation .global-navigation-menu [role="group"] a:focus-visible {
+    background: var(--portal-gold-hover, #b8860b) !important;
+    color: #ffffff !important;
+}
+.app-shell .site-navigation .global-navigation-menu .global-nav-link {
+    background: var(--portal-gold, #d4a017) !important;
+    color: var(--portal-gold-ink, #2b2100) !important;
+    border-color: var(--portal-gold-border, #e6cf82) !important;
+    box-shadow: 0 2px 7px rgb(94 70 0 / 10%) !important;
+}
+.app-shell .site-navigation .global-navigation-menu .global-nav-link:hover,
+.app-shell .site-navigation .global-navigation-menu .global-nav-link:focus-visible {
+    background: var(--portal-gold-hover, #b8860b) !important;
+    color: #ffffff !important;
+    border-color: var(--portal-gold-hover, #b8860b) !important;
+}
+.app-shell .site-navigation .global-navigation-menu .global-nav-link-active,
+.app-shell .site-navigation .global-navigation-menu .global-nav-link[aria-current="page"] {
+    background: #8a6200 !important;
+    color: #ffffff !important;
+    border-color: #8a6200 !important;
+    box-shadow: inset 4px 0 0 #f6d365 !important;
+}
+.app-shell .site-navigation .global-navigation-menu .global-nav-link :is(span, svg) {
+    color: inherit !important;
+}
+.app-shell .site-navigation .global-navigation-menu .global-nav-active-dot {
+    background: #fff8e1 !important;
+    box-shadow: 0 0 0 3px rgb(43 33 0 / 12%) !important;
+}
+.app-shell .site-navigation .nav-menu-toggle {
+    background: var(--portal-gold, #d4a017) !important;
+    color: var(--portal-gold-ink, #2b2100) !important;
+    border-color: var(--portal-gold-hover, #b8860b) !important;
+}
+.app-shell .site-navigation .nav-menu-toggle:hover,
+.app-shell .site-navigation .nav-menu-toggle:focus-visible {
+    background: var(--portal-gold-hover, #b8860b) !important;
+    color: #ffffff !important;
+}
+@media (max-width: 640px) {
+    .app-shell .site-navigation .global-navigation-menu {
+        max-height: calc(100dvh - 4rem);
+        overflow-y: auto;
+        overscroll-behavior: contain;
+    }
+    .app-shell .site-navigation .global-navigation-menu .global-nav-link {
+        min-height: 44px;
+        overflow-wrap: anywhere;
+    }
+}
