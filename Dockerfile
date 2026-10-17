@@ -39,4 +39,9 @@ COPY --from=frontend /app/public/build ./public/build
 RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
 RUN chown -R www-data:www-data storage bootstrap/cache
 EXPOSE 80
-CMD ["sh", "-c", "set -e; php artisan migrate --force; php artisan db:seed --force; php artisan storage:link || true; php artisan config:cache; php artisan view:cache; exec apache2-foreground"]
+
+# Run schema migrations on every start, but do not re-run seeders on every
+# deployment: admins may intentionally remove or customize catalogue records.
+# For a brand-new database, run "php artisan db:seed --force" once as an
+# explicit bootstrap step after migrations.
+CMD ["sh", "-c", "set -e; php artisan migrate --force; php artisan storage:link || true; php artisan config:cache; php artisan view:cache; exec apache2-foreground"]
