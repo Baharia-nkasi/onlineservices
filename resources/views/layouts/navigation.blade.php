@@ -32,7 +32,7 @@
 
     <div class="flex items-center gap-1 rounded-xl border border-slate-200 bg-slate-50 p-1" role="group" aria-label="Language">
     <a href="{{ route('language.switch', 'en') }}" class="rounded-lg px-2.5 py-1.5 text-xs font-extrabold {{ app()->getLocale() === 'en' ? 'bg-neutral-200 text-neutral-900 shadow-sm' : 'text-neutral-600 hover:text-black dark:text-neutral-300 dark:hover:text-white' }}">EN</a>
-    <a href="{{ route('language.switch', 'sw') }}" class="rounded-lg px-2.5 py-1.5 text-xs font-extrabold {{ app()->getLocale() === 'sw' ? 'bg-white text-blue-700 shadow-sm' : 'text-slate-500 hover:text-slate-800' }}">SW</a>
+    <a href="{{ route('language.switch', 'sw') }}" class="rounded-lg px-2.5 py-1.5 text-xs font-extrabold {{ app()->getLocale() === 'sw' ? 'bg-neutral-200 text-neutral-900 shadow-sm' : 'text-neutral-600 hover:text-black dark:text-neutral-300 dark:hover:text-white' }}">SW</a>
 </div>
 
     @auth
