@@ -1,4 +1,5 @@
 import '../css/responsive-dashboard.css';
+import '../css/application-management-contrast.css';
 
 import './bootstrap';
 
@@ -133,7 +134,6 @@ function initDynamicTableSearch() {
     });
 }
 
-
 function readSavedTheme() {
     try {
         return localStorage.getItem('theme');
@@ -165,14 +165,8 @@ function applyTheme(theme, persist = true) {
 
     if (toggle) {
         toggle.setAttribute('aria-pressed', isDark ? 'true' : 'false');
-        toggle.setAttribute(
-            'aria-label',
-            isDark ? 'Switch to light mode' : 'Switch to dark mode'
-        );
-        toggle.setAttribute(
-            'title',
-            isDark ? 'Switch to light mode' : 'Switch to dark mode'
-        );
+        toggle.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+        toggle.setAttribute('title', isDark ? 'Switch to light mode' : 'Switch to dark mode');
     }
 
     if (label) {
@@ -205,7 +199,6 @@ function initThemeToggle() {
         }
     });
 }
-
 
 function initServiceCarousel() {
     document.querySelectorAll('[data-service-carousel]').forEach((carousel) => {
@@ -242,8 +235,6 @@ function initServiceCarousel() {
             if (!carousel.contains(event.relatedTarget)) restart();
         });
 
-        // Do not keep rotating a hidden browser tab. This also prevents a
-        // user returning to the page and landing on an unexpected slide.
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) {
                 window.clearInterval(timer);
