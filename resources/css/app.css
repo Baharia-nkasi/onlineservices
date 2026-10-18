@@ -3097,104 +3097,164 @@ html.dark header nav button:focus-visible {
     outline-offset: 2px;
 }
 
-/* FINAL, stable monochrome theme for the entire portal.
-   Light mode is white/black; dark mode is black/white. This final layer
-   overrides legacy green/neon/navy rules without changing page structure. */
+/* FINAL PORTAL THEME: vanilla gold in light mode with readable black text.
+   Keep dark mode independently dark with high-contrast light text.
+   This final layer also fixes document-requirement forms, rows, labels and controls. */
 :root {
   color-scheme: light;
-  --portal-page:#fff; --portal-surface:#fff; --portal-panel:#f5f5f5;
-  --portal-text:#111; --portal-muted:#404040; --portal-border:#d4d4d4;
-  --portal-button:#111; --portal-button-text:#fff; --portal-hover:#e5e5e5;
-  --portal-focus:#404040; --portal-shadow:0 2px 8px rgb(0 0 0 / 6%);
+  --portal-page: #f3e5ab;
+  --portal-surface: #fff8dc;
+  --portal-panel: #f8edc2;
+  --portal-text: #111111;
+  --portal-muted: #45402f;
+  --portal-border: #c7b779;
+  --portal-button: #b8860b;
+  --portal-button-text: #111111;
+  --portal-hover: #eee0a4;
+  --portal-focus: #8a6d00;
+  --portal-shadow: 0 3px 12px rgb(77 61 0 / 10%);
 }
 html.dark {
-  color-scheme:dark;
-  --portal-page:#000; --portal-surface:#111; --portal-panel:#1a1a1a;
-  --portal-text:#fff; --portal-muted:#d4d4d4; --portal-border:#4a4a4a;
-  --portal-button:#fff; --portal-button-text:#000; --portal-hover:#333;
-  --portal-focus:#fff; --portal-shadow:0 2px 10px rgb(0 0 0 / 28%);
+  color-scheme: dark;
+  --portal-page: #211b0b;
+  --portal-surface: #30270e;
+  --portal-panel: #3a3012;
+  --portal-text: #fff9e6;
+  --portal-muted: #e6d9b4;
+  --portal-border: #796632;
+  --portal-button: #e4bd42;
+  --portal-button-text: #171204;
+  --portal-hover: #4a3c16;
+  --portal-focus: #f5d76e;
+  --portal-shadow: 0 3px 12px rgb(0 0 0 / 25%);
 }
-html,body,body.app-shell,body.app-shell>.min-h-screen,.app-main,
-body.neon-admin-shell>.min-h-screen>header,
-body.neon-admin-shell>.min-h-screen>header>div,
+html, body, body.app-shell, body.app-shell > .min-h-screen, .app-main,
+body.neon-admin-shell > .min-h-screen > header,
+body.neon-admin-shell > .min-h-screen > header > div,
 body.neon-admin-shell .neon-shell {
-  background:var(--portal-page)!important; color:var(--portal-text)!important;
+  background: var(--portal-page) !important;
+  color: var(--portal-text) !important;
 }
-body.neon-admin-shell .neon-shell { background-image:none!important; }
-body.neon-admin-shell .neon-shell::before { content:none!important; }
-.site-navigation,.site-navigation>div,.site-navigation .global-navigation-menu,
-.site-navigation .global-navigation-menu>div,.theme-toggle-dock,
-.bottom-navigation,.bottom-nav,footer nav {
-  background:var(--portal-surface)!important; color:var(--portal-text)!important;
-  border-color:var(--portal-border)!important;
+body.neon-admin-shell .neon-shell { background-image: none !important; }
+body.neon-admin-shell .neon-shell::before { content: none !important; }
+
+.site-navigation, .site-navigation > div, .site-navigation .global-navigation-menu,
+.site-navigation .global-navigation-menu > div, .theme-toggle-dock,
+.bottom-navigation, .bottom-nav, footer nav {
+  background: var(--portal-surface) !important;
+  color: var(--portal-text) !important;
+  border-color: var(--portal-border) !important;
 }
-.site-navigation :is(a,button,span,p),
-.site-navigation .global-navigation-menu :is(a,button,span,p),
-.theme-toggle-dock :is(a,button,span,p),
-.bottom-navigation :is(a,button,span,p),.bottom-nav :is(a,button,span,p),
-footer nav :is(a,button,span,p) { color:var(--portal-text); }
-.site-navigation .global-nav-link,.site-navigation .global-nav-link-icon {
-  color:var(--portal-text)!important; background:transparent!important; border-color:transparent!important;
+.site-navigation :is(a, button, span, p),
+.site-navigation .global-navigation-menu :is(a, button, span, p),
+.theme-toggle-dock :is(a, button, span, p),
+.bottom-navigation :is(a, button, span, p), .bottom-nav :is(a, button, span, p),
+footer nav :is(a, button, span, p) { color: var(--portal-text); }
+.site-navigation .global-nav-link, .site-navigation .global-nav-link-icon {
+  color: var(--portal-text) !important;
+  background: transparent !important;
+  border-color: transparent !important;
 }
-.site-navigation .global-nav-link:hover,.site-navigation .global-nav-link-active,
+.site-navigation .global-nav-link:hover, .site-navigation .global-nav-link-active,
 .site-navigation .global-nav-link-active:hover {
-  color:var(--portal-text)!important; background:var(--portal-hover)!important;
-  border-color:var(--portal-border)!important; box-shadow:none!important;
+  color: var(--portal-text) !important;
+  background: var(--portal-hover) !important;
+  border-color: var(--portal-border) !important;
+  box-shadow: none !important;
 }
-.nav-menu-toggle,.theme-toggle-switch,.admin-management-header .neon-button,
-.admin-management-header .neon-button-outline,.admin-management-header a,
-.neon-shell .neon-button,.neon-shell .neon-button-outline {
-  background:var(--portal-button)!important; color:var(--portal-button-text)!important;
-  border:1px solid var(--portal-border)!important; box-shadow:none!important; text-shadow:none!important;
+.nav-menu-toggle, .theme-toggle-switch, .admin-management-header .neon-button,
+.admin-management-header .neon-button-outline, .admin-management-header a,
+.neon-shell .neon-button, .neon-shell .neon-button-outline {
+  background: var(--portal-button) !important;
+  color: var(--portal-button-text) !important;
+  border: 1px solid var(--portal-border) !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
 }
-.app-main .neon-shell,.app-main .neon-shell .neon-card,
-.app-main .neon-shell .neon-row,.app-main .neon-shell .neon-status,
-.app-main .neon-shell .status-pill,.app-main .portal-card,.app-main .neon-card,
-.app-main .neon-glow-border,.app-main .card,.app-main [data-portal-card] {
-  background:var(--portal-surface)!important; color:var(--portal-text)!important;
-  border-color:var(--portal-border)!important; box-shadow:var(--portal-shadow)!important;
-  text-shadow:none!important;
+.app-main .neon-shell, .app-main .neon-shell .neon-card,
+.app-main .neon-shell .neon-row, .app-main .neon-shell .neon-status,
+.app-main .neon-shell .status-pill, .app-main .portal-card, .app-main .neon-card,
+.app-main .neon-glow-border, .app-main .card, .app-main [data-portal-card],
+.app-main .admin-document-panel, .app-main .admin-document-form,
+.app-main .admin-document-row, .app-main .admin-document-summary,
+.app-main .admin-services-panel, .app-main .admin-services-toolbar,
+.app-main .admin-management-card, .app-main .admin-service-card {
+  background: var(--portal-surface) !important;
+  color: var(--portal-text) !important;
+  border-color: var(--portal-border) !important;
+  box-shadow: var(--portal-shadow) !important;
+  text-shadow: none !important;
+}
+.app-main .admin-document-panel { padding: 1rem; border: 1px solid var(--portal-border) !important; border-radius: 1rem; }
+.app-main .admin-document-summary {
+  color: var(--portal-text) !important;
+  background: var(--portal-panel) !important;
+  border: 1px solid var(--portal-border) !important;
+  border-radius: .85rem;
+}
+.app-main .admin-document-summary :is(strong, span, svg) { color: var(--portal-text) !important; }
+.app-main .admin-document-form, .app-main .admin-document-row {
+  color: var(--portal-text) !important;
+  background: var(--portal-panel) !important;
+  border: 1px solid var(--portal-border) !important;
+  border-radius: .85rem;
+  padding: 1rem;
 }
 .app-main :is(h1,h2,h3,h4,h5,h6,p,span,label,li,td,th,legend,small,strong,em),
 .neon-shell :is(h1,h2,h3,h4,h5,h6,p,span,label,li,td,th,legend,small,strong,em),
 .admin-management-header :is(h1,h2,h3,h4,h5,h6,p,span,label,a) {
-  color:var(--portal-text)!important;
+  color: var(--portal-text) !important;
 }
-.neon-shell .neon-title,.neon-shell .neon-value,.neon-shell .neon-muted {
-  color:var(--portal-text)!important; text-shadow:none!important;
+.neon-shell .neon-title, .neon-shell .neon-value, .neon-shell .neon-muted {
+  color: var(--portal-text) !important;
+  text-shadow: none !important;
 }
-.app-main :is(input:not([type=checkbox]):not([type=radio]):not([type=range]),select,textarea),
-.neon-shell input,.neon-shell select,.neon-shell textarea,
-.admin-management-header input,.admin-management-header select,.admin-management-header textarea {
-  background:var(--portal-surface)!important; color:var(--portal-text)!important;
-  border-color:var(--portal-border)!important; caret-color:var(--portal-text); box-shadow:none!important;
+.app-main :is(input:not([type=checkbox]):not([type=radio]):not([type=range]), select, textarea),
+.neon-shell input, .neon-shell select, .neon-shell textarea,
+.admin-management-header input, .admin-management-header select, .admin-management-header textarea,
+.app-main .admin-document-form input, .app-main .admin-document-form select,
+.app-main .admin-document-row input, .app-main .admin-document-row select {
+  background: var(--portal-surface) !important;
+  color: var(--portal-text) !important;
+  border-color: var(--portal-border) !important;
+  caret-color: var(--portal-text);
+  box-shadow: none !important;
 }
-.app-main :is(input,textarea,select)::placeholder,.neon-shell :is(input,textarea,select)::placeholder {
-  color:var(--portal-muted)!important; opacity:1;
+.app-main :is(input,textarea,select)::placeholder,
+.neon-shell :is(input,textarea,select)::placeholder {
+  color: var(--portal-muted) !important;
+  opacity: 1;
 }
-.app-main :is(button,a):focus-visible,.site-navigation :is(button,a):focus-visible,
+.app-main :is(button,a):focus-visible, .site-navigation :is(button,a):focus-visible,
 .theme-toggle-switch:focus-visible {
-  outline:2px solid var(--portal-focus)!important; outline-offset:3px;
+  outline: 2px solid var(--portal-focus) !important;
+  outline-offset: 3px;
 }
 .app-main :is(.bg-green-50,.bg-green-100,.bg-emerald-50,.bg-emerald-100,
 .bg-lime-50,.bg-lime-100,.bg-blue-50,.bg-indigo-50,.bg-purple-50,
 .bg-slate-50,.bg-slate-100,.bg-gray-50,.bg-gray-100,.bg-zinc-50,.bg-neutral-50) {
-  background:var(--portal-panel)!important;
+  background: var(--portal-panel) !important;
 }
 .app-shell :is(button[class*="bg-blue-"],a[class*="bg-blue-"],button[class*="bg-indigo-"],a[class*="bg-indigo-"],
 button[class*="bg-green-"],a[class*="bg-green-"],button[class*="bg-emerald-"],a[class*="bg-emerald-"],
 button[class*="bg-red-"],a[class*="bg-red-"],button[class*="bg-rose-"],a[class*="bg-rose-"],
 button[class*="bg-purple-"],a[class*="bg-purple-"],button[class*="bg-violet-"],a[class*="bg-violet-"],
 button[class*="bg-sky-"],a[class*="bg-sky-"],button[class*="bg-teal-"],a[class*="bg-teal-"]) {
-  background:var(--portal-button)!important; color:var(--portal-button-text)!important;
-  border-color:var(--portal-border)!important;
+  background: var(--portal-button) !important;
+  color: var(--portal-button-text) !important;
+  border-color: var(--portal-border) !important;
 }
 .app-shell :is(.nav-menu-toggle,.neon-button,.neon-button-outline,.portal-button,
 .admin-pagination-button,.admin-management-header a,.admin-management-header button,
 button[class*="bg-blue-"],a[class*="bg-blue-"],button[class*="bg-indigo-"],a[class*="bg-indigo-"],
 button[class*="bg-green-"],a[class*="bg-green-"],button[class*="bg-emerald-"],a[class*="bg-emerald-"]) * {
-  color:var(--portal-button-text)!important;
+  color: var(--portal-button-text) !important;
 }
 html.dark .app-main :is(.bg-white,.bg-slate-50,.bg-slate-100,.bg-gray-50,.bg-gray-100,
 .bg-zinc-50,.bg-neutral-50,.bg-green-50,.bg-green-100,.bg-emerald-50,.bg-emerald-100,
-.bg-blue-50,.bg-indigo-50,.bg-purple-50) { background:var(--portal-surface)!important; }
+.bg-blue-50,.bg-indigo-50,.bg-purple-50) {
+  background: var(--portal-surface) !important;
+}
+html.dark .app-main :is(.admin-document-panel,.admin-document-form,.admin-document-row) {
+  background: var(--portal-panel) !important;
+}
