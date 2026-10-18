@@ -494,3 +494,211 @@ html.dark #document-requirements .admin-group-required-indicator { color:#ffb4a8
 html.dark #document-requirements .admin-requirement-switch:has(input:checked) {
   border-color: #68c58a;
 }
+
+
+/* Final polish: document requirement controls use distinct, theme-safe flex cards. */
+#document-requirements .admin-document-heading {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: .4rem;
+  background: linear-gradient(135deg, var(--portal-panel), var(--portal-surface)) !important;
+}
+#document-requirements .admin-document-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  padding: .35rem .65rem;
+  border: 1px solid var(--portal-border);
+  border-radius: 999px;
+  background: var(--portal-surface);
+  color: var(--portal-muted) !important;
+  font-size: .7rem;
+  font-weight: 900;
+  letter-spacing: .13em;
+}
+#document-requirements .admin-document-title {
+  margin: .15rem 0 0;
+  color: var(--portal-text) !important;
+  font-size: clamp(1.25rem, 2.3vw, 1.75rem);
+  font-weight: 950;
+  line-height: 1.2;
+  letter-spacing: -.025em;
+}
+#document-requirements .admin-document-intro {
+  max-width: 52rem;
+  color: var(--portal-muted) !important;
+  line-height: 1.65;
+}
+#document-requirements .admin-document-add-form {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  gap: 1rem !important;
+  padding: clamp(.85rem, 2vw, 1.35rem);
+  border-radius: 1.2rem;
+  box-shadow: 0 8px 24px rgb(77 61 0 / 8%);
+}
+#document-requirements .admin-requirement-field {
+  min-width: 0;
+  padding: .85rem;
+  border: 1px solid var(--portal-border);
+  border-radius: .95rem;
+  background: var(--portal-surface);
+  box-shadow: 0 2px 7px rgb(77 61 0 / 4%);
+}
+#document-requirements .admin-requirement-label {
+  margin-bottom: .1rem;
+  color: var(--portal-text) !important;
+  font-size: .82rem;
+  font-weight: 900;
+}
+#document-requirements .admin-requirement-field :is(input,select,textarea) {
+  min-height: 2.9rem;
+  background: var(--portal-page) !important;
+  color: var(--portal-text) !important;
+  border-color: var(--portal-border) !important;
+  border-radius: .75rem;
+}
+#document-requirements .admin-requirement-field :is(input,select,textarea)::placeholder {
+  color: var(--portal-muted) !important;
+  opacity: 1;
+}
+#document-requirements .admin-requirement-switches {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: .7rem;
+  min-width: 0;
+  padding: .25rem 0;
+}
+#document-requirements .admin-requirement-switch {
+  flex: 1 1 9rem;
+  min-width: 0;
+  min-height: 3.2rem;
+  justify-content: flex-start;
+  gap: .7rem;
+  padding: .7rem .9rem;
+  border: 1px solid var(--portal-border) !important;
+  border-radius: .95rem;
+  background: var(--portal-surface) !important;
+  color: var(--portal-text) !important;
+  box-shadow: 0 3px 9px rgb(77 61 0 / 6%);
+  transition: background-color .18s ease, border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+#document-requirements .admin-requirement-switch > span:last-child {
+  display: inline-block;
+  color: var(--portal-text) !important;
+  font-size: .9rem;
+  font-weight: 900;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+#document-requirements .admin-switch-track {
+  flex-shrink: 0;
+  border: 2px solid #655a3c;
+  background: #d6cfb8;
+}
+#document-requirements .admin-switch-track::after {
+  background: #fff;
+  border: 1px solid #655a3c;
+}
+#document-requirements .admin-requirement-switch input:checked + .admin-switch-track {
+  background: #176b38;
+  border-color: #10552b;
+}
+#document-requirements .admin-requirement-switch input:checked + .admin-switch-track::after {
+  background: #fff;
+  border-color: #10552b;
+}
+#document-requirements .admin-requirement-switch:has(input:checked) {
+  background: #e5f4e8 !important;
+  border-color: #287844 !important;
+  box-shadow: inset 0 0 0 1px #287844, 0 3px 10px rgb(40 120 68 / 10%);
+}
+#document-requirements .admin-requirement-switch:has(input:checked) > span:last-child {
+  color: #164b2b !important;
+}
+html.dark #document-requirements .admin-requirement-switch {
+  background: #30270e !important;
+  color: #fff9e6 !important;
+  border-color: #796632 !important;
+}
+html.dark #document-requirements .admin-requirement-switch > span:last-child {
+  color: #fff9e6 !important;
+}
+html.dark #document-requirements .admin-switch-track {
+  background: #635a43;
+  border-color: #b5a579;
+}
+html.dark #document-requirements .admin-switch-track::after {
+  background: #fff9e6;
+  border-color: #51421b;
+}
+html.dark #document-requirements .admin-requirement-switch:has(input:checked) {
+  background: #173c27 !important;
+  border-color: #68c58a !important;
+  box-shadow: inset 0 0 0 1px #68c58a, 0 3px 10px rgb(0 0 0 / 15%);
+}
+html.dark #document-requirements .admin-requirement-switch:has(input:checked) > span:last-child {
+  color: #d8ffe3 !important;
+}
+html.dark #document-requirements .admin-requirement-switch input:checked + .admin-switch-track {
+  background: #287844;
+  border-color: #8be0a5;
+}
+#document-requirements .admin-document-item {
+  padding: clamp(.85rem, 2vw, 1.25rem);
+  border-radius: 1.15rem;
+  box-shadow: 0 5px 18px rgb(77 61 0 / 7%);
+}
+#document-requirements .admin-document-editor {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: .8rem;
+  padding: clamp(.75rem, 1.7vw, 1rem);
+  border-radius: 1rem;
+  background: var(--portal-panel) !important;
+}
+#document-requirements .admin-document-editor :is(input:not([type="hidden"]):not([type="checkbox"]),select) {
+  width: 100%;
+  min-height: 2.85rem;
+  padding: .65rem .75rem;
+  border-radius: .75rem;
+  background: var(--portal-surface) !important;
+  color: var(--portal-text) !important;
+}
+#document-requirements .admin-document-editor > div.md\:col-span-8 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .65rem;
+}
+#document-requirements .admin-requirement-submit {
+  min-height: 3rem;
+  border-radius: .9rem;
+  box-shadow: 0 4px 10px rgb(77 61 0 / 12%);
+  transition: transform .18s ease, background-color .18s ease, box-shadow .18s ease;
+}
+#document-requirements .admin-requirement-submit:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 7px 15px rgb(77 61 0 / 16%);
+}
+html.dark #document-requirements .admin-requirement-submit {
+  background: #e4bd42 !important;
+  color: #171204 !important;
+}
+@media (min-width: 640px) {
+  #document-requirements .admin-document-add-form { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  #document-requirements .admin-document-editor { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 768px) {
+  #document-requirements .admin-document-editor { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  #document-requirements .admin-document-editor > input[name="name"],
+  #document-requirements .admin-document-editor > input[name="description"] { grid-column: span 3 / span 3; }
+  #document-requirements .admin-document-editor > select[name="requirement_type"],
+  #document-requirements .admin-document-editor > input[name="requirement_group"] { grid-column: span 2 / span 2; }
+  #document-requirements .admin-document-editor > input[name="minimum_required"],
+  #document-requirements .admin-document-editor > input[name="sort_order"] { grid-column: span 1 / span 1; }
+  #document-requirements .admin-document-editor > div.md\:col-span-8 { grid-column: span 6 / span 6; }
+}
+@media (min-width: 1024px) {
+  #document-requirements .admin-document-add-form { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
