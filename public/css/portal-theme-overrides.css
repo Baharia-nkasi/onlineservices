@@ -485,3 +485,12 @@ html.dark #document-requirements .admin-group-required-indicator { color:#ffb4a8
   #document-requirements .admin-requirement-switches { gap:.5rem; }
   #document-requirements .admin-requirement-switch { flex:1 1 8rem; }
 }
+
+#document-requirements [hidden] { display: none !important; }
+#document-requirements .admin-requirement-switch:active { transform: translateY(1px); }
+#document-requirements .admin-requirement-switch:has(input:checked) {
+  border-color: #287844;
+}
+html.dark #document-requirements .admin-requirement-switch:has(input:checked) {
+  border-color: #68c58a;
+}
