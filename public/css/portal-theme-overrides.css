@@ -1,43 +1,75 @@
-/* Vanilla-gold admin navigation and document-requirements styling.
-   Loaded after the compiled application stylesheet to win over legacy theme rules. */
+/* Shared portal theme: light vanilla-gold and coordinated dark cocoa-gold.
+   This file is loaded after app.css so it resolves legacy color conflicts. */
 :root {
-  --vanilla-gold: #f3e5ab;
-  --vanilla-gold-surface: #fff8dc;
-  --vanilla-gold-panel: #f8edc2;
-  --vanilla-gold-hover: #eee0a4;
-  --vanilla-gold-border: #c7b779;
-  --vanilla-gold-ink: #111111;
-  --vanilla-gold-muted: #45402f;
-  --vanilla-gold-action: #e0b52c;
+  color-scheme: light;
+  --portal-page: #f3e5ab;
+  --portal-surface: #fff8dc;
+  --portal-panel: #f8edc2;
+  --portal-hover: #eee0a4;
+  --portal-text: #111111;
+  --portal-muted: #45402f;
+  --portal-border: #c7b779;
+  --portal-action: #e0b52c;
+  --portal-action-hover: #d1a51e;
+  --portal-action-text: #111111;
+  --portal-focus: #806400;
+  --portal-shadow: 0 5px 18px rgb(77 61 0 / 10%);
+}
+html.dark {
+  color-scheme: dark;
+  --portal-page: #211b0b;
+  --portal-surface: #30270e;
+  --portal-panel: #3a3012;
+  --portal-hover: #4a3c16;
+  --portal-text: #fff9e6;
+  --portal-muted: #e6d9b4;
+  --portal-border: #796632;
+  --portal-action: #e4bd42;
+  --portal-action-hover: #f0ce5b;
+  --portal-action-text: #171204;
+  --portal-focus: #f5d76e;
+  --portal-shadow: 0 5px 18px rgb(0 0 0 / 25%);
 }
 
-/* Shared admin page canvas and navigation use the same warm gold palette. */
-body.neon-admin-shell,
+/* Base canvas and shared layout surfaces */
+html, body, body.app-shell, body.app-shell > .min-h-screen,
+body.app-shell .app-main, body.neon-admin-shell,
 body.neon-admin-shell > .min-h-screen,
 body.neon-admin-shell > .min-h-screen > header,
 body.neon-admin-shell > .min-h-screen > header > div,
-body.neon-admin-shell .app-main,
 body.neon-admin-shell .neon-shell {
-  background: var(--vanilla-gold) !important;
-  background-image: none !important;
-  color: var(--vanilla-gold-ink) !important;
+  background-color: var(--portal-page) !important;
+  color: var(--portal-text) !important;
 }
-body.neon-admin-shell .site-navigation,
-body.neon-admin-shell .site-navigation > div,
-body.neon-admin-shell .site-navigation .global-navigation-menu,
-body.neon-admin-shell .site-navigation .global-navigation-menu > div,
-body.neon-admin-shell .mobile-menu {
-  background: var(--vanilla-gold-surface) !important;
-  color: var(--vanilla-gold-ink) !important;
-  border-color: var(--vanilla-gold-border) !important;
-  box-shadow: 0 5px 18px rgb(77 61 0 / 10%) !important;
+body.neon-admin-shell .neon-shell { background-image: none !important; }
+body.neon-admin-shell .neon-shell::before { content: none !important; }
+.app-shell, .app-main, .site-navigation, .mobile-menu,
+.theme-toggle-dock, .portal-card, .admin-management-card,
+.admin-management-step, .neon-card, .neon-row,
+.admin-document-panel, .admin-document-form, .admin-document-row,
+.admin-document-summary {
+  transition: background-color .22s ease, color .22s ease, border-color .22s ease;
 }
-body.neon-admin-shell .site-navigation :is(a, button, span, p, svg),
-body.neon-admin-shell .mobile-menu :is(a, button, span, p, svg) {
-  color: var(--vanilla-gold-ink) !important;
+
+/* Navigation and dropdowns */
+.site-navigation, .site-navigation > div,
+.site-navigation .global-navigation-menu,
+.site-navigation .global-navigation-menu > div,
+.site-navigation .mobile-menu, .mobile-menu,
+.theme-toggle-dock, .bottom-navigation, .bottom-nav, footer nav {
+  background: var(--portal-surface) !important;
+  color: var(--portal-text) !important;
+  border-color: var(--portal-border) !important;
+  box-shadow: var(--portal-shadow);
 }
-body.neon-admin-shell .site-navigation .global-nav-link,
-body.neon-admin-shell .mobile-menu a {
+.site-navigation :is(a,button,span,p,svg),
+.site-navigation .global-navigation-menu :is(a,button,span,p,svg),
+.mobile-menu :is(a,button,span,p,svg),
+.theme-toggle-dock :is(a,button,span,p) {
+  color: var(--portal-text);
+}
+.site-navigation .global-nav-link,
+.mobile-menu a {
   display: flex;
   align-items: center;
   gap: .65rem;
@@ -46,73 +78,76 @@ body.neon-admin-shell .mobile-menu a {
   border: 1px solid transparent !important;
   border-radius: .8rem;
   background: transparent !important;
-  color: var(--vanilla-gold-ink) !important;
+  color: var(--portal-text) !important;
   font-weight: 700;
-  transition: background-color .18s ease, border-color .18s ease, transform .18s ease;
+  transition: background-color .18s ease, border-color .18s ease;
 }
-body.neon-admin-shell .site-navigation .global-nav-link:hover,
-body.neon-admin-shell .mobile-menu a:hover {
-  background: var(--vanilla-gold-hover) !important;
-  border-color: var(--vanilla-gold-border) !important;
-  color: #111 !important;
+.site-navigation .global-nav-link:hover,
+.mobile-menu a:hover {
+  background: var(--portal-hover) !important;
+  border-color: var(--portal-border) !important;
+  color: var(--portal-text) !important;
 }
-body.neon-admin-shell .site-navigation .global-nav-link-active,
-body.neon-admin-shell .site-navigation .global-nav-link[aria-current="page"],
-body.neon-admin-shell .site-navigation [aria-current="page"],
-body.neon-admin-shell .mobile-menu a[aria-current="page"] {
-  background: var(--vanilla-gold-action) !important;
-  border: 1px solid #9a7410 !important;
-  color: #111 !important;
-  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 28%), 0 3px 8px rgb(77 61 0 / 12%) !important;
+.site-navigation .global-nav-link-active,
+.site-navigation .global-nav-link[aria-current="page"],
+.site-navigation [aria-current="page"],
+.mobile-menu a[aria-current="page"] {
+  background: var(--portal-action) !important;
+  border: 1px solid var(--portal-border) !important;
+  color: var(--portal-action-text) !important;
+  font-weight: 800;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 15%);
+}
+.nav-menu-toggle, .site-navigation .nav-menu-toggle,
+.site-navigation button, .admin-management-header .neon-button,
+.admin-management-header .neon-button-outline, .neon-shell .neon-button,
+.neon-shell .neon-button-outline {
+  background: var(--portal-action) !important;
+  color: var(--portal-action-text) !important;
+  border: 1px solid var(--portal-border) !important;
+  border-radius: .75rem;
+  box-shadow: none !important;
+  text-shadow: none !important;
   font-weight: 800;
 }
-body.neon-admin-shell .nav-menu-toggle,
-body.neon-admin-shell .site-navigation button,
-body.neon-admin-shell .admin-management-header .neon-button,
-body.neon-admin-shell .admin-management-header .neon-button-outline {
-  background: var(--vanilla-gold-action) !important;
-  color: #111 !important;
-  border: 1px solid #9a7410 !important;
-  border-radius: .75rem;
-  box-shadow: 0 2px 7px rgb(77 61 0 / 12%) !important;
-  text-shadow: none !important;
-}
-body.neon-admin-shell .site-navigation button:hover,
-body.neon-admin-shell .nav-menu-toggle:hover {
-  background: #d1a51e !important;
-  color: #111 !important;
+.nav-menu-toggle:hover, .site-navigation button:hover,
+.admin-management-header .neon-button:hover,
+.admin-management-header .neon-button-outline:hover,
+.neon-shell .neon-button:hover, .neon-shell .neon-button-outline:hover {
+  background: var(--portal-action-hover) !important;
+  color: var(--portal-action-text) !important;
 }
 
-/* Manage document requirements: consistent surface, clear hierarchy and flex layout. */
-body.neon-admin-shell .admin-document-panel,
-body.neon-admin-shell .admin-document-panel > *,
-body.neon-admin-shell .admin-document-summary,
-body.neon-admin-shell .admin-document-form,
-body.neon-admin-shell .admin-document-row,
-body.neon-admin-shell .admin-document-summary-copy {
-  color: var(--vanilla-gold-ink) !important;
-  border-color: var(--vanilla-gold-border) !important;
+/* General cards, panels, service management and document requirements */
+.app-main .portal-card, .app-main .neon-card,
+.app-main .neon-row, .app-main .neon-status, .app-main .status-pill,
+.app-main .admin-management-card, .app-main .admin-management-step,
+.app-main .admin-service-card, .app-main .admin-services-panel,
+.app-main .admin-services-toolbar, .app-main .admin-document-panel,
+.app-main .admin-document-form, .app-main .admin-document-row,
+.app-main .admin-document-summary, .app-main [data-portal-card] {
+  background: var(--portal-surface) !important;
+  color: var(--portal-text) !important;
+  border-color: var(--portal-border) !important;
+  box-shadow: var(--portal-shadow) !important;
   text-shadow: none !important;
 }
-body.neon-admin-shell .admin-document-panel {
-  background: var(--vanilla-gold-surface) !important;
-  border: 1px solid var(--vanilla-gold-border) !important;
-  border-radius: 1rem;
+.app-main .admin-document-panel {
   padding: 1rem;
-  box-shadow: 0 5px 18px rgb(77 61 0 / 9%) !important;
+  border: 1px solid var(--portal-border) !important;
+  border-radius: 1rem;
 }
-body.neon-admin-shell .admin-document-summary {
+.app-main .admin-document-summary {
   display: flex !important;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: .75rem;
   padding: .9rem 1rem;
-  border: 1px solid var(--vanilla-gold-border) !important;
   border-radius: .85rem;
-  background: var(--vanilla-gold-panel) !important;
+  background: var(--portal-panel) !important;
 }
-body.neon-admin-shell .admin-document-summary-copy {
+.app-main .admin-document-summary-copy {
   display: flex;
   flex: 1 1 14rem;
   flex-direction: column;
@@ -120,107 +155,244 @@ body.neon-admin-shell .admin-document-summary-copy {
   min-width: 0;
   overflow-wrap: anywhere;
 }
-body.neon-admin-shell .admin-document-summary-copy strong,
-body.neon-admin-shell .admin-document-summary :is(span, small, p, strong),
-body.neon-admin-shell .admin-document-count,
-body.neon-admin-shell .admin-document-chevron {
-  color: var(--vanilla-gold-ink) !important;
-}
-body.neon-admin-shell .admin-document-form {
-  display: flex !important;
-  flex-wrap: wrap;
-  align-items: end;
-  gap: 1rem;
-  margin-top: 1rem;
-  padding: 1rem;
-  border: 1px solid var(--vanilla-gold-border) !important;
-  border-radius: .9rem;
-  background: var(--vanilla-gold-panel) !important;
-}
-body.neon-admin-shell .admin-document-form > * {
-  flex: 1 1 13rem;
-  min-width: 0;
-}
-body.neon-admin-shell .admin-document-form label {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: .5rem;
-  color: var(--vanilla-gold-ink) !important;
-  font-weight: 700;
-}
-body.neon-admin-shell .admin-document-row {
+.app-main .admin-document-form, .app-main .admin-document-row {
   display: flex !important;
   flex-wrap: wrap;
   align-items: end;
   gap: .85rem;
-  margin-top: .8rem;
+  margin-top: .85rem;
   padding: 1rem;
-  border: 1px solid var(--vanilla-gold-border) !important;
+  border: 1px solid var(--portal-border) !important;
   border-radius: .9rem;
-  background: var(--vanilla-gold-panel) !important;
+  background: var(--portal-panel) !important;
 }
-body.neon-admin-shell .admin-document-row > * {
-  flex: 1 1 11rem;
-  min-width: 0;
-}
-body.neon-admin-shell .admin-document-panel :is(h1,h2,h3,h4,h5,h6,p,span,label,li,td,th,legend,small,strong,em) {
-  color: var(--vanilla-gold-ink) !important;
+.app-main .admin-document-form > * { flex: 1 1 13rem; min-width: 0; }
+.app-main .admin-document-row > * { flex: 1 1 11rem; min-width: 0; }
+
+/* Use theme-aware text colors instead of fixed black or fixed white. */
+.app-main :is(h1,h2,h3,h4,h5,h6,p,span,label,li,td,th,legend,small,strong,em),
+.neon-shell :is(h1,h2,h3,h4,h5,h6,p,span,label,li,td,th,legend,small,strong,em),
+.admin-management-header :is(h1,h2,h3,h4,h5,h6,p,span,label,a) {
+  color: var(--portal-text) !important;
   text-shadow: none !important;
 }
-body.neon-admin-shell .admin-document-panel :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) {
-  display: block;
+.app-main .neon-title, .app-main .neon-value,
+.app-main .neon-muted, .admin-document-count, .admin-document-chevron {
+  color: var(--portal-text) !important;
+}
+
+/* Form fields have enough contrast in both modes. */
+.app-main :is(input:not([type=checkbox]):not([type=radio]):not([type=range]),select,textarea),
+.neon-shell input, .neon-shell select, .neon-shell textarea,
+.admin-management-header input, .admin-management-header select,
+.admin-management-header textarea {
   box-sizing: border-box;
-  width: 100%;
-  min-width: 0;
-  min-height: 2.75rem;
-  padding: .65rem .8rem;
-  border: 1px solid #9e8b4b !important;
-  border-radius: .7rem !important;
-  background: #fffdf2 !important;
-  color: #111 !important;
+  max-width: 100%;
+  background: var(--portal-surface) !important;
+  color: var(--portal-text) !important;
+  border: 1px solid var(--portal-border) !important;
+  caret-color: var(--portal-text);
   box-shadow: none !important;
 }
-body.neon-admin-shell .admin-document-panel :is(input, textarea, select)::placeholder {
-  color: var(--vanilla-gold-muted) !important;
+.app-main :is(input,textarea,select)::placeholder,
+.neon-shell :is(input,textarea,select)::placeholder {
+  color: var(--portal-muted) !important;
   opacity: 1;
 }
-body.neon-admin-shell .admin-document-panel input[type="checkbox"] {
-  accent-color: #9a7410;
-  flex: 0 0 auto;
+.app-main input[type=checkbox], .app-main input[type=radio] {
+  accent-color: var(--portal-action);
 }
-body.neon-admin-shell .admin-document-panel :is(button, a, input, select, textarea):focus-visible,
-body.neon-admin-shell .site-navigation :is(button, a):focus-visible {
-  outline: 3px solid #8a6d00 !important;
+.app-main :is(button,a,input,select,textarea):focus-visible,
+.site-navigation :is(button,a):focus-visible,
+.theme-toggle-switch:focus-visible {
+  outline: 3px solid var(--portal-focus) !important;
   outline-offset: 2px;
 }
-body.neon-admin-shell .admin-document-panel :is(button, a, input[type="submit"]) {
-  max-width: 100%;
-  overflow-wrap: anywhere;
+
+/* Standardize status chips and light utility surfaces while retaining meaning. */
+.app-main :is(.bg-green-50,.bg-green-100,.bg-emerald-50,.bg-emerald-100,
+.bg-lime-50,.bg-lime-100,.bg-blue-50,.bg-indigo-50,.bg-purple-50,
+.bg-slate-50,.bg-slate-100,.bg-gray-50,.bg-gray-100,.bg-zinc-50,.bg-neutral-50) {
+  background: var(--portal-panel) !important;
 }
-body.neon-admin-shell .admin-document-panel :is(button[class*="bg-"], a[class*="bg-"], button.neon-button, a.neon-button) {
-  background: var(--vanilla-gold-action) !important;
+.app-main .status-pill {
+  border: 1px solid var(--portal-border) !important;
+  background: var(--portal-panel) !important;
+  color: var(--portal-text) !important;
+}
+.app-shell :is(button[class*="bg-blue-"],a[class*="bg-blue-"],
+button[class*="bg-indigo-"],a[class*="bg-indigo-"],
+button[class*="bg-green-"],a[class*="bg-green-"],
+button[class*="bg-emerald-"],a[class*="bg-emerald-"],
+button[class*="bg-red-"],a[class*="bg-red-"],
+button[class*="bg-rose-"],a[class*="bg-rose-"],
+button[class*="bg-purple-"],a[class*="bg-purple-"],
+button[class*="bg-violet-"],a[class*="bg-violet-"],
+button[class*="bg-sky-"],a[class*="bg-sky-"],
+button[class*="bg-teal-"],a[class*="bg-teal-"]) {
+  background: var(--portal-action) !important;
+  color: var(--portal-action-text) !important;
+  border-color: var(--portal-border) !important;
+}
+
+/* The theme toggle should be readable and match the current mode. */
+.theme-toggle-dock {
+  background: var(--portal-page) !important;
+  border-color: var(--portal-border) !important;
+}
+.theme-toggle-switch {
+  background: var(--portal-surface) !important;
+  color: var(--portal-text) !important;
+  border-color: var(--portal-border) !important;
+}
+.theme-toggle-label { color: var(--portal-text) !important; }
+.theme-toggle-track { background: #e4d7a2 !important; }
+.theme-toggle-thumb { background: #fffdf2 !important; }
+html.dark .theme-toggle-track { background: #66531b !important; }
+html.dark .theme-toggle-thumb { background: #fff2bf !important; }
+
+/* Keep intentional hero banners dark, but ensure their content stays readable. */
+.app-main .dashboard-hero, .app-main .portal-gradient {
+  background-color: #172033 !important;
+}
+.app-main .dashboard-hero :is(h1,h2,h3,p,span,a,svg),
+.app-main .portal-gradient :is(h1,h2,h3,p,span,a,svg) {
+  color: #f8fafc !important;
+}
+.app-main .dashboard-hero .dashboard-hero-action {
+  background: #fff8dc !important;
   color: #111 !important;
-  border: 1px solid #9a7410 !important;
-  font-weight: 800;
-  text-shadow: none !important;
-  box-shadow: 0 2px 7px rgb(77 61 0 / 12%) !important;
 }
-body.neon-admin-shell .admin-document-panel :is(button[class*="bg-"], a[class*="bg-"], button.neon-button, a.neon-button):hover {
-  background: #d1a51e !important;
-  color: #111 !important;
+.app-main .dashboard-hero .dashboard-hero-action-secondary {
+  background: rgb(255 255 255 / 12%) !important;
+  color: #fff !important;
 }
+
+/* Dark mode: warm dark background, raised cocoa panels, ivory text and gold actions. */
+html.dark body, html.dark body.app-shell, html.dark body.app-shell > .min-h-screen,
+html.dark body.app-shell .app-main, html.dark body.neon-admin-shell,
+html.dark body.neon-admin-shell > .min-h-screen,
+html.dark body.neon-admin-shell > .min-h-screen > header,
+html.dark body.neon-admin-shell > .min-h-screen > header > div,
+html.dark body.neon-admin-shell .neon-shell {
+  background: var(--portal-page) !important;
+  color: var(--portal-text) !important;
+}
+html.dark .site-navigation, html.dark .site-navigation > div,
+html.dark .site-navigation .global-navigation-menu,
+html.dark .site-navigation .global-navigation-menu > div,
+html.dark .mobile-menu, html.dark .theme-toggle-dock,
+html.dark .bottom-navigation, html.dark .bottom-nav, html.dark footer nav {
+  background: var(--portal-surface) !important;
+  color: var(--portal-text) !important;
+  border-color: var(--portal-border) !important;
+}
+html.dark .site-navigation :is(a,button,span,p,svg),
+html.dark .mobile-menu :is(a,button,span,p,svg),
+html.dark .theme-toggle-dock :is(a,button,span,p) {
+  color: var(--portal-text);
+}
+html.dark .site-navigation .global-nav-link,
+html.dark .mobile-menu a {
+  color: var(--portal-text) !important;
+}
+html.dark .site-navigation .global-nav-link:hover,
+html.dark .mobile-menu a:hover {
+  background: var(--portal-hover) !important;
+  color: var(--portal-text) !important;
+}
+html.dark .site-navigation .global-nav-link-active,
+html.dark .site-navigation .global-nav-link[aria-current="page"],
+html.dark .site-navigation [aria-current="page"],
+html.dark .mobile-menu a[aria-current="page"] {
+  background: var(--portal-action) !important;
+  color: var(--portal-action-text) !important;
+}
+html.dark .app-main .portal-card, html.dark .app-main .neon-card,
+html.dark .app-main .neon-row, html.dark .app-main .neon-status,
+html.dark .app-main .status-pill, html.dark .app-main .admin-management-card,
+html.dark .app-main .admin-management-step, html.dark .app-main .admin-service-card,
+html.dark .app-main .admin-services-panel, html.dark .app-main .admin-services-toolbar,
+html.dark .app-main .admin-document-panel, html.dark .app-main .admin-document-summary {
+  background: var(--portal-surface) !important;
+  color: var(--portal-text) !important;
+  border-color: var(--portal-border) !important;
+}
+html.dark .app-main .admin-document-form,
+html.dark .app-main .admin-document-row {
+  background: var(--portal-panel) !important;
+  color: var(--portal-text) !important;
+  border-color: var(--portal-border) !important;
+}
+html.dark .app-main :is(h1,h2,h3,h4,h5,h6,p,span,label,li,td,th,legend,small,strong,em),
+html.dark .neon-shell :is(h1,h2,h3,h4,h5,h6,p,span,label,li,td,th,legend,small,strong,em),
+html.dark .admin-management-header :is(h1,h2,h3,h4,h5,h6,p,span,label,a) {
+  color: var(--portal-text) !important;
+}
+html.dark .app-main :is(input:not([type=checkbox]):not([type=radio]):not([type=range]),select,textarea),
+html.dark .neon-shell input, html.dark .neon-shell select, html.dark .neon-shell textarea,
+html.dark .admin-management-header input, html.dark .admin-management-header select,
+html.dark .admin-management-header textarea {
+  background: #211b0b !important;
+  color: #fff9e6 !important;
+  border-color: #796632 !important;
+}
+html.dark .app-main :is(input,textarea,select)::placeholder,
+html.dark .neon-shell :is(input,textarea,select)::placeholder {
+  color: #e6d9b4 !important;
+  opacity: 1;
+}
+html.dark .app-main :is(button[class*="bg-blue-"],a[class*="bg-blue-"],
+button[class*="bg-indigo-"],a[class*="bg-indigo-"],
+button[class*="bg-green-"],a[class*="bg-green-"],
+button[class*="bg-emerald-"],a[class*="bg-emerald-"],
+button[class*="bg-red-"],a[class*="bg-red-"],
+button[class*="bg-rose-"],a[class*="bg-rose-"],
+button[class*="bg-purple-"],a[class*="bg-purple-"],
+button[class*="bg-violet-"],a[class*="bg-violet-"],
+button[class*="bg-sky-"],a[class*="bg-sky-"],
+button[class*="bg-teal-"],a[class*="bg-teal-"]) {
+  background: var(--portal-action) !important;
+  color: var(--portal-action-text) !important;
+  border-color: var(--portal-border) !important;
+}
+html.dark .app-main :is(.bg-white,.bg-slate-50,.bg-slate-100,.bg-gray-50,.bg-gray-100,
+.bg-zinc-50,.bg-neutral-50,.bg-green-50,.bg-green-100,.bg-emerald-50,.bg-emerald-100,
+.bg-blue-50,.bg-indigo-50,.bg-purple-50) {
+  background: var(--portal-surface) !important;
+}
+html.dark .app-main .dashboard-recent-row:hover,
+html.dark .app-main [class*="hover:bg-slate-"]:hover {
+  background: var(--portal-hover) !important;
+}
+html.dark .app-main .dashboard-hero, html.dark .app-main .portal-gradient {
+  background-color: #172033 !important;
+}
+html.dark .app-main .dashboard-hero :is(h1,h2,h3,p,span,a,svg),
+html.dark .app-main .portal-gradient :is(h1,h2,h3,p,span,a,svg) {
+  color: #f8fafc !important;
+}
+
 @media (max-width: 640px) {
-  body.neon-admin-shell .admin-document-panel { padding: .7rem; }
-  body.neon-admin-shell .admin-document-form,
-  body.neon-admin-shell .admin-document-row {
-    display: flex !important;
+  .app-main .admin-document-panel { padding: .7rem; }
+  .app-main .admin-document-form, .app-main .admin-document-row {
     flex-direction: column;
     align-items: stretch;
     gap: .75rem;
     padding: .8rem;
   }
-  body.neon-admin-shell .admin-document-form > *,
-  body.neon-admin-shell .admin-document-row > * { flex: 1 1 auto; width: 100%; }
-  body.neon-admin-shell .site-navigation .global-navigation-menu { max-height: calc(100dvh - 4rem); overflow-y: auto; }
+  .app-main .admin-document-form > *, .app-main .admin-document-row > * {
+    flex: 1 1 auto;
+    width: 100%;
+  }
+  .site-navigation .global-navigation-menu {
+    max-height: calc(100dvh - 4rem);
+    overflow-y: auto;
+  }
+  .theme-toggle-dock {
+    padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: .01ms !important; }
 }
