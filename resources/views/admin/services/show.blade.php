@@ -95,7 +95,7 @@
                         <option value="choose_one">{{ __('Choose one from group') }}</option>
                         <option value="choose_many">{{ __('Choose many from group') }}</option>
                     </select></div>
-                    <div class="admin-requirement-field"><label for="new-requirement-group" class="admin-requirement-label">{{ __('Group') }} <span class="admin-group-required-indicator" hidden>*</span></label><input id="new-requirement-group" name="requirement_group" value="{{ old('requirement_group') }}" maxlength="100" pattern="[A-Za-z0-9_-]+" class="input-modern" placeholder="{{ __('Group') }}" aria-describedby="requirement-group-help"><small id="requirement-group-help" class="admin-requirement-help">{{ __('Only needed for choose-one or choose-many rules.') }}</small></div>
+                    <div id="new-requirement-group-field" class="admin-requirement-field"><label for="new-requirement-group" class="admin-requirement-label">{{ __('Group') }} <span class="admin-group-required-indicator" hidden>*</span></label><input id="new-requirement-group" name="requirement_group" value="{{ old('requirement_group') }}" maxlength="100" pattern="[A-Za-z0-9_-]+" class="input-modern" placeholder="{{ __('Group') }}" aria-describedby="requirement-group-help"><small id="requirement-group-help" class="admin-requirement-help">{{ __('Only needed for choose-one or choose-many rules.') }}</small></div>
                     <div class="admin-requirement-field"><label for="new-requirement-minimum" class="admin-requirement-label">{{ __('Minimum required') }}</label><input id="new-requirement-minimum" type="number" name="minimum_required" value="{{ old('minimum_required', 1) }}" min="1" max="100" required class="input-modern" placeholder="{{ __('Minimum required') }}"></div>
                     <div class="admin-requirement-field"><label for="new-requirement-sort" class="admin-requirement-label">{{ __('Sort order') }}</label><input id="new-requirement-sort" type="number" name="sort_order" value="{{ old('sort_order', 0) }}" min="0" max="10000" required class="input-modern" placeholder="{{ __('Sort order') }}"></div>
                     <div class="admin-requirement-switches"><label class="admin-requirement-switch"><input type="hidden" name="is_required" value="0"><input type="checkbox" name="is_required" value="1" @checked(old('is_required', 1))><span class="admin-switch-track" aria-hidden="true"></span><span>{{ __('Required') }}</span></label>
@@ -150,4 +150,35 @@
         </div>
     </div>
 </div>
+
+<script>
+(() => {
+    const initRequirementGroup = () => {
+        const type = document.getElementById('new-requirement-type');
+        const group = document.getElementById('new-requirement-group');
+        const field = document.getElementById('new-requirement-group-field');
+        const indicator = document.querySelector('.admin-group-required-indicator');
+        if (!type || !group || !field) return;
+
+        const syncGroupRule = () => {
+            const grouped = type.value === 'choose_one' || type.value === 'choose_many';
+            field.hidden = !grouped;
+            group.required = grouped;
+            group.setAttribute('aria-required', grouped ? 'true' : 'false');
+            if (indicator) indicator.hidden = !grouped;
+            if (!grouped) group.setCustomValidity('');
+        };
+
+        type.addEventListener('change', syncGroupRule);
+        syncGroupRule();
+    };
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initRequirementGroup, { once: true });
+    } else {
+        initRequirementGroup();
+    }
+})();
+</script>
+
 </x-app-layout>
