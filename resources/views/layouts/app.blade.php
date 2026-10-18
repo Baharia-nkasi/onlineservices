@@ -19,7 +19,7 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <link rel="stylesheet" href="{{ asset('css/portal-theme-overrides.css') }}?v=20261018-2">
+    <link rel="stylesheet" href="{{ asset('css/portal-theme-overrides.css') }}?v=20261018-3">
 </head>
 <body class="font-sans antialiased app-shell theme-transition bg-slate-50 text-slate-900 {{ request()->routeIs('admin.*') ? 'neon-admin-shell' : '' }}">
 <div class="min-h-screen">
