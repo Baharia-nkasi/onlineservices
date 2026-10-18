@@ -80,33 +80,33 @@
             </form>
         </section>
 
-        <section id="document-requirements" class="rounded-[2rem] border border-sky-200 bg-white shadow-sm overflow-hidden">
-            <div class="border-b border-slate-200 p-6">
+        <section id="document-requirements" class="admin-document-panel rounded-[2rem] border border-sky-200 bg-white shadow-sm overflow-hidden">
+            <div class="admin-document-heading border-b border-slate-200 p-6">
                 <h3 class="text-xl font-black text-slate-900">{{ __('Document Requirements') }}</h3>
                 <p class="mt-1 text-sm text-slate-500">{{ __('Add, edit, activate or deactivate documents required for this service.') }}</p>
             </div>
             <div class="p-6">
-                <form method="POST" action="{{ route('admin.services.documents.store', $service) }}" class="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
+                <form method="POST" action="{{ route('admin.services.documents.store', $service) }}" class="admin-document-add-form grid gap-3 md:grid-cols-2 lg:grid-cols-4">
                     @csrf
-                    <input name="name" required maxlength="255" class="input-modern" placeholder="{{ __('Document name') }}">
-                    <input name="description" maxlength="2000" class="input-modern" placeholder="{{ __('Description') }}">
-                    <select name="requirement_type" class="input-modern">
+                    <div class="admin-requirement-field"><label for="new-requirement-name" class="admin-requirement-label">{{ __('Document name') }} <span aria-hidden="true">*</span></label><input id="new-requirement-name" name="name" value="{{ old('name') }}" required maxlength="255" class="input-modern" placeholder="{{ __('Document name') }}" autocomplete="off"></div>
+                    <div class="admin-requirement-field"><label for="new-requirement-description" class="admin-requirement-label">{{ __('Description') }}</label><input id="new-requirement-description" name="description" value="{{ old('description') }}" maxlength="2000" class="input-modern" placeholder="{{ __('Description') }}"></div>
+                    <div class="admin-requirement-field"><label for="new-requirement-type" class="admin-requirement-label">{{ __('Requirement rule') }}</label><select id="new-requirement-type" name="requirement_type" class="input-modern">
                         <option value="single">{{ __('Single requirement') }}</option>
                         <option value="choose_one">{{ __('Choose one from group') }}</option>
                         <option value="choose_many">{{ __('Choose many from group') }}</option>
-                    </select>
-                    <input name="requirement_group" maxlength="100" pattern="[A-Za-z0-9_-]+" class="input-modern" placeholder="{{ __('Group') }}">
-                    <input type="number" name="minimum_required" value="1" min="1" max="100" class="input-modern" placeholder="{{ __('Minimum required') }}">
-                    <input type="number" name="sort_order" value="0" min="0" max="10000" class="input-modern" placeholder="{{ __('Sort order') }}">
-                    <label class="flex items-center gap-2 text-sm font-bold"><input type="hidden" name="is_required" value="0"><input type="checkbox" name="is_required" value="1" checked>{{ __('Required') }}</label>
-                    <label class="flex items-center gap-2 text-sm font-bold"><input type="hidden" name="is_active" value="0"><input type="checkbox" name="is_active" value="1" checked>{{ __('Active') }}</label>
-                    <button type="submit" class="portal-button md:col-span-2 lg:col-span-4">{{ __('Add Requirement') }}</button>
+                    </select></div>
+                    <div class="admin-requirement-field"><label for="new-requirement-group" class="admin-requirement-label">{{ __('Group') }} <span class="admin-group-required-indicator" hidden>*</span></label><input id="new-requirement-group" name="requirement_group" value="{{ old('requirement_group') }}" maxlength="100" pattern="[A-Za-z0-9_-]+" class="input-modern" placeholder="{{ __('Group') }}" aria-describedby="requirement-group-help"><small id="requirement-group-help" class="admin-requirement-help">{{ __('Only needed for choose-one or choose-many rules.') }}</small></div>
+                    <div class="admin-requirement-field"><label for="new-requirement-minimum" class="admin-requirement-label">{{ __('Minimum required') }}</label><input id="new-requirement-minimum" type="number" name="minimum_required" value="{{ old('minimum_required', 1) }}" min="1" max="100" required class="input-modern" placeholder="{{ __('Minimum required') }}"></div>
+                    <div class="admin-requirement-field"><label for="new-requirement-sort" class="admin-requirement-label">{{ __('Sort order') }}</label><input id="new-requirement-sort" type="number" name="sort_order" value="{{ old('sort_order', 0) }}" min="0" max="10000" required class="input-modern" placeholder="{{ __('Sort order') }}"></div>
+                    <div class="admin-requirement-switches"><label class="admin-requirement-switch"><input type="hidden" name="is_required" value="0"><input type="checkbox" name="is_required" value="1" @checked(old('is_required', 1))><span class="admin-switch-track" aria-hidden="true"></span><span>{{ __('Required') }}</span></label>
+                    <label class="admin-requirement-switch"><input type="hidden" name="is_active" value="0"><input type="checkbox" name="is_active" value="1" @checked(old('is_active', 1))><span class="admin-switch-track" aria-hidden="true"></span><span>{{ __('Active') }}</span></label></div>
+                    <button type="submit" class="admin-requirement-submit portal-button md:col-span-2 lg:col-span-4"><span aria-hidden="true">＋</span> {{ __('Add Requirement') }}</button>
                 </form>
 
                 <div class="mt-6 space-y-4">
                     @forelse($service->documents as $document)
-                        <div id="document-requirement-{{ $document->id }}" class="scroll-mt-24 rounded-3xl border border-cyan-100 bg-gradient-to-br from-cyan-50/70 to-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
-                            <form method="POST" action="{{ route('admin.service-documents.update', $document) }}" class="grid gap-3 md:grid-cols-12">
+                        <div id="document-requirement-{{ $document->id }}" class="admin-document-item scroll-mt-24 rounded-3xl border border-cyan-100 bg-gradient-to-br from-cyan-50/70 to-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+                            <form method="POST" action="{{ route('admin.service-documents.update', $document) }}" class="admin-document-editor grid gap-3 md:grid-cols-12">
                                 @csrf @method('PATCH')
                                 <input name="name" value="{{ $document->name }}" required maxlength="255" class="input-modern md:col-span-3">
                                 <input name="description" value="{{ $document->description }}" maxlength="2000" class="input-modern md:col-span-3">
@@ -119,9 +119,9 @@
                                 <input type="number" name="minimum_required" value="{{ $document->minimum_required }}" min="1" max="100" class="input-modern">
                                 <input type="number" name="sort_order" value="{{ $document->sort_order }}" min="0" max="10000" class="input-modern">
                                 <div class="flex flex-wrap items-center gap-4 md:col-span-8">
-                                    <label class="text-xs font-bold"><input type="hidden" name="is_required" value="0"><input type="checkbox" name="is_required" value="1" @checked($document->is_required)> {{ __('Required') }}</label>
-                                    <label class="text-xs font-bold"><input type="hidden" name="is_active" value="0"><input type="checkbox" name="is_active" value="1" @checked($document->is_active)> {{ __('Active') }}</label>
-                                    <button type="submit" class="portal-button">{{ __('Save') }}</button>
+                                    <label class="admin-requirement-switch"><input type="hidden" name="is_required" value="0"><input type="checkbox" name="is_required" value="1" @checked($document->is_required)><span class="admin-switch-track" aria-hidden="true"></span><span>{{ __('Required') }}</span></label>
+                                    <label class="admin-requirement-switch"><input type="hidden" name="is_active" value="0"><input type="checkbox" name="is_active" value="1" @checked($document->is_active)><span class="admin-switch-track" aria-hidden="true"></span><span>{{ __('Active') }}</span></label>
+                                    <button type="submit" class="admin-requirement-submit portal-button">{{ __('Save Changes') }}</button>
                                 </div>
                             </form>
                             <div class="mt-3 flex justify-between gap-3 border-t border-slate-100 pt-3">
