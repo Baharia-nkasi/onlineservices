@@ -396,3 +396,92 @@ html.dark .app-main .portal-gradient :is(h1,h2,h3,p,span,a,svg) {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: .01ms !important; }
 }
+
+
+/* Document requirements: explicit selectors fix legacy utility backgrounds that were escaping the theme. */
+#document-requirements {
+  background: var(--portal-surface) !important;
+  color: var(--portal-text) !important;
+  border-color: var(--portal-border) !important;
+}
+#document-requirements > .admin-document-heading {
+  background: var(--portal-panel) !important;
+  border-color: var(--portal-border) !important;
+}
+#document-requirements .admin-document-add-form {
+  display: grid !important;
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+  align-items: start;
+  gap: 1rem !important;
+  padding: 1.15rem;
+  border: 1px solid var(--portal-border) !important;
+  border-radius: 1rem;
+  background: var(--portal-panel) !important;
+  color: var(--portal-text) !important;
+}
+#document-requirements .admin-document-add-form > * { min-width: 0; }
+#document-requirements .admin-requirement-field { display:flex; min-width:0; flex-direction:column; gap:.4rem; }
+#document-requirements .admin-requirement-label {
+  display:block; color:var(--portal-text) !important; font-size:.82rem; font-weight:800; line-height:1.35;
+}
+#document-requirements .admin-requirement-label span[aria-hidden="true"],
+#document-requirements .admin-group-required-indicator { color:#a32618 !important; }
+html.dark #document-requirements .admin-requirement-label span[aria-hidden="true"],
+html.dark #document-requirements .admin-group-required-indicator { color:#ffb4a8 !important; }
+#document-requirements .admin-requirement-help { color:var(--portal-muted) !important; font-size:.75rem; line-height:1.4; }
+#document-requirements .admin-requirement-field :is(input,select,textarea) {
+  width:100%; min-height:2.8rem; border:1px solid var(--portal-border) !important; border-radius:.7rem;
+  padding:.65rem .75rem; background:var(--portal-surface) !important; color:var(--portal-text) !important;
+  font:inherit; font-size:.9rem;
+}
+#document-requirements .admin-requirement-field :is(input,select,textarea):focus {
+  outline:3px solid var(--portal-focus) !important; outline-offset:2px;
+}
+#document-requirements .admin-requirement-switches { display:flex; flex-wrap:wrap; align-items:center; gap:.75rem; }
+#document-requirements .admin-requirement-switch {
+  display:inline-flex; align-items:center; justify-content:flex-start; gap:.6rem; min-height:2.75rem;
+  padding:.55rem .8rem; border:1px solid var(--portal-border); border-radius:.8rem;
+  background:var(--portal-surface); color:var(--portal-text) !important; font-size:.875rem;
+  font-weight:800; cursor:pointer; user-select:none;
+}
+#document-requirements .admin-requirement-switch input[type="checkbox"] {
+  position:absolute; width:1px; height:1px; margin:-1px; overflow:hidden; clip:rect(0,0,0,0);
+  clip-path:inset(50%); white-space:nowrap;
+}
+#document-requirements .admin-switch-track {
+  position:relative; display:inline-block; flex:0 0 2.45rem; width:2.45rem; height:1.35rem;
+  border:1px solid var(--portal-border); border-radius:999px; background:#82785d; transition:background-color .18s ease;
+}
+#document-requirements .admin-switch-track::after {
+  position:absolute; top:.12rem; left:.12rem; width:.98rem; height:.98rem; border-radius:50%;
+  background:#fffdf5; box-shadow:0 1px 3px rgb(0 0 0 / 25%); content:""; transition:transform .18s ease;
+}
+#document-requirements .admin-requirement-switch input:checked + .admin-switch-track { background:#287844; border-color:#1f6538; }
+#document-requirements .admin-requirement-switch input:checked + .admin-switch-track::after { transform:translateX(1.08rem); }
+#document-requirements .admin-requirement-switch input:focus-visible + .admin-switch-track { outline:3px solid var(--portal-focus); outline-offset:3px; }
+#document-requirements .admin-document-item {
+  background:var(--portal-surface) !important; border-color:var(--portal-border) !important; color:var(--portal-text) !important;
+}
+#document-requirements .admin-document-editor {
+  align-items:center; padding:.9rem; border:1px solid var(--portal-border); border-radius:.85rem;
+  background:var(--portal-panel) !important;
+}
+#document-requirements .admin-document-editor :is(input:not([type="hidden"]):not([type="checkbox"]),select,textarea) {
+  min-width:0; max-width:100%; background:var(--portal-surface) !important; color:var(--portal-text) !important;
+  border-color:var(--portal-border) !important;
+}
+#document-requirements .admin-requirement-submit {
+  display:inline-flex; align-items:center; justify-content:center; gap:.5rem; min-height:2.85rem; width:100%;
+  padding:.75rem 1rem; border:1px solid var(--portal-border) !important; border-radius:.8rem;
+  background:var(--portal-action) !important; color:var(--portal-action-text) !important; font-size:.95rem;
+  font-weight:900; cursor:pointer; opacity:1 !important; visibility:visible !important;
+}
+#document-requirements .admin-requirement-submit:hover { background:var(--portal-action-hover) !important; }
+#document-requirements .admin-requirement-submit:disabled { cursor:not-allowed; opacity:.6 !important; }
+@media (min-width:640px) { #document-requirements .admin-document-add-form { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media (min-width:1024px) { #document-requirements .admin-document-add-form { grid-template-columns:repeat(4,minmax(0,1fr)); } }
+@media (max-width:639px) {
+  #document-requirements .admin-document-add-form { padding:.8rem; }
+  #document-requirements .admin-requirement-switches { gap:.5rem; }
+  #document-requirements .admin-requirement-switch { flex:1 1 8rem; }
+}
