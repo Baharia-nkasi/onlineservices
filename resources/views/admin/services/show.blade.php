@@ -82,8 +82,9 @@
 
         <section id="document-requirements" class="admin-document-panel rounded-[2rem] border border-sky-200 bg-white shadow-sm overflow-hidden">
             <div class="admin-document-heading border-b border-slate-200 p-6">
-                <h3 class="text-xl font-black text-slate-900">{{ __('Document Requirements') }}</h3>
-                <p class="mt-1 text-sm text-slate-500">{{ __('Add, edit, activate or deactivate documents required for this service.') }}</p>
+                <p class="admin-document-eyebrow">{{ __('SERVICE CHECKLIST') }}</p>
+                <h3 class="admin-document-title">{{ __('Manage Document Requirements') }}</h3>
+                <p class="admin-document-intro">{{ __('Add, edit, activate or deactivate documents required for this service.') }}</p>
             </div>
             <div class="p-6">
                 <form method="POST" action="{{ route('admin.services.documents.store', $service) }}" class="admin-document-add-form grid gap-3 md:grid-cols-2 lg:grid-cols-4">
