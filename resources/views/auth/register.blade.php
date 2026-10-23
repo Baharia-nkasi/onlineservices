@@ -27,6 +27,15 @@
       @media(max-width:480px) {
         body:has(form[data-live-validate="register"]) form[data-live-validate="register"] { padding:1.1rem; border-radius:1rem; }
       }
+
+      body:has(form[data-live-validate="register"]) form[data-live-validate="register"] button.password-visibility-toggle {
+        position:absolute!important; inset-block:0; right:0; width:2.75rem; height:100%; min-height:0;
+        padding:0 .65rem; background:transparent!important; color:#684900!important;
+        border:0!important; border-radius:0 .7rem .7rem 0; box-shadow:none!important; transform:none!important;
+      }
+      body:has(form[data-live-validate="register"]) form[data-live-validate="register"] button.password-visibility-toggle:hover {
+        background:#fff3cc!important; color:#21180b!important;
+      }
     </style>
     <form method="POST" action="{{ route('register') }}" data-live-validate="register" novalidate>
         @csrf
