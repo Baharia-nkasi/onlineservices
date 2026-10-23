@@ -102,6 +102,25 @@
       @media(prefers-reduced-motion:reduce) {
         .neon-login-shell *, .neon-login-shell *::before, .neon-login-shell *::after { transition-duration:.01ms!important; animation-duration:.01ms!important; }
       }
+
+      /* Shared, accessible password visibility control for authentication forms. */
+      .password-visibility-field { position:relative; min-width:0; }
+      .password-visibility-field input { padding-right:3.25rem!important; }
+      .password-visibility-toggle {
+        position:absolute!important; inset-block:0; right:0; z-index:5;
+        display:inline-flex!important; align-items:center!important; justify-content:center!important;
+        width:2.75rem; min-height:0!important; height:100%; padding:0 .65rem!important;
+        background:transparent!important; color:#684900!important; border:0!important;
+        border-radius:0 .7rem .7rem 0!important; box-shadow:none!important;
+        transform:none!important; cursor:pointer;
+      }
+      .password-visibility-toggle:hover { background:#fff3cc!important; color:#21180b!important; }
+      .password-visibility-toggle:focus-visible { outline:3px solid #8a6200!important; outline-offset:-3px; }
+      .password-visibility-toggle svg { display:block; width:1.25rem; height:1.25rem; flex:0 0 auto; }
+      .password-visibility-toggle svg.hidden { display:none!important; }
+      .password-visibility-toggle .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+      .neon-login-shell .neon-login-card button.password-visibility-toggle { background:transparent!important; color:#684900!important; border:0!important; box-shadow:none!important; transform:none!important; }
+      .neon-login-shell .neon-login-card button.password-visibility-toggle:hover { background:#fff3cc!important; color:#21180b!important; }
     </style>
 </head>
 <body class="min-h-screen font-sans antialiased">
