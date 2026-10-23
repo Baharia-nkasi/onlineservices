@@ -275,14 +275,11 @@ class ServiceDocumentSeeder extends Seeder
             */
 
             'erita-nakala-cheti-kilichopotea' => [
+                ['name' => 'Cheti cha Zamani', 'required' => true],
                 ['name' => 'Kitambulisho cha Taifa', 'required' => true],
-                ['name' => 'Namba ya cheti cha zamani', 'required' => false],
-                ['name' => 'Nakala ya cheti', 'required' => false],
-                ['name' => 'Ripoti ya polisi', 'required' => false],
-                ['name' => 'Cheti kilichoharibika', 'required' => false],
-                ['name' => 'Nyaraka zinazothibitisha taarifa za cheti', 'required' => true],
-                ['name' => 'Taarifa za kuzaliwa au kifo', 'required' => true],
-                ['name' => 'Namba ya simu', 'required' => true],
+                ['name' => 'Kitambulisho cha Mpiga Kura', 'required' => false],
+                ['name' => 'Barua ya Utambulisho kutoka kwa Afisa Mtendaji', 'required' => true],
+                ['name' => 'Cheti cha Kumaliza Shule (Leaving School)', 'required' => true],
             ],
 
             /*
@@ -409,6 +406,52 @@ class ServiceDocumentSeeder extends Seeder
                         'is_active' => true,
                     ]
                 );
+            }
+        }
+
+        // This service has an explicitly approved document list. Reconcile the
+        // catalogue (including soft-deleted rows) so obsolete requirements cannot
+        // remain visible or be reintroduced by a previous seed run.
+        $eritaService = Service::where('slug', 'erita-nakala-cheti-kilichopotea')->first();
+
+        if ($eritaService) {
+            $allowedNames = array_column($requirements['erita-nakala-cheti-kilichopotea'], 'name');
+
+            ServiceDocument::withTrashed()
+                ->where('service_id', $eritaService->id)
+                ->whereNotIn('name', $allowedNames)
+                ->get()
+                ->each(function (ServiceDocument $document) {
+                    if (! $document->trashed()) {
+                        $document->delete();
+                    }
+
+                    if ($document->is_active) {
+                        $document->is_active = false;
+                        $document->save();
+                    }
+                });
+
+            foreach ($requirements['erita-nakala-cheti-kilichopotea'] as $index => $document) {
+                $record = ServiceDocument::withTrashed()->firstOrNew([
+                    'service_id' => $eritaService->id,
+                    'name' => $document['name'],
+                ]);
+
+                if ($record->exists && $record->trashed()) {
+                    $record->restore();
+                }
+
+                $record->fill([
+                    'description' => $document['description'] ?? null,
+                    'is_required' => $document['required'],
+                    'requirement_type' => $document['required'] ? 'required' : 'optional',
+                    'requirement_group' => null,
+                    'minimum_required' => 1,
+                    'sort_order' => $index + 1,
+                    'is_active' => true,
+                ]);
+                $record->save();
             }
         }
     }
