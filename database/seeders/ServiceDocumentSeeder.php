@@ -19,18 +19,11 @@ class ServiceDocumentSeeder extends Seeder
             */
 
             'maombi-ya-chuo-kikuu' => [
-                ['name' => 'Kitambulisho cha Taifa', 'required' => true],
-                ['name' => 'Cheti cha kuzaliwa', 'required' => true],
-                ['name' => 'Picha ya pasipoti', 'required' => true],
-                ['name' => 'Cheti au matokeo ya Kidato cha Nne', 'required' => true],
-                ['name' => 'Cheti au matokeo ya Kidato cha Sita', 'required' => false],
-                ['name' => 'Cheti cha Stashahada', 'required' => false],
-                ['name' => 'Nakala ya matokeo ya Stashahada', 'required' => false],
-                ['name' => 'Vyeti vingine vya kitaaluma', 'required' => false],
-                ['name' => 'Namba ya mtihani ya Kidato cha Nne', 'required' => true],
-                ['name' => 'Namba ya mtihani ya Kidato cha Sita', 'required' => false],
-                ['name' => 'Taarifa za mzazi au mlezi', 'required' => true],
-                ['name' => 'Nyaraka za uhamisho', 'required' => false],
+                ['name' => 'Kitambulisho cha Taifa au Namba ya Nida', 'required' => true],
+                ['name' => 'Cheti Cha Form Four (Index Number)', 'required' => true],
+                ['name' => 'Cheti Cha Form Six (Index Number)', 'required' => true],
+                ['name' => 'Cheti cha Stashahada (Diploma Certificate)', 'required' => true],
+                ['name' => 'Nambari ya Uthibitishaji wa Tuzo (AVN)', 'required' => true],
             ],
 
             /*
@@ -406,6 +399,51 @@ class ServiceDocumentSeeder extends Seeder
                         'is_active' => true,
                     ]
                 );
+            }
+        }
+
+        // The university application service has an explicitly approved list.
+        // Retire all extra rows and restore/update only the five approved items.
+        $universityService = Service::where('slug', 'maombi-ya-chuo-kikuu')->first();
+
+        if ($universityService) {
+            $allowedNames = array_column($requirements['maombi-ya-chuo-kikuu'], 'name');
+
+            ServiceDocument::withTrashed()
+                ->where('service_id', $universityService->id)
+                ->whereNotIn('name', $allowedNames)
+                ->get()
+                ->each(function (ServiceDocument $document) {
+                    if (! $document->trashed()) {
+                        $document->delete();
+                    }
+
+                    if ($document->is_active) {
+                        $document->is_active = false;
+                        $document->save();
+                    }
+                });
+
+            foreach ($requirements['maombi-ya-chuo-kikuu'] as $index => $document) {
+                $record = ServiceDocument::withTrashed()->firstOrNew([
+                    'service_id' => $universityService->id,
+                    'name' => $document['name'],
+                ]);
+
+                if ($record->exists && $record->trashed()) {
+                    $record->restore();
+                }
+
+                $record->fill([
+                    'description' => null,
+                    'is_required' => $document['required'],
+                    'requirement_type' => $document['required'] ? 'required' : 'optional',
+                    'requirement_group' => null,
+                    'minimum_required' => 1,
+                    'sort_order' => $index + 1,
+                    'is_active' => true,
+                ]);
+                $record->save();
             }
         }
 
