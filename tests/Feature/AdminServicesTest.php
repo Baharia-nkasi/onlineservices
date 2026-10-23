@@ -328,7 +328,7 @@ class AdminServicesTest extends TestCase
     }
 
 
-    public function test_admin_service_management_hides_deactivated_services_and_can_purge_unused_ones(): void
+    public function test_admin_service_management_shows_deactivated_services_and_can_purge_unused_ones(): void
     {
         $admin = User::factory()->create(['role' => 'admin']);
         $customer = User::factory()->create(['role' => 'customer']);
