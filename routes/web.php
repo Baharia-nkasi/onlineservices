@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminCustomerController;
+use App\Http\Controllers\AdminServiceCatalogueController;
 use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\ApplicationDocumentController;
 use App\Http\Controllers\CustomerApplicationController;
@@ -93,7 +94,7 @@ Route::middleware('locale')->group(function () {
                 ->middleware('throttle:30,1')->name('documents.status');
             Route::delete('/documents/{document}', [AdminController::class, 'destroyDocument'])
                 ->middleware('throttle:20,1')->name('documents.destroy');
-            Route::get('/services', [AdminController::class, 'services'])->name('services.index');
+            Route::get('/services', [AdminServiceCatalogueController::class, 'index'])->name('services.index');
             Route::post('/services/purge-deactivated', [AdminController::class, 'purgeDeactivatedServices'])
                 ->middleware('throttle:5,1')->name('services.purge-deactivated');
             Route::get('/services/{service}', [AdminController::class, 'showService'])->name('services.show');

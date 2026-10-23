@@ -52,8 +52,8 @@
             <div class="admin-services-toolbar border-b border-slate-200 p-5 sm:p-6">
                 <div class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
                     <div>
-                        <h3 class="text-xl font-black text-slate-900">{{ __('Active Services') }}</h3>
-                        <p class="mt-1 text-sm text-slate-500">{{ __('Only active services appear here and in document requirements management. Deactivated services with customer history are kept safely in the database.') }}</p>
+                        <h3 class="text-xl font-black text-slate-900">{{ __('All Services') }}</h3>
+                        <p class="mt-1 text-sm text-slate-500">{{ __('Active services appear in the customer catalogue. Deactivated services remain here for admin review. Services with customer application history are preserved.') }}</p>
                         <form method="POST" action="{{ route('admin.services.purge-deactivated') }}" class="mt-3" onsubmit="return confirm('{{ __('Permanently delete all deactivated services that have no customer applications? Services with application history will be kept. This cannot be undone.') }}');">
                             @csrf
                             <button type="submit" class="inline-flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-sm font-extrabold text-red-700 transition hover:bg-red-100">
@@ -204,7 +204,7 @@
                         <div class="admin-service-footer mt-4">
                             <p class="text-xs text-slate-500">@if($service->is_active){{ __('Active services are visible to customers and can receive new requests.') }}@else{{ __('Deactivated services are hidden from new customer requests. Existing applications are preserved.') }}@endif</p>
                             <div class="flex flex-wrap items-center justify-end gap-2">
-                                <form method="POST" action="{{ route('admin.services.destroy', $service) }}" onsubmit="return confirm('{{ __('PERMANENTLY DELETE this service, all document requirements, all customer applications and related history? This cannot be undone.') }}');">
+                                <form method="POST" action="{{ route('admin.services.destroy', $service) }}" onsubmit="return confirm('{{ __('Permanently delete this deactivated service and its document requirements? Services with customer application history cannot be deleted, and their records will be preserved. This cannot be undone.') }}');">
                                     @csrf @method('DELETE')
                                     <button type="submit" class="inline-flex items-center gap-2 rounded-xl border border-red-300 bg-red-50 px-4 py-2.5 text-sm font-extrabold text-red-700 shadow-sm transition hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
                                         <span aria-hidden="true">🗑</span>
@@ -219,11 +219,11 @@
                         <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-50 text-3xl font-black text-emerald-700" aria-hidden="true">⌕</div>
                         @if(!empty($search))
                             <h4 class="text-base font-extrabold text-slate-800">{{ __('No matching services found') }}</h4>
-                            <p class="mx-auto mt-2 max-w-lg text-sm text-slate-500">{{ __('Try another service name, slug or description, or clear the search to see all active services.') }}</p>
+                            <p class="mx-auto mt-2 max-w-lg text-sm text-slate-500">{{ __('Try another service name, slug or description, or clear the search to see all services.') }}</p>
                             <a href="{{ route('admin.services.index') }}" class="portal-button-secondary mt-4 !w-auto">{{ __('Clear search') }}</a>
                         @else
-                            <h4 class="text-base font-extrabold text-slate-800">{{ __('No active services found') }}</h4>
-                            <p class="mx-auto mt-2 max-w-lg text-sm text-slate-500">{{ __('Deactivated services are hidden from this list. Add a new service above or activate an existing service to make it available here.') }}</p>
+                            <h4 class="text-base font-extrabold text-slate-800">{{ __('No services found') }}</h4>
+                            <p class="mx-auto mt-2 max-w-lg text-sm text-slate-500">{{ __('No services match this view. Add a new service above or adjust your search.') }}</p>
                         @endif
                     </div>
                 @endforelse

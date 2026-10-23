@@ -328,7 +328,7 @@ class AdminServicesTest extends TestCase
     }
 
 
-    public function test_admin_service_management_hides_deactivated_services_and_can_purge_unused_ones(): void
+    public function test_admin_service_management_shows_deactivated_services_and_can_purge_unused_ones(): void
     {
         $admin = User::factory()->create(['role' => 'admin']);
         $customer = User::factory()->create(['role' => 'customer']);
@@ -370,8 +370,8 @@ class AdminServicesTest extends TestCase
             ->get(route('admin.services.index'))
             ->assertOk()
             ->assertSee('Active eRITA Replacement')
-            ->assertDontSee('Deactivated eRITA Death Certificate')
-            ->assertDontSee('Historical Deactivated Service');
+            ->assertSee('Deactivated eRITA Death Certificate')
+            ->assertSee('Historical Deactivated Service');
 
         $this->actingAs($admin)
             ->post(route('admin.services.purge-deactivated'))
@@ -383,7 +383,7 @@ class AdminServicesTest extends TestCase
     }
 
 
-    public function test_admin_can_search_active_services_by_name_slug_or_description(): void
+    public function test_admin_can_search_services_by_name_slug_or_description(): void
     {
         $admin = User::factory()->create(['role' => 'admin']);
 
@@ -419,7 +419,7 @@ class AdminServicesTest extends TestCase
             ->assertOk()
             ->assertSee('Passport Assistance')
             ->assertDontSee('Birth Certificate')
-            ->assertDontSee('Inactive Passport Service')
+            ->assertSee('Inactive Passport Service')
             ->assertSee('Search results for');
 
         $this->actingAs($admin)
