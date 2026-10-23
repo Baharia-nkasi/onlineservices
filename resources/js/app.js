@@ -263,7 +263,42 @@ function initServiceManagementShortcuts() {
     });
 }
 
+
+function initPasswordVisibilityToggles() {
+    document.querySelectorAll('[data-password-visibility-toggle]').forEach((toggle) => {
+        if (toggle.dataset.passwordToggleReady === '1') return;
+        toggle.dataset.passwordToggleReady = '1';
+
+        const inputId = toggle.getAttribute('aria-controls');
+        const input = inputId ? document.getElementById(inputId) : null;
+        if (!input || !input.matches('input[type="password"], input[type="text"]')) {
+            toggle.disabled = true;
+            return;
+        }
+
+        const openEye = toggle.querySelector('[data-eye-open]');
+        const closedEye = toggle.querySelector('[data-eye-closed]');
+        const accessibleLabel = toggle.querySelector('.sr-only');
+
+        toggle.addEventListener('click', () => {
+            const reveal = input.type === 'password';
+            input.type = reveal ? 'text' : 'password';
+            const label = reveal ? 'Hide password' : 'Show password';
+
+            toggle.setAttribute('aria-label', label);
+            toggle.setAttribute('title', label);
+            toggle.setAttribute('aria-pressed', reveal ? 'true' : 'false');
+            if (accessibleLabel) accessibleLabel.textContent = label;
+
+            openEye?.classList.toggle('hidden', reveal);
+            closedEye?.classList.toggle('hidden', !reveal);
+            input.focus({ preventScroll: true });
+        });
+    });
+}
+
 function initInteractiveUi() {
+    initPasswordVisibilityToggles();
     initServiceCarousel();
     initThemeToggle();
     initLiveValidation();
