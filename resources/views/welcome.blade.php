@@ -100,26 +100,33 @@
 
 @media(max-width:767px) {
   .landing-page header>div { align-items:center; gap:.7rem; padding-top:.75rem; padding-bottom:.75rem; }
-  .landing-page header nav { display:flex!important; order:3; flex:1 0 100%; width:100%; justify-content:flex-start; gap:.55rem 1rem; padding-top:.35rem; border-top:1px solid var(--landing-border); }
-  .landing-page header nav a { font-size:.82rem; padding:.25rem 0; }
-  .landing-page header>div>div:last-child { margin-left:auto; flex-wrap:wrap; justify-content:flex-end; gap:.4rem; }
-  .landing-page header>div>a:first-child { flex:1 1 auto; }
+  /* Keep the mobile header compact; the old forced-visible desktop nav squeezed the account CTA. */
+  .landing-page header nav { display:none!important; }
+  .landing-page header>div>a:first-child { flex:1 1 100%; min-width:0; }
   .landing-page header>div>a:first-child>span:last-child span:last-child { font-size:.65rem; }
-  .landing-page header a.bg-blue-700 { padding:.55rem .7rem; font-size:.78rem; }
+  .landing-page header>div>div:last-child {
+    display:flex; flex:1 1 100%; width:100%; min-width:0; margin-left:0;
+    flex-wrap:nowrap; align-items:center; justify-content:space-between; gap:.6rem;
+  }
+  .landing-page header>div>div:last-child [role=group] { flex:0 0 auto; }
+  .landing-page header>div>div:last-child > a { display:inline-flex!important; align-items:center; justify-content:center; min-height:42px; white-space:nowrap; }
+  .landing-page header a.bg-blue-700 { flex:0 1 auto; padding:.6rem .85rem; font-size:.82rem; }
   .landing-page .landing-hero>div.relative { gap:2rem; padding-top:3.25rem; padding-bottom:3.25rem; }
   .landing-page .landing-hero>div.relative>div:first-child,.landing-page .landing-hero>div.relative>[data-service-carousel] { flex-basis:100%; }
   .landing-page .landing-hero h1 { font-size:clamp(2.35rem,10vw,3.6rem); line-height:1.07; }
   .landing-page .landing-hero [data-service-carousel] img { height:340px; }
+  .landing-page .landing-hero article a[href*="register"] { display:flex; width:100%; min-height:48px; align-items:center; justify-content:center; }
   .landing-page .landing-hero [data-service-carousel] article>div:nth-last-child(2) { padding:1.15rem; }
   .landing-page .landing-hero [data-service-carousel] article h2 { font-size:1.3rem; }
   .landing-page .landing-hero>div.relative>div:first-child>div:nth-of-type(2) { gap:.75rem; }
   .landing-page .landing-hero>div.relative>div:first-child>div:nth-of-type(2)>div { flex-basis:90px; }
+  .landing-page .landing-hero>div.relative>div:first-child>div:first-child + div a { min-height:48px; }
   .landing-page .landing-services,.landing-page .landing-steps,.landing-page .landing-about { padding-top:3.25rem; padding-bottom:3.25rem; }
 }
 @media(max-width:380px) {
   .landing-page header>div>a:first-child>span:last-child span:first-child { font-size:.88rem; }
   .landing-page header>div>div:last-child [role=group] a { padding:.35rem .45rem; }
-  .landing-page header a.bg-blue-700 { padding:.5rem .55rem; }
+  .landing-page header a.bg-blue-700 { padding:.55rem .65rem; font-size:.78rem; }
   .landing-page .landing-hero [data-service-carousel] img { height:300px; }
 }
 @media(prefers-reduced-motion:reduce) {
